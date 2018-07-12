@@ -9,7 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "blockstack": "^17.2.0"
+    "blockstack": "^17.2.0",
+    "nano-sql": "^1.7.0",
+    "nano-trivial": "^1.1.0",
+    "trivialdb": "^3.0.0-rc.2"
   },
   "devDependencies": {
     "@types/node": "^10.5.2",
