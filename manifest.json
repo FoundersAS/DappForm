@@ -1,0 +1,10 @@
+{
+  "name": "Test App",
+  "start_url": "http://localhost:8080",
+  "description": "A simple app build on blockstack",
+  "icons": [{
+    "src": "http://localhost:8080/icon.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  }]
+}
