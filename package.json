@@ -11,7 +11,7 @@
   "dependencies": {
     "blockstack": "^17.2.0",
     "nano-sql": "^1.7.0",
-    "nano-trivial": "^1.1.0",
+    "nano-trivial": "https://github.com/FoundersAS/nano-trival",
     "trivialdb": "^3.0.0-rc.2"
   },
   "devDependencies": {

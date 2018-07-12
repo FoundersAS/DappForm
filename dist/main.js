@@ -1,4 +1,5 @@
 import { getFile, putFile } from './write.js';
+import { addForm } from './db.js';
 const { blockstack } = window;
 if (blockstack.isUserSignedIn()) {
     // const userData = blockstack.loadUserData()
@@ -24,4 +25,5 @@ async function main() {
     console.log('Wrote some junk!');
     const retrieved = await getFile(name);
     console.log('got', retrieved);
+    addForm('test');
 }

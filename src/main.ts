@@ -1,4 +1,5 @@
 import { getFile, putFile } from './write.js'
+import { addForm } from './db.js'
 
 const {blockstack} = window as any
 
@@ -28,4 +29,6 @@ async function main () {
 
   const retrieved = await getFile(name)
   console.log('got', retrieved)
+
+  addForm('test')
 }

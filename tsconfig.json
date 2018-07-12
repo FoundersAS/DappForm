@@ -2,13 +2,12 @@
   "compilerOptions": {
     "module": "es6",
     "target": "es2017",
-
     "sourceMap": false,
-
-    "noImplicitAny": true,
-
+    "noImplicitAny": false,
     "allowJs": false,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "outDir": "dist",
+    "moduleResolution": "node"
   },
   "exclude": [
     "node_modules"

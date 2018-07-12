@@ -875,6 +875,13 @@ nano-trivial@^1.1.0:
     nano-sql "^1.6.3"
     trivialdb "^3.0.0-rc.2"
 
+"nano-trivial@https://github.com/FoundersAS/nano-trival":
+  version "1.1.0"
+  resolved "https://github.com/FoundersAS/nano-trival#54ce0906c1122d310f4e24ee9f9f2dafbb1bd3cf"
+  dependencies:
+    nano-sql "^1.6.3"
+    trivialdb "^3.0.0-rc.2"
+
 node-abi@^2.2.0:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-2.4.3.tgz#43666b7b17e57863e572409edbb82115ac7af28b"
