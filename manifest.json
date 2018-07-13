@@ -1,9 +1,9 @@
 {
   "name": "Test App",
-  "start_url": "http://localhost:8080",
+  "start_url": "https://dappform.takectrl.io/",
   "description": "A simple app build on blockstack",
   "icons": [{
-    "src": "http://localhost:8080/icon.png",
+    "src": "https://dappform.takectrl.io/icon.png",
     "sizes": "256x256",
     "type": "image/png"
   }]
