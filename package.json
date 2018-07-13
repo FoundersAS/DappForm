@@ -4,18 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "node node_modules/http-server/bin/http-server --cors -o"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "blockstack": "^17.2.0",
     "nano-sql": "^1.7.0",
-    "nano-trivial": "https://github.com/FoundersAS/nano-trival",
+    "nano-trivial": "git+https://github.com/FoundersAS/nano-trival.git",
     "trivialdb": "^3.0.0-rc.2"
   },
   "devDependencies": {
     "@types/node": "^10.5.2",
+    "http-server": "^0.11.1",
+    "ts-loader": "^4.4.2",
     "typescript": "^2.9.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FoundersAS/DappForm.git"
   }
 }
