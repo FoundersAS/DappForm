@@ -9,7 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bigi": "^1.4.2",
+    "bitcoinjs-lib": "^3.3.2",
     "blockstack": "^17.2.0",
+    "elliptic": "^6.4.0",
+    "lit-html": "^0.10.2",
     "nano-sql": "^1.7.0",
     "nano-trivial": "git+https://github.com/FoundersAS/nano-trival.git",
     "trivialdb": "^3.0.0-rc.2"
