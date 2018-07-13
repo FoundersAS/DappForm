@@ -4,8 +4,8 @@
 // import { TrivialAdapter } from 'nano-trivial';
 
 const { blockstack } = window as any // hax
-const { TrivialAdapter } = window as any // hax
-const { nSQL } = window as any // hax
+const TrivialAdapter = require('nano-trivial').TrivialAdapter
+const nSQL = require("nano-sql").nSQL
 
 const readFunc = (path: string) => {
   console.log('read path: ', path);

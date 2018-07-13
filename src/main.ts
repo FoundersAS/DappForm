@@ -1,5 +1,5 @@
-import { getFile, putFile } from './write.js'
-import { addForm } from './db.js'
+import { getFile, putFile } from './write'
+import { addForm } from './db'
 
 const {blockstack} = window as any
 
