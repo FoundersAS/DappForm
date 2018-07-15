@@ -1,6 +1,8 @@
 const EllipticCurve = require('elliptic').ec;
 const ECPair = require('bitcoinjs-lib').ECPair;
 const bigi = require('bigi');
+const {encryptECIES, decryptECIES} = require('../../node_modules/blockstack/lib/encryption.js')
+const {blockstack} = window as any
 
 const ecurve = new EllipticCurve('secp256k1');
 
@@ -20,10 +22,30 @@ const keyFromPublic = ecurve.keyFromPublic(publicKey, 'hex');
 keyFromPublic.verify(message, derSign);
 // JSON.stringify(derSign)
 
+export function encryptForm (toKey:string, contents:Object) {
+  const jsonContents = JSON.stringify(contents)
+  const encryptedOjb = encryptECIES(toKey, jsonContents)
+  return encryptedOjb
+}
+
 export function signMessage (message:string, privateKey:string) {
   const keyFromPrivate = ecurve.keyFromPrivate(privateKey, 'hex')
   const signature = keyFromPrivate.sign(message)
   return signature
+}
+
+export function decryptForm (cipherObj: Object): Object | undefined {
+  if (!cipherObj) {
+    return
+  }
+  const appPrivateKey = blockstack.loadUserData().appPrivateKey
+  try {
+    const decrypted = decryptECIES(appPrivateKey, cipherObj)
+    return decrypted
+  }
+  catch (e) {
+    console.warn(e)
+  }
 }
 
 // export function verifySignedMessage (path:string, privateKey:string) {

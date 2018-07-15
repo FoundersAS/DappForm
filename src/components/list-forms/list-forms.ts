@@ -1,6 +1,6 @@
-import { render, html } from '../../../node_modules/lit-html/src/lit-html'
-import { signMessage } from '../../util/sign-path'
-import State from '../../state'
+import { html, render } from '../../../node_modules/lit-html/src/lit-html'
+import { decryptForm, signMessage } from '../../util/crypto'
+import Store from '../../store'
 
 const {blockstack} = window as any
 
@@ -42,13 +42,29 @@ export async function fetchForms():Promise<Array<Object>> {
   })
   if (res.status === 200) {
     const json = await res.json()
-    return json
+
+    const decrypted = json
+      .map((entry:any) => entry.data)
+      .filter((cipherObj:any) => typeof cipherObj === "object")
+      .filter((cipherObj:any) => !!cipherObj.cipherText)
+      .filter((cipherObj:any) => Object.keys(cipherObj).length > 0)
+      .map((cipherObj:any) => decryptForm(cipherObj))
+
+    const failed = decrypted.filter((form:any) => !form)
+
+    console.info("Failed:")
+    console.info(failed)
+
+    const successfullyDecrypted = decrypted
+      .filter((form:any) => !!form)
+      .map((form:any) => JSON.parse(form))
+    return successfullyDecrypted
   }
   throw new Error("Failed getting forms")
 }
 
 export function update () {
-  const {forms} = State.state
+  const {forms} = Store.store
   console.debug(forms.func)
   const formsList = forms // convert to view model
 
@@ -57,7 +73,8 @@ export function update () {
 `
   render(tpl, document.querySelector('.forms-list'))
 
-  document.querySelector('.fetch-submissions').addEventListener('click', (evt:Event) => {
-    fetchForms()
+  document.querySelector('.fetch-submissions').addEventListener('click', async () => {
+    const forms = await fetchForms()
+    Store.setFormsAction(forms)
   })
 }
