@@ -1,5 +1,4 @@
-
-interface Question {
+export interface Question {
   label: string,
   type: string,
   name: string,
@@ -8,7 +7,7 @@ interface Question {
   modified: Date,
 }
 
-interface FormFormat {
+export interface Form {
   uuid: string,
   name: string,
 
@@ -21,14 +20,14 @@ interface FormFormat {
   questions: Question[],
 }
 
-interface FormSubmission {
+export interface Submission {
   uuid: string,
   formUuid: string,
   created: Date,
   answers: Answer[]
 }
 
-interface Answer {
+export interface Answer {
   questionUuid: string,
   name: string,
   value: string,
