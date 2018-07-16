@@ -1,5 +1,7 @@
 import { render, html } from '../../../node_modules/lit-html/src/lit-html'
+import { Answer, Form, Submission } from '../../form-format'
 const {blockstack} = window as any
+const uuidv4 = require('../../../node_modules/uuid/v4')
 
 export async function update () {
   const el = document.querySelector('fill-form')
@@ -9,10 +11,9 @@ export async function update () {
   const formId = url.searchParams.get('form-id')
   const app = location.origin
 
-  let form
+  let form:Form
 
   if (author && formId) {
-    // const form = await see(formId, author)
     const pathToPublicForm = await blockstack.getUserAppFileUrl(`forms/${formId}.json`, author, app)
     const res = await fetch(pathToPublicForm, {
       mode: 'cors'
@@ -23,20 +24,67 @@ export async function update () {
     form = json
   }
 
+  form = <Form>{
+    uuid: uuidv4(),
+    name: 'A safe survey',
+    created: new Date(),
+    modified: new Date(),
+    introText: 'The tough questions',
+    confirmationText: 'Thanks a bunch!',
+    questions: [{
+        uuid: uuidv4(),
+        name: 'Do you trust typeform now?',
+        label: 'Do you trust typeform now?',
+        type: 'text',
+      },
+      {
+        uuid: uuidv4(),
+        name: 'Ok how about now?',
+        label: 'Ok how about now?',
+        type: 'text',
+      }
+    ],
+  }
+
+  const questions = form.questions.map(q => {
+    const disabled = 'disabled'
+    return html`
+<div class="cell medium-12">
+    <label>${q.label}</label>
+    <input type=${q.type} class="form-answer" data-name="${q.name}" ${disabled}>
+</div>`
+  })
+
   const tpl = html`
-    <h3>Fill in form</h3>
-    <pre>${form ? JSON.stringify(form, null, 2) : "Not found"}</pre>
+<h2>${form.name}</h2>    
+<h6>${form.introText}</h6>    
+<form class="grid-x">
+    ${questions}
+    
+    <div class="cell small-12">
+        <button type="button" class="button submit-button">Submit</button>
+    </div>
+</form>
 `
 
   render(tpl, el)
-}
 
-// works for loggedin users
-async function see(formID:string, username:string):Promise<Object> {
-  const form = await blockstack.getFile(`forms/${formID}.json`, {
-    app: location.origin,
-    decrypt: false,
-    username: username,
+  document.querySelector('.submit-button').addEventListener('click', () => {
+
+    const answers:Answer[] = Array.from(document.querySelectorAll('.form-answer')).map((el:HTMLInputElement) => {
+      return <Answer>{
+        value: el.value,
+        name: el.getAttribute('data-name'),
+      }
+    })
+
+    const submission = <Submission>{
+      uuid: uuidv4(),
+      formUuid: form.uuid,
+      created: new Date(),
+      answers,
+    }
+    console.debug('submit', submission)
+    // submit()
   })
-  return form
 }
