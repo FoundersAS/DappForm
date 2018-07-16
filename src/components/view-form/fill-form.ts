@@ -1,5 +1,6 @@
 import { render, html } from '../../../node_modules/lit-html/src/lit-html'
 import { Answer, Form, Submission } from '../../form-format'
+import Store from '../../store'
 const {blockstack} = window as any
 const uuidv4 = require('../../../node_modules/uuid/v4')
 
@@ -10,6 +11,9 @@ export async function update () {
   const author = url.searchParams.get('author')
   const formId = url.searchParams.get('form-id')
   const app = location.origin
+
+  const submission:Submission = Store.store.routeParams.submission
+  const viewMode = (submission !== undefined)
 
   let form:Form
 
@@ -51,7 +55,7 @@ export async function update () {
     return html`
 <div class="cell medium-12">
     <label>${q.label}</label>
-    <input type=${q.type} class="form-answer" data-name="${q.name}" ${disabled}>
+    <input type=${q.type} class="form-answer" data-name="${q.name}" ${viewMode ? 'disabled' : ''} value="${viewMode ? '123' : ''}">
 </div>`
   })
 
