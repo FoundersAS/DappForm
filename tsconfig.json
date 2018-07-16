@@ -3,7 +3,7 @@
     "module": "es6",
     "target": "es2017",
     "noImplicitAny": true,
-    "noEmitOnError": true
+    "noEmitOnError": false
   },
   "exclude": [
     "node_modules"
