@@ -6,7 +6,8 @@
   "scripts": {
     "serve": "node node_modules/http-server/bin/http-server --cors -o",
     "build": "webpack",
-    "develop": "webpack --watch"
+    "develop": "webpack --watch",
+    "publish": "git add dist; git commit -m build; git push; open http://dappform.takectrl.io"
   },
   "author": "",
   "license": "ISC",
