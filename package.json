@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "node node_modules/http-server/bin/http-server --cors -o"
+    "serve": "node node_modules/http-server/bin/http-server --cors -o",
+    "build": "webpack",
+    "develop": "webpack --watch"
   },
   "author": "",
   "license": "ISC",
