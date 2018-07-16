@@ -12,6 +12,11 @@ HTTP server `npm i -g http-server`
 
 ## Development
 
-Use `npm run serve` for convenience or start any web server with CORS hax enabled eg. `http-server --cors`
+`npm run serve` for convenience, otherwise you can start any web server with CORS enabled eg. `http-server --cors`
 
-Launch webpack `webpack --watch`
+`npm run develop` equivalent to `webpack --watch`
+
+
+## Deployment
+
+`npm run publish` to push content to github pages.
