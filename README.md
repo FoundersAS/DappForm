@@ -1,11 +1,17 @@
 # DappForm
 
+
 ## Installation
 
-`npm install -g webpack webpack-cli` (sudo if you get something like `Error: EACCES: permission denied...`)
+`npm install` to download code dependencies.
+
+`npm install -g webpack webpack-cli` (use `sudo` if you get something like `Error: EACCES: permission denied...`)
+
+HTTP server `npm i -g http-server`
+
 
 ## Development
 
-Start any web server with CORS hax eg. `http-server --cors` or use `npm run serve` for convenience.
+Use `npm run serve` for convenience or start any web server with CORS hax enabled eg. `http-server --cors`
 
-Then launch webpack `webpack --watch`
+Launch webpack `webpack --watch`
