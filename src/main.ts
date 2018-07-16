@@ -1,27 +1,14 @@
-
-import { fetchForms } from './components/list-forms/list-forms'
 import Store from './store'
 import { encryptForm } from './util/crypto'
+import { Route } from './components/router'
 
 const {blockstack} = window as any
 
-async function main () {
-  const name = 'tmp/' + 'junk' + new Date().getTime()
-  // await putFile(name, {random: Math.random()})
-  // console.log('Wrote some junk!')
-  //
-  // const retrieved = await getFile(name)
-  // console.log('got', retrieved)
-  //
-  // addForm('test')
+function main () {
+  Store.setRouteAction( parseInt(sessionStorage.route, 10) || Route.Login )
 
-  // document.addEventListener('DOMContentLoaded', () => {
-  //   console.debug("onload")
-  // fetchNewSubmissionsUpdate()
-  const forms = await fetchForms()
-  Store.setFormsAction(forms)
-  console.debug(forms)
-  // })
+  // nav
+  document.querySelector('.nav-item-list').addEventListener('click', () => Store.setRouteAction(Route.FormsList))
 }
 
 async function upload () {
@@ -63,21 +50,4 @@ async function upload () {
 
 // side effects
 
-if (blockstack.isUserSignedIn()) {
-  // const userData = blockstack.loadUserData()
-  // const user = new blockstack.Person(this.userData.profile)
-  // const user.username = this.userData.username
-  main()
-}
-else if (blockstack.isSignInPending()) {
-  blockstack.handlePendingSignIn()
-    .then((userData: any) => {
-      console.log('signed in!')
-      console.log(userData)
-      window.location.reload()
-    })
-    .catch((err:any) => console.error(err))
-}
-else {
-  blockstack.redirectToSignIn()
-}
+main()

@@ -1,5 +1,6 @@
 import { update as listUpdate } from './components/list-forms/list-forms'
-
+import { persist, Route, update as routeUpdate } from './components/router'
+const {blockstack} = window as any
 type Dict = {[k: string]: any}
 type RODict = Readonly<{[k: string]: Readonly<Dict>}>
 
@@ -10,6 +11,7 @@ export default class Store {
 
   private static _store = <Dict>{ // default state
     forms: [],
+    route: Route.Login,
   }
 
   static get store():Readonly<RODict> {
@@ -30,9 +32,23 @@ export default class Store {
     }
     Store.callReducers(Store.setFormsAction)
   }
+
+  static setRouteAction(value:Route, routeParams:Object = {}) {
+    if (!blockstack.isUserSignedIn()) { // simple redirect if user not logged in
+      value = Route.Login
+    }
+    this._store.route = value
+    this._store.routeParams = routeParams
+    Store.callReducers(Store.setRouteAction)
+  }
 }
 
 // glue together actions and reducers
 Store.reducers.set(Store.setFormsAction, new Set([
   listUpdate,
+]))
+
+Store.reducers.set(Store.setRouteAction, new Set([
+  routeUpdate,
+  persist,
 ]))

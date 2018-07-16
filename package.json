@@ -13,6 +13,7 @@
     "bitcoinjs-lib": "^3.3.2",
     "blockstack": "^17.2.0",
     "elliptic": "^6.4.0",
+    "foundation-sites": "^6.5.0-rc.2",
     "lit-html": "^0.10.2",
     "nano-sql": "^1.7.0",
     "nano-trivial": "git+https://github.com/FoundersAS/nano-trival.git",
