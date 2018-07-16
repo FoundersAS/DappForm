@@ -3,6 +3,8 @@ import Store from '../../store'
 import { render, html } from '../../../node_modules/lit-html/src/lit-html'
 const {blockstack} = window as any
 
+const clickHandlers = new WeakSet<Element>()
+
 export function update() {
   const el = document.querySelector('login')
 
@@ -11,15 +13,17 @@ export function update() {
 `
   render(tpl, el)
 
+  if (!clickHandlers.has(el)) {
+    document.querySelector('.login-button').addEventListener('click', (evt) => {
+      (evt.target as HTMLButtonElement).disabled = true
+      blockstackLogin();
+    })
+  }
+
 }
 
-function init () {
-  update()
-
-  document.querySelector('.login-button').addEventListener('click', (evt) => {
-    (evt.target as HTMLButtonElement).disabled = true
-    blockstackLogin();
-  })
+export function blockstackSignout () {
+  blockstack.signUserOut(location.origin)
 }
 
 function blockstackLogin () {
@@ -37,7 +41,10 @@ function blockstackLogin () {
       .catch(console.warn)
   }
   else {
-    blockstack.redirectToSignIn()
+    blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
+      'store_write',
+      'publish_data',
+    ])
   }
 }
 
