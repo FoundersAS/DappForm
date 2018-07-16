@@ -43583,12 +43583,13 @@ function addEventListeners() {
 /*!***************************************!*\
   !*** ./src/components/login/login.ts ***!
   \***************************************/
-/*! exports provided: update */
+/*! exports provided: update, blockstackSignout */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockstackSignout", function() { return blockstackSignout; });
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
 /* harmony import */ var _node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/lit-html/src/lit-html */ "./node_modules/lit-html/src/lit-html.ts");
@@ -43596,19 +43597,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const { blockstack } = window;
+const clickHandlers = new WeakSet();
 function update() {
     const el = document.querySelector('login');
     const tpl = _node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_2__["html"] `<h1>Login</h1>
     <button type="button" class="login-button button">Blockstack</button>
 `;
     Object(_node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_2__["render"])(tpl, el);
+    if (!clickHandlers.has(el)) {
+        document.querySelector('.login-button').addEventListener('click', (evt) => {
+            evt.target.disabled = true;
+            blockstackLogin();
+        });
+    }
 }
-function init() {
-    update();
-    document.querySelector('.login-button').addEventListener('click', (evt) => {
-        evt.target.disabled = true;
-        blockstackLogin();
-    });
+function blockstackSignout() {
+    blockstack.signUserOut(location.origin);
 }
 function blockstackLogin() {
     if (blockstack.isUserSignedIn()) {
@@ -43625,7 +43629,10 @@ function blockstackLogin() {
             .catch(console.warn);
     }
     else {
-        blockstack.redirectToSignIn();
+        blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
+            'store_write',
+            'publish_data',
+        ]);
     }
 }
 
@@ -43648,6 +43655,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _login_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./login/login */ "./src/components/login/login.ts");
 /* harmony import */ var _list_forms_list_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./list-forms/list-forms */ "./src/components/list-forms/list-forms.ts");
 /* harmony import */ var _view_form_view_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view-form/view-form */ "./src/components/view-form/view-form.ts");
+/* harmony import */ var _view_form_fill_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view-form/fill-form */ "./src/components/view-form/fill-form.ts");
+
 
 
 
@@ -43657,30 +43666,34 @@ var Route;
     Route[Route["Login"] = 1] = "Login";
     Route[Route["FormView"] = 2] = "FormView";
     Route[Route["FormsList"] = 3] = "FormsList";
+    Route[Route["Fill"] = 4] = "Fill";
 })(Route || (Route = {}));
 const map = new Map([
     [Route.Login, `<login></login>`],
     [Route.FormView, `<forms-view></forms-view>`],
     [Route.FormsList, `<forms-list></forms-list>`],
+    [Route.Fill, `<fill-form></fill-form>`],
 ]);
 const viewInitMap = new Map([
     [Route.Login, _login_login__WEBPACK_IMPORTED_MODULE_1__["update"]],
     [Route.FormsList, _list_forms_list_forms__WEBPACK_IMPORTED_MODULE_2__["init"]],
     [Route.FormView, _view_form_view_form__WEBPACK_IMPORTED_MODULE_3__["update"]],
+    [Route.Fill, _view_form_fill_form__WEBPACK_IMPORTED_MODULE_4__["update"]],
 ]);
 let lastRoute = -1;
 function update() {
     const el = document.querySelector('router');
     console.assert(!!el);
-    const currentRoute = _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route;
+    let currentRoute = _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route;
+    if (location.toString().includes('form-id')) {
+        currentRoute = Route.Fill;
+    }
     if (lastRoute !== currentRoute) {
         const tpl = map.get(currentRoute) || `View ${Route[currentRoute]} doesn't exist`;
         el.innerHTML = tpl;
-        console.log(lastRoute, '=>', currentRoute);
+        localStorage.debug && console.debug(lastRoute, '=>', currentRoute);
         const initFunc = viewInitMap.get(currentRoute);
-        if (initFunc) {
-            initFunc();
-        }
+        initFunc();
         lastRoute = currentRoute;
     }
 }
@@ -43688,6 +43701,55 @@ function persist() {
     if (Route[_store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route]) {
         sessionStorage.route = _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route;
     }
+}
+
+
+/***/ }),
+
+/***/ "./src/components/view-form/fill-form.ts":
+/*!***********************************************!*\
+  !*** ./src/components/view-form/fill-form.ts ***!
+  \***********************************************/
+/*! exports provided: update */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony import */ var _node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/src/lit-html */ "./node_modules/lit-html/src/lit-html.ts");
+
+const { blockstack } = window;
+async function update() {
+    const el = document.querySelector('fill-form');
+    const url = new URL(location.toString());
+    const author = url.searchParams.get('author');
+    const formId = url.searchParams.get('form-id');
+    const app = location.origin;
+    let form;
+    if (author && formId) {
+        // const form = await see(formId, author)
+        const pathToPublicForm = await blockstack.getUserAppFileUrl(`forms/${formId}.json`, author, app);
+        const res = await fetch(pathToPublicForm, {
+            mode: 'cors'
+        });
+        const json = await res.json();
+        // make view model
+        form = json;
+    }
+    const tpl = _node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_0__["html"] `
+    <h3>Fill in form</h3>
+    <pre>${form ? JSON.stringify(form, null, 2) : "Not found"}</pre>
+`;
+    Object(_node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
+}
+// works for loggedin users
+async function see(formID, username) {
+    const form = await blockstack.getFile(`forms/${formID}.json`, {
+        app: location.origin,
+        decrypt: false,
+        username: username,
+    });
+    return form;
 }
 
 
@@ -43707,14 +43769,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
 
 
+const { blockstack } = window;
 function update() {
     const el = document.querySelector('forms-view');
     const id = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.formId;
+    const username = blockstack.loadUserData().username;
+    const shareURL = new URL(location.origin);
+    shareURL.searchParams.append(`author`, username);
+    shareURL.searchParams.append(`form-id`, id);
     const tpl = _node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_0__["html"] `
-<h3>View form ${id}</h3>
+    <h3>View form</h3>
+    <p>Share URL <br>
+    <code>${shareURL}</code></p>
 `;
     Object(_node_modules_lit_html_src_lit_html__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
-    console.debug(el);
 }
 
 
@@ -43732,6 +43800,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./src/store.ts");
 /* harmony import */ var _util_crypto__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/crypto */ "./src/util/crypto.ts");
 /* harmony import */ var _components_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/router */ "./src/components/router.ts");
+/* harmony import */ var _components_login_login__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/login/login */ "./src/components/login/login.ts");
+
 
 
 
@@ -43740,8 +43810,9 @@ function main() {
     _store__WEBPACK_IMPORTED_MODULE_0__["default"].setRouteAction(parseInt(sessionStorage.route, 10) || _components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Login);
     // nav
     document.querySelector('.nav-item-list').addEventListener('click', () => _store__WEBPACK_IMPORTED_MODULE_0__["default"].setRouteAction(_components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormsList));
+    document.querySelector('.button-signout').addEventListener('click', () => Object(_components_login_login__WEBPACK_IMPORTED_MODULE_3__["blockstackSignout"])());
 }
-async function upload() {
+async function uploadEncrypt() {
     console.assert(blockstack.isUserSignedIn(), "User is not logged id");
     // const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
     const recipientPubKey = '0304eb59f9d33acdc46825c160405b1154ccabfff226fb777e4ce5df4c8f8cacd4';
@@ -43772,8 +43843,29 @@ async function upload() {
     }
     console.debug(res1);
 }
-window.upload = upload;
-// upload()
+window.upload = uploadEncrypt;
+async function uploadShare() {
+    console.assert(blockstack.isUserSignedIn(), "User is not logged id");
+    const authorPubkey = blockstack.getPublicKeyFromPrivate(blockstack.loadUserData().appPrivateKey);
+    const recipientPubKey = '0304eb59f9d33acdc46825c160405b1154ccabfff226fb777e4ce5df4c8f8cacd4';
+    const quickForm = {
+        id: 43,
+        name: "The real questions.",
+        questions: [
+            { label: "Do you like privacy?" },
+        ],
+        submissions: [],
+    };
+    // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
+    // await putFile(`forms/${quickForm.id}.json`, quickForm)
+    await blockstack.putFile(`forms/${quickForm.id}.json`, JSON.stringify(quickForm), { encrypt: false });
+    // Object.values(blockstack.loadUserData().profile.apps)[0]
+    // lookupProfile
+    // target to find: https://gaia.blockstack.org/hub/14ktrFjBTrQhmvZYdEgVZPEvceo6uKiyLZ/forms/43.json
+    // where the hash is the app public address
+    console.debug(`did put stuff`);
+}
+window.share = uploadShare;
 // side effects
 main();
 
