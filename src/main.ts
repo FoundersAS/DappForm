@@ -2,6 +2,7 @@ import Store from './store'
 import { encryptForm } from './util/crypto'
 import { Route } from './components/router'
 import { blockstackSignout } from './components/login/login'
+import { generateHeaders } from './util/bench'
 
 const {blockstack} = window as any
 
@@ -11,6 +12,9 @@ function main () {
   // nav
   document.querySelector('.nav-item-list').addEventListener('click', () => Store.setRouteAction(Route.FormsList))
   document.querySelector('.button-signout').addEventListener('click', () => blockstackSignout())
+
+  const submissionWorker = new Worker('src/workers/submission-worker.js')
+  submissionWorker.postMessage({'test': 'hello'})
 }
 
 async function uploadEncrypt () {
