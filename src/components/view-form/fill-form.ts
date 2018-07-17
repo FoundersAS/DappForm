@@ -1,8 +1,10 @@
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission } from '../../form-format'
 import Store from '../../store'
+import { create } from '../list-forms/list-forms'
 const {blockstack} = window as any
 const uuidv4 = require('../../../node_modules/uuid/v4')
+import { encryptForm } from '../../util/crypto'
 
 export async function update () {
   const el = document.querySelector('fill-form')
@@ -26,53 +28,26 @@ export async function update () {
     // make view model
     form = json
   }
-
-  // form = <Form>{
-  //   uuid: uuidv4(),
-  //   name: 'A safe survey',
-  //   created: new Date(),
-  //   modified: new Date(),
-  //   introText: 'The tough questions',
-  //   confirmationText: 'Thanks a bunch!',
-  //   questions: [{
-  //       uuid: uuidv4(),
-  //       name: 'Do you trust typeform now?',
-  //       label: 'Do you trust typeform now?',
-  //       type: 'text',
-  //     },
-  //     {
-  //       uuid: uuidv4(),
-  //       name: 'Ok how about now?',
-  //       label: 'Ok how about now?',
-  //       type: 'text',
-  //     }
-  //   ],
-  // }
-
-  const collectAnswers = () => {
-    const answers:Answer[] = Array.from(document.querySelectorAll('.form-answer')).map((el:HTMLInputElement) => {
-      return <Answer>{
-        value: el.value,
-        name: el.getAttribute('data-name'),
-      }
-    })
-
-    const submission = <Submission>{
-      uuid: uuidv4(),
-      formUuid: form.uuid,
-      created: new Date(),
-      answers,
-    }
-    console.debug('submit', submission)
+  else if (submission) {
+    form = Store.store.forms.find(f => f.uuid === submission.formUuid)
   }
 
   const questions = ((!form) ? [] : form.questions).map(q => {
     return html`
 <div class="cell medium-12">
     <label>${q.label}</label>
-    <input type=${q.type} class="form-answer" data-name="${q.name}" value="">
+    <input type=${q.type} class="form-answer" data-question-uuid="${q.uuid}" data-name="${q.name}" value="">
 </div>`
   })
+
+  const submit = async (evt:Event) => {
+    (evt.target as HTMLButtonElement).disabled = true
+    const submission = collectAnswers()
+    submission.formUuid = form.uuid
+    console.debug("to submit",submission)
+    const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey ) // be visible to me self!! YArrrrg
+    await uploadEncrypt(authorPubkey, submission)
+  }
 
   const tpl = html`
 <h2>${form.name}</h2>    
@@ -81,10 +56,63 @@ export async function update () {
     ${questions}
     
     <div class="cell small-12">
-        <button type="button" class="button submit-button" on-click="${()=>collectAnswers()}">Submit</button>
+        <button type="button" class="button submit-button" on-click="${(evt:any)=>submit(evt)}">Submit</button>
     </div>
 </form>
+
+<p>Submissions:</p>
+<pre>${JSON.stringify(submission,null,2)}</pre>
 `
 
   render(tpl, el)
+
+  if (submission) {
+    // fill out
+  }
+}
+
+function collectAnswers () {
+  const answers:Answer[] = Array.from(document.querySelectorAll('.form-answer')).map((el:HTMLInputElement) => {
+    return <Answer>{
+      value: el.value,
+      name: el.getAttribute('data-name'),
+      questionUuid: el.getAttribute('data-question-uuid'),
+    }
+  })
+
+  const submission = <Submission>{
+    uuid: uuidv4(),
+    created: new Date(),
+    answers,
+  }
+
+  return submission
+}
+
+async function uploadEncrypt (recipientPubKey:string, quickForm:Object) {
+  try {
+    await create()
+  }
+  catch (e) {
+    console.error('err creating', e)
+  }
+
+  // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
+  const cipherObj = encryptForm(recipientPubKey, quickForm)
+  const body = {
+    data: cipherObj,
+    key: recipientPubKey,
+  }
+
+  const res1 = await fetch('https://bench.takectrl.io/', {
+    method: 'POST',
+    body: JSON.stringify(body),
+    mode: 'cors',
+    headers: {
+      'Content-Type': "application/json",
+    }
+  })
+  if (res1.status !== 200) {
+    throw new Error('failed upload')
+  }
 }

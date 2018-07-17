@@ -1,10 +1,53 @@
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
-import { Submission } from '../../form-format'
+import { Form, Submission } from '../../form-format'
 import { Route } from '../router'
+import { decryptForm, signMessage } from '../../util/crypto'
 const {blockstack} = window as any
 
-export function update () {
+async function fetchSubmissions():Promise<Submission[]> {
+  const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
+
+  const signature = signMessage('/get', blockstack.loadUserData().appPrivateKey)
+  const derSign = signature.toDER();
+  const sigHeader = JSON.stringify(derSign)
+
+  const res = await fetch('https://bench.takectrl.io/get', {
+    mode: 'cors',
+    headers: {
+      'x-ctrl-key': authorPubkey,
+      'x-ctrl-signature': sigHeader,
+    }
+  })
+  if (res.status === 200) {
+    const json = await res.json()
+    console.debug(json)
+    const decrypted = json
+      .map((entry:any) => entry.data)
+      .filter((cipherObj:any) => typeof cipherObj === "object")
+      .filter((cipherObj:any) => !!cipherObj.cipherText)
+      .filter((cipherObj:any) => Object.keys(cipherObj).length > 0)
+      .map((cipherObj:any) => decryptForm(cipherObj))
+
+    const failed = decrypted.filter((form:any) => !form)
+
+    if (failed.length > 0) {
+      console.info("Failed to decrypt:")
+      console.info(failed)
+    }
+
+    const successfullyDecrypted = decrypted
+      .filter((form:any) => !!form)
+      .map((form:any) => JSON.parse(form))
+
+    return successfullyDecrypted
+  }
+  throw new Error("Failed getting forms")
+}
+
+const submissions = <Submission[]>[]
+
+export function update (fetch:boolean = true) {
   const el = document.querySelector('forms-view')
   const id = Store.store.routeParams.formId
 
@@ -14,27 +57,30 @@ export function update () {
   shareURL.searchParams.append(`author`, username)
   shareURL.searchParams.append(`form-id`, id)
 
-  const submissions = <Submission[]>[{
-    formUuid: `123`,
-    uuid: `123`,
-    created: new Date(),
-    answers: [{}, {}]
-  }]
+  if (fetch) {
+    fetchSubmissions().then(ss => {
+      console.log(ss)
+      ss.forEach(s => submissions.push(s))
+      console.debug(submissions)
+      update(false)
+    })
+  }
 
-  const goToForm = (formId: string, submissionId: string) => {
-    Store.setRouteAction(Route.Fill, {formId: formId, submission: submissions.find(s => s.uuid === submissionId)})
+  const seeSubmissions = (formId: string, submissionId: string) => {
+    Store.setRouteAction(Route.Fill, {submission: submissions.find(s => s.uuid === submissionId)})
   }
 
   const submissionsListTpl = submissions
-    .sort(((a, b) => a.created.getTime() - b.created.getTime()))
     .map(submission => {
       return html`<div class="grid-x">
-        <div class="cell auto">Submitted on ${submission.created.toDateString()}</div> 
+        <div class="cell auto">Submitted on ${submission.created}</div> 
         <div class="cell shrink">
-          <button class="clear button link" on-click="${() => goToForm(submission.formUuid, submission.uuid)}">View submission</button>
+          <button class="clear button link" on-click="${() => seeSubmissions(submission.formUuid, submission.uuid)}">View submission</button>
         </div>
     </div>`
     })
+
+  console.debug(submissionsListTpl, submissions)
 
   const tpl = html`
     <h3>Form dashboard</h3>

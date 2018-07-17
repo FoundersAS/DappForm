@@ -22,43 +22,6 @@ export async function create() {
   }
 }
 
-async function fetchSubmissions():Promise<Form[]> {
-  const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
-
-  const signature = signMessage('/get', blockstack.loadUserData().appPrivateKey)
-  const derSign = signature.toDER();
-  const sigHeader = JSON.stringify(derSign)
-
-  const res = await fetch('https://bench.takectrl.io/get', {
-    mode: 'cors',
-    headers: {
-      'x-ctrl-key': authorPubkey,
-      'x-ctrl-signature': sigHeader,
-    }
-  })
-  if (res.status === 200) {
-    const json = await res.json()
-
-    const decrypted = json
-      .map((entry:any) => entry.data)
-      .filter((cipherObj:any) => typeof cipherObj === "object")
-      .filter((cipherObj:any) => !!cipherObj.cipherText)
-      .filter((cipherObj:any) => Object.keys(cipherObj).length > 0)
-      .map((cipherObj:any) => decryptForm(cipherObj))
-
-    const failed = decrypted.filter((form:any) => !form)
-
-    console.info("Failed:")
-    console.info(failed)
-
-    const successfullyDecrypted = decrypted
-      .filter((form:any) => !!form)
-      .map((form:any) => JSON.parse(form))
-    return successfullyDecrypted
-  }
-  throw new Error("Failed getting forms")
-}
-
 const formsListRemoteFile = 'forms.json'
 
 async function getList ():Promise<Partial<Form>[]> {
@@ -136,9 +99,4 @@ ${formsListTpl}
 `
   const el:HTMLElement = document.querySelector('forms-list')
   render(tpl, el)
-}
-
-(window as any).fetchFromBench = async () => {
-  const forms = await fetchSubmissions()
-  Store.setFormsAction(forms)
 }
