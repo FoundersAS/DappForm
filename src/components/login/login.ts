@@ -1,25 +1,20 @@
 import { Route } from '../router'
 import Store from '../../store'
-import { render, html } from '../../../node_modules/lit-html/src/lit-html'
+import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 const {blockstack} = window as any
-
-const clickHandlers = new WeakSet<Element>()
 
 export function update() {
   const el = document.querySelector('login')
 
-  const tpl = html`<h1>Login</h1>
-    <button type="button" class="login-button button">Blockstack</button>
-`
-  render(tpl, el)
-
-  if (!clickHandlers.has(el)) {
-    document.querySelector('.login-button').addEventListener('click', (evt) => {
-      (evt.target as HTMLButtonElement).disabled = true
-      blockstackLogin();
-    })
+  const login = (evt:Event) => {
+    (evt.target as HTMLButtonElement).disabled = true
+    blockstackLogin()
   }
 
+  const tpl = html`<h1>Login</h1>
+    <button on-click="${(evt:Event) => login(evt)}" type="button" class="login-button button large">Blockstack</button>
+`
+  render(tpl, el)
 }
 
 export function blockstackSignout () {

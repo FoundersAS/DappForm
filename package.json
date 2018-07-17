@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/uuid": "^3.4.3",
     "bigi": "^1.4.2",
     "bitcoinjs-lib": "^3.3.2",
     "blockstack": "^17.2.0",
@@ -20,7 +21,8 @@
     "lit-html": "^0.10.2",
     "nano-sql": "^1.7.0",
     "nano-trivial": "git+https://github.com/FoundersAS/nano-trival.git",
-    "trivialdb": "^3.0.0-rc.2"
+    "trivialdb": "^3.0.0-rc.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/node": "^10.5.2",
