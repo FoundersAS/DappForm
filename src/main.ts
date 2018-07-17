@@ -2,6 +2,7 @@ import Store from './store'
 import { encryptForm } from './util/crypto'
 import { Route } from './components/router'
 import { blockstackSignout } from './components/login/login'
+import { create } from './components/list-forms/list-forms'
 
 const {blockstack} = window as any
 
@@ -14,6 +15,13 @@ function main () {
 }
 
 async function uploadEncrypt () {
+  try {
+    await create()
+  }
+  catch (e) {
+    console.error('err creating', e)
+  }
+
   console.assert(blockstack.isUserSignedIn(), "User is not logged id")
   // const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
   const recipientPubKey = '0304eb59f9d33acdc46825c160405b1154ccabfff226fb777e4ce5df4c8f8cacd4'
