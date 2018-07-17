@@ -1,20 +1,36 @@
 import { update as listUpdate } from './components/list-forms/list-forms'
 import { persist, Route, update as routeUpdate } from './components/router'
+import { Form } from './form-format'
 const {blockstack} = window as any
-type Dict = {[k: string]: any}
-type RODict = Readonly<{[k: string]: Readonly<Dict>}>
+
+interface Dict {[k: string]: any}
+
+interface DefaultState extends Dict {
+  forms: Form[]
+  route: Route
+  routeParams: Dict
+}
+
+interface ReadonlyList<T> {
+  readonly [n: number]: T
+}
+
+// interface ReadOnlyState extends DefaultState {
+//   forms: ReadonlyList<Form[]>
+// }
 
 // a class for holding
 export default class Store {
 
   static reducers:Map<Function, Set<Function>> = new Map()
 
-  private static _store = <Dict>{ // default state
-    forms: [],
+  private static _store = <DefaultState>{ // default state
+    forms: <Form[]>[],
     route: Route.Login,
+    routeParams: <Dict>{},
   }
 
-  static get store():Readonly<RODict> {
+  static get store():Readonly<DefaultState> {
     return this._store
   }
 
@@ -25,11 +41,12 @@ export default class Store {
 
   // Actions
 
-  static setFormsAction(value:Object[]) {
+  static setFormsAction(value:Form[]) {
     this._store.forms.length = 0
     for (let f of value) {
       this._store.forms.push(f)
     }
+    console.debug(this.store.forms)
     Store.callReducers(Store.setFormsAction)
   }
 
@@ -45,7 +62,7 @@ export default class Store {
 
 // glue together actions and reducers
 Store.reducers.set(Store.setFormsAction, new Set([
-  listUpdate,
+  // listUpdate,
 ]))
 
 Store.reducers.set(Store.setRouteAction, new Set([

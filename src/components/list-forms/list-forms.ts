@@ -22,7 +22,7 @@ export async function create() {
   }
 }
 
-export async function fetchForms():Promise<Array<Object>> {
+async function fetchSubmissions():Promise<Form[]> {
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
 
   const signature = signMessage('/get', blockstack.loadUserData().appPrivateKey)
@@ -63,11 +63,12 @@ export function update () {
   const {forms} = Store.store
 
   // test test
-  forms.length === 0 && forms.push(<Form>{
+  sessionStorage.data && forms.length === 0 && forms.push(<Form>{
     created: new Date(),
     name: "The hard questions,",
     uuid: '123',
-    }, {
+    },
+    <Form>{
     created: new Date(),
     name: "Typeform tilfredshedsundersøgelse",
     uuid: '234',
@@ -75,7 +76,9 @@ export function update () {
 
   const formsList:Form[] = forms as any // convert to view model
 
-  const formsListTpl = formsList.map(form => html`
+  const formsListTpl = formsList
+    .sort((a, b) => a.created.getTime() - b.created.getTime())
+    .map(form => html`
 <div class="grid-x">
   <div class="cell auto">
       ${form.name}
@@ -99,6 +102,6 @@ ${formsListTpl}
 }
 
 (window as any).fetchFromBench = async () => {
-  const forms = await fetchForms()
+  const forms = await fetchSubmissions()
   Store.setFormsAction(forms)
 }
