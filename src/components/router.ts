@@ -1,6 +1,6 @@
 import Store from '../store'
 import { update as loginInit } from './login/login'
-import { init as listInit } from './list-forms/list-forms'
+import { update as listInit } from './list-forms/list-forms'
 import { update as viewFormInit } from './view-form/view-form'
 import { update as fillInit } from './view-form/fill-form'
 

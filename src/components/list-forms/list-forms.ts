@@ -1,7 +1,8 @@
-import { html, render } from '../../../node_modules/lit-html/src/lit-html'
+import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { decryptForm, signMessage } from '../../util/crypto'
 import Store from '../../store'
 import { Route } from '../router'
+import { Form } from '../../form-format'
 
 const {blockstack} = window as any
 
@@ -22,12 +23,6 @@ export async function create() {
 }
 
 export async function fetchForms():Promise<Array<Object>> {
-  try {
-    await create()
-  }
-  catch (e) {
-    console.error('err creating', e)
-  }
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
 
   const signature = signMessage('/get', blockstack.loadUserData().appPrivateKey)
@@ -67,48 +62,43 @@ export async function fetchForms():Promise<Array<Object>> {
 export function update () {
   const {forms} = Store.store
 
-  const formsList = forms // convert to view model
-  const tpl = html`
-<h3>Forms</h3>
-<button class="fetch-submissions button" type="button">Fetch latest</button>   
-<div>
-    ${formsList.map((form:any) => html`<pre>${JSON.stringify(form, null, 2)}</pre>
-    <button data-form-id="${form.id}" class="clear button">View</button>`)}
+  // test test
+  forms.length === 0 && forms.push(<Form>{
+    created: new Date(),
+    name: "The hard questions,",
+    uuid: '123',
+    }, {
+    created: new Date(),
+    name: "Typeform tilfredshedsundersøgelse",
+    uuid: '234',
+  })
+
+  const formsList:Form[] = forms as any // convert to view model
+
+  const formsListTpl = formsList.map(form => html`
+<div class="grid-x">
+  <div class="cell auto">
+      ${form.name}
+  </div>
+  <div class="cell auto">
+      ${form.created.toUTCString()}
+  </div>
+  <div class="cell shrink">
+      <button class="clear button link" on-click="${() => Store.setRouteAction(Route.FormView, {formId: form.uuid}) }">View</button>
+  </div>
 </div>
+`)
+
+  const tpl = html`
+<h3>Your forms (${forms.length})</h3>
+   
+${formsListTpl}
 `
   const el:HTMLElement = document.querySelector('forms-list')
   render(tpl, el)
-
-  addEventListeners()
 }
 
-export function init () {
-  update()
-}
-
-const clickHandlers = new WeakSet()
-
-function addEventListeners () {
-  const fetchBtn = document.querySelector('.fetch-submissions')
-  if (!clickHandlers.has(fetchBtn)) {
-    clickHandlers.add(fetchBtn)
-    document.querySelector('.fetch-submissions').addEventListener('click', async () => {
-      const forms = await fetchForms()
-      Store.setFormsAction(forms)
-    })
-  }
-
-  Array.from(document.querySelectorAll('button[data-form-id]')).forEach((btn:HTMLElement) => {
-    if (clickHandlers.has(btn)) return
-    clickHandlers.add(btn)
-    btn.addEventListener('click',
-    evt =>
-      Store.setRouteAction(Route.FormView, {formId: (evt.target as HTMLElement).getAttribute('data-form-id')})
-    )
-  })
-}
-
-type Component = {
-  init: Function,
-  update: Function
+(window as any).fetchFromBench = async () => {
+  const forms = await fetchForms()
+  Store.setFormsAction(forms)
 }

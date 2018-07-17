@@ -1,4 +1,4 @@
-import { render, html } from '../../../node_modules/lit-html/src/lit-html'
+import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission } from '../../form-format'
 import Store from '../../store'
 const {blockstack} = window as any
@@ -13,7 +13,6 @@ export async function update () {
   const app = location.origin
 
   const submission:Submission = Store.store.routeParams.submission
-  const viewMode = (submission !== undefined)
 
   let form:Form
 
@@ -28,53 +27,29 @@ export async function update () {
     form = json
   }
 
-  form = <Form>{
-    uuid: uuidv4(),
-    name: 'A safe survey',
-    created: new Date(),
-    modified: new Date(),
-    introText: 'The tough questions',
-    confirmationText: 'Thanks a bunch!',
-    questions: [{
-        uuid: uuidv4(),
-        name: 'Do you trust typeform now?',
-        label: 'Do you trust typeform now?',
-        type: 'text',
-      },
-      {
-        uuid: uuidv4(),
-        name: 'Ok how about now?',
-        label: 'Ok how about now?',
-        type: 'text',
-      }
-    ],
-  }
+  // form = <Form>{
+  //   uuid: uuidv4(),
+  //   name: 'A safe survey',
+  //   created: new Date(),
+  //   modified: new Date(),
+  //   introText: 'The tough questions',
+  //   confirmationText: 'Thanks a bunch!',
+  //   questions: [{
+  //       uuid: uuidv4(),
+  //       name: 'Do you trust typeform now?',
+  //       label: 'Do you trust typeform now?',
+  //       type: 'text',
+  //     },
+  //     {
+  //       uuid: uuidv4(),
+  //       name: 'Ok how about now?',
+  //       label: 'Ok how about now?',
+  //       type: 'text',
+  //     }
+  //   ],
+  // }
 
-  const questions = form.questions.map(q => {
-    const disabled = 'disabled'
-    return html`
-<div class="cell medium-12">
-    <label>${q.label}</label>
-    <input type=${q.type} class="form-answer" data-name="${q.name}" ${viewMode ? 'disabled' : ''} value="${viewMode ? '123' : ''}">
-</div>`
-  })
-
-  const tpl = html`
-<h2>${form.name}</h2>    
-<h6>${form.introText}</h6>    
-<form class="grid-x">
-    ${questions}
-    
-    <div class="cell small-12">
-        <button type="button" class="button submit-button">Submit</button>
-    </div>
-</form>
-`
-
-  render(tpl, el)
-
-  document.querySelector('.submit-button').addEventListener('click', () => {
-
+  const collectAnswers = () => {
     const answers:Answer[] = Array.from(document.querySelectorAll('.form-answer')).map((el:HTMLInputElement) => {
       return <Answer>{
         value: el.value,
@@ -89,6 +64,27 @@ export async function update () {
       answers,
     }
     console.debug('submit', submission)
-    // submit()
+  }
+
+  const questions = ((!form) ? [] : form.questions).map(q => {
+    return html`
+<div class="cell medium-12">
+    <label>${q.label}</label>
+    <input type=${q.type} class="form-answer" data-name="${q.name}" value="">
+</div>`
   })
+
+  const tpl = html`
+<h2>${form.name}</h2>    
+<h6>${form.introText}</h6>    
+<form class="grid-x grid-margin-y">
+    ${questions}
+    
+    <div class="cell small-12">
+        <button type="button" class="button submit-button" on-click="${()=>collectAnswers()}">Submit</button>
+    </div>
+</form>
+`
+
+  render(tpl, el)
 }
