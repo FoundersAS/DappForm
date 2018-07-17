@@ -1,6 +1,7 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Form, Question } from '../../form-format'
 import Store from '../../store'
+import { Route } from '../router'
 
 const uuidv4 = require('../../../node_modules/uuid/v4')
 const {blockstack} = window as any
@@ -14,9 +15,9 @@ export function update() {
   const save = async (evt:MouseEvent) => {
     (evt.target as HTMLButtonElement).disabled = true
     const newForm = collectForm()
-    console.debug(newForm)
     await uploadShare(newForm)
     Store.setFormsAction([...Store.store.forms, newForm])
+    Store.setRouteAction(Route.FormsList)
   }
 
   const tpl = html`
