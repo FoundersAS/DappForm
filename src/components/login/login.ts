@@ -12,7 +12,7 @@ export function update() {
   }
 
   const tpl = html`<h1>Login</h1>
-    <button on-click="${(evt:Event) => login(evt)}" type="button" class="login-button button">Blockstack</button>
+    <button on-click="${(evt:Event) => login(evt)}" type="button" class="login-button button large">Blockstack</button>
 `
   render(tpl, el)
 }
