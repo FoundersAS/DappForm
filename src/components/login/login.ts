@@ -1,7 +1,7 @@
 import { Route } from '../router'
 import Store from '../../store'
 import { render, html } from '../../../node_modules/lit-html/src/lit-html'
-const {blockstack} = window as any
+const blockstack = require('blockstack')
 
 const clickHandlers = new WeakSet<Element>()
 
@@ -34,6 +34,7 @@ function blockstackLogin () {
     Store.setRouteAction(Route.FormsList)
   }
   else if (blockstack.isSignInPending()) {
+    console.log('pending')
     blockstack.handlePendingSignIn()
       .then(() => {
         Store.setRouteAction(Route.FormsList)

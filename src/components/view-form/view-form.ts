@@ -1,6 +1,6 @@
 import { render, html } from '../../../node_modules/lit-html/src/lit-html'
 import Store from '../../store'
-const {blockstack} = window as any
+const blockstack = require('blockstack')
 
 export function update () {
   const el = document.querySelector('forms-view')

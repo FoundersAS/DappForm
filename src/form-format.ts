@@ -32,3 +32,11 @@ export interface Answer {
   name: string,
   value: string,
 }
+
+export interface SubmissionMap {
+  [key: string]: Submission
+}
+
+export interface FormSubmissionMap {
+  [key: string]: SubmissionMap
+}

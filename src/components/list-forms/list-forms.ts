@@ -1,9 +1,9 @@
 import { html, render } from '../../../node_modules/lit-html/src/lit-html'
-import { decryptForm, signMessage } from '../../util/crypto'
+import { decryptFile, signString } from '../../util/crypto'
 import Store from '../../store'
 import { Route } from '../router'
 
-const {blockstack} = window as any
+const blockstack = require('blockstack')
 
 export async function create() {
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
@@ -30,7 +30,7 @@ export async function fetchForms():Promise<Array<Object>> {
   }
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
 
-  const signature = signMessage('/get', blockstack.loadUserData().appPrivateKey)
+  const signature = signString('/get', blockstack.loadUserData().appPrivateKey)
   const derSign = signature.toDER();
   const sigHeader = JSON.stringify(derSign)
 
@@ -49,7 +49,7 @@ export async function fetchForms():Promise<Array<Object>> {
       .filter((cipherObj:any) => typeof cipherObj === "object")
       .filter((cipherObj:any) => !!cipherObj.cipherText)
       .filter((cipherObj:any) => Object.keys(cipherObj).length > 0)
-      .map((cipherObj:any) => decryptForm(cipherObj))
+      .map((cipherObj:any) => decryptFile(cipherObj))
 
     const failed = decrypted.filter((form:any) => !form)
 
@@ -70,7 +70,7 @@ export function update () {
   const formsList = forms // convert to view model
   const tpl = html`
 <h3>Forms</h3>
-<button class="fetch-submissions button" type="button">Fetch latest</button>   
+<button class="fetch-submissions button" type="button">Fetch latest</button>
 <div>
     ${formsList.map((form:any) => html`<pre>${JSON.stringify(form, null, 2)}</pre>
     <button data-form-id="${form.id}" class="clear button">View</button>`)}

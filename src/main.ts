@@ -1,10 +1,20 @@
+const css = require('./css/style.css')
+
+import {default as SubmissionWorker} from "worker-loader!./workers/submission.worker";
 import Store from './store'
-import { encryptForm } from './util/crypto'
+import { encryptFile } from './util/crypto'
 import { Route } from './components/router'
 import { blockstackSignout } from './components/login/login'
-import { generateHeaders } from './util/bench'
 
-const {blockstack} = window as any
+const blockstack = require('blockstack')
+
+declare global {
+  interface Window { ctrl: any; }
+}
+
+window.ctrl = window.ctrl || {};
+
+window.ctrl.blockstack = blockstack
 
 function main () {
   Store.setRouteAction( parseInt(sessionStorage.route, 10) || Route.Login )
@@ -13,8 +23,26 @@ function main () {
   document.querySelector('.nav-item-list').addEventListener('click', () => Store.setRouteAction(Route.FormsList))
   document.querySelector('.button-signout').addEventListener('click', () => blockstackSignout())
 
-  const submissionWorker = new Worker('src/workers/submission-worker.js')
-  submissionWorker.postMessage({'test': 'hello'})
+  fetchSubmissions()
+}
+
+
+function fetchSubmissions () {
+  const submissionWorker = new SubmissionWorker()
+  submissionWorker.onmessage = function (e: any) {
+    console.log('message from worker: ', e.data)
+  }
+
+  const blockstackData = {
+    blockstack: localStorage.getItem('blockstack'),
+    gaia: localStorage.getItem('blockstack-gaia-hub-config'),
+    key: localStorage.getItem('blockstack-transit-private-key')
+  }
+
+  submissionWorker.postMessage({
+    cmd: 'start',
+    blockstackData
+  })
 }
 
 async function uploadEncrypt () {
@@ -32,7 +60,7 @@ async function uploadEncrypt () {
   }
 
   // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
-  const cipherObj = encryptForm(recipientPubKey, quickForm)
+  const cipherObj = encryptFile(recipientPubKey, quickForm)
   const body = {
     data: cipherObj,
     key: recipientPubKey,

@@ -1,6 +1,7 @@
 import { update as listUpdate } from './components/list-forms/list-forms'
 import { persist, Route, update as routeUpdate } from './components/router'
-const {blockstack} = window as any
+const blockstack = require('blockstack')
+
 type Dict = {[k: string]: any}
 type RODict = Readonly<{[k: string]: Readonly<Dict>}>
 

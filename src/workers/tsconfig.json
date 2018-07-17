@@ -3,10 +3,13 @@
     "module": "es6",
     "target": "es2017",
     "noImplicitAny": true,
-    "noEmitOnError": false
+    "noEmitOnError": false,
+    "lib": [
+      "webworker",
+      "es2017"
+    ]
   },
   "exclude": [
-    "node_modules",
-    "src/workers"
+    "node_modules"
   ]
 }

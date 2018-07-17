@@ -1,5 +1,5 @@
 import { render, html } from '../../../node_modules/lit-html/src/lit-html'
-const {blockstack} = window as any
+const blockstack = require('blockstack')
 
 export async function update () {
   const el = document.querySelector('fill-form')
