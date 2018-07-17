@@ -15,9 +15,12 @@ export function update () {
   shareURL.searchParams.append(`form-id`, id)
 
   const submissions = <Submission[]>[]
-  const submissionsTpl = submissions.map(s => {
-    return html`<div>Submitted on ${s.created} 
-        <button class="clear button" data-form-id="${s.formUuid}" data-submission-id="${s.uuid}">View submission</button>
+
+  const submissionsListTpl = submissions
+    .sort(((a, b) => a.created.getTime() - b.created.getTime()))
+    .map(submission => {
+    return html`<div>Submitted on ${submission.created} 
+        <button class="clear button" data-form-id="${submission.formUuid}" data-submission-id="${submission.uuid}">View submission</button>
     </div>`
   })
 
@@ -30,7 +33,7 @@ export function update () {
     <code>${shareURL}</code></p>
     
     <h4>Submissions (0)</h4>
-    <div>${submissionsTpl}</div>
+    <div>${submissionsListTpl}</div>
 `
   render(tpl, el)
 
