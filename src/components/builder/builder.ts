@@ -159,7 +159,11 @@ async function addToList (newForm:Form) {
     console.info('Problem getting list:')
     console.info(e)
   }
-  list.push(<Partial<Form>>{uuid: newForm.uuid})
+  list.push(<Partial<Form>>{
+    uuid: newForm.uuid,
+    name: newForm.name,
+    created: newForm.created,
+  })
   await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
   console.debug(`did update list`)
 }

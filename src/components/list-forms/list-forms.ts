@@ -59,8 +59,28 @@ async function fetchSubmissions():Promise<Form[]> {
   throw new Error("Failed getting forms")
 }
 
+const formsListRemoteFile = 'forms.json'
+
+async function getList ():Promise<Partial<Form>[]> {
+  let list = <Partial<Form>[]>[]
+  try {
+    const json = await blockstack.getFile(formsListRemoteFile)
+    if (json) {
+      list = JSON.parse(json)
+    }
+  }
+  catch (e) {
+    console.info('Problem getting list:')
+    console.info(e)
+  }
+  return list
+}
+
+
 export function update () {
   const {forms} = Store.store
+
+  getList().then(list => Store.setFormsAction(list as any))
 
   // test test
   sessionStorage.data && forms.length === 0 && forms.push(<Form>{
@@ -77,6 +97,7 @@ export function update () {
   const formsList:Form[] = forms as any // convert to view model
 
   const formsListTpl = formsList
+    .filter(form => !!form.created)
     .sort((a, b) => a.created.getTime() - b.created.getTime())
     .map(form => html`
 <div class="grid-x">
