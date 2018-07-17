@@ -9,6 +9,14 @@ export function update() {
   const el:HTMLElement = document.querySelector(`build-form`)
   const questionsListTpl = questions.map(renderLeaf)
 
+  const save = async (evt:MouseEvent) => {
+    (evt.target as HTMLButtonElement).disabled = true
+    const newForm = collectForm()
+    collectForm()
+    console.debug(newForm)
+    // await uploadShare(newForm)
+  }
+
   const tpl = html`
 <h3>Build</h3>
 
@@ -36,7 +44,7 @@ export function update() {
           <button on-click="${() => {addField(questions); update()}}" class="hollow button" type="button">Add text</button>      
       </div>
       <div class="cell shrink">
-          <button on-click="${() => collectForm()}" class="hollow button primary" type="button">Save</button>      
+          <button on-click="${(evt:MouseEvent) => save(evt)}" class="hollow button primary" type="button">Save</button>      
       </div> 
     </div>
   </div>   
@@ -46,22 +54,34 @@ export function update() {
   render(tpl, el)
 }
 
-function collectForm () {
+function collectForm ():Form {
+  // basics
   const newFrom = <Form>{
     uuid: uuidv4(),
     created: new Date(),
     modified: new Date(),
     questions: [],
-    name: document.querySelector('.form-name')
+    name: (document.querySelector('[name=form-name]') as HTMLInputElement).value,
+    introText: (document.querySelector('[name=intro-text]') as HTMLInputElement).value,
   }
-  // questions.length
-  const questions = Array.from(document.querySelectorAll('.question-item'))
+
+  // questions
+  newFrom.questions = Array.from(document.querySelectorAll('.question-item'))
     .map((el:HTMLElement) => {
+      const [label] = Array.from(el.querySelectorAll('input')).map(el => el.value)
+      const [type] = Array.from(el.querySelectorAll('select')).map(el => el.value)
       return <Question>{
-        uuid: uuidv4()
+        uuid: uuidv4(),
+        label,
+        name: label,
+        type,
+        created: new Date(),
+        modified: new Date(),
       }
     })
   // question-item
+
+  return newFrom
 }
 
 function addField (questions:Question[]) {
@@ -82,8 +102,12 @@ function renderLeaf(q:Question) {
   <div class="cell small-4">
     <label>Type
       <select name="${q.name}-q-type">
-          <option>Text</option>
-          <option>Number</option>
+          <option>text</option>
+          <option>email</option>
+          <option>number</option>
+          <option>datetime-local</option>
+          <option>tel</option>
+          <option>url</option>
       </select>
     </label>
   </div>
