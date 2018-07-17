@@ -10,8 +10,10 @@ function main () {
   Store.setRouteAction( parseInt(sessionStorage.route, 10) || Route.Login )
 
   // nav
-  document.querySelector('.nav-item-list').addEventListener('click', () => Store.setRouteAction(Route.FormsList))
-  document.querySelector('.button-signout').addEventListener('click', () => blockstackSignout())
+  const nav = document.querySelector(`nav`)
+  nav.querySelector('.button-list').addEventListener('click', () => Store.setRouteAction(Route.FormsList))
+  nav.querySelector('.button-signout').addEventListener('click', () => blockstackSignout())
+  nav.querySelector('.button-build').addEventListener('click', () => Store.setRouteAction(Route.Build))
 }
 
 async function uploadEncrypt () {
@@ -57,32 +59,6 @@ async function uploadEncrypt () {
 }
 (window as any).upload = uploadEncrypt
 
-async function uploadShare () {
-  console.assert(blockstack.isUserSignedIn(), "User is not logged id")
-  const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
-  const recipientPubKey = '0304eb59f9d33acdc46825c160405b1154ccabfff226fb777e4ce5df4c8f8cacd4'
-
-  const quickForm = {
-    id: 43,
-    name: "The real questions.",
-    questions: [
-      {label: "Do you like privacy?"},
-    ],
-    submissions: <Object[]>[],
-  }
-
-  // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
-  // await putFile(`forms/${quickForm.id}.json`, quickForm)
-  await blockstack.putFile(`forms/${quickForm.id}.json`, JSON.stringify(quickForm), {encrypt: false})
-
-  // Object.values(blockstack.loadUserData().profile.apps)[0]
-
-  // lookupProfile
-  // target to find: https://gaia.blockstack.org/hub/14ktrFjBTrQhmvZYdEgVZPEvceo6uKiyLZ/forms/43.json
-  // where the hash is the app public address
-  console.debug(`did put stuff`)
-}
-(window as any).share = uploadShare
 
 
 // side effects
