@@ -16,6 +16,7 @@ export function update() {
     (evt.target as HTMLButtonElement).disabled = true
     const newForm = collectForm()
     await uploadShare(newForm)
+    await addToList(newForm)
     Store.setFormsAction([...Store.store.forms, newForm])
     Store.setRouteAction(Route.FormsList)
   }
@@ -142,4 +143,23 @@ async function uploadShare (newForm:Form) {
   // target to find: https://gaia.blockstack.org/hub/14ktrFjBTrQhmvZYdEgVZPEvceo6uKiyLZ/forms/43.json
   // where the hash is the app public address
   console.debug(`did put stuff`)
+}
+
+const formsListRemoteFile = 'forms.json'
+
+async function addToList (newForm:Form) {
+  let list = <Partial<Form>[]>[]
+  try {
+    const json = await blockstack.getFile(formsListRemoteFile)
+    if (json) {
+      list = JSON.parse(json)
+    }
+  }
+  catch (e) {
+    console.info('Problem getting list:')
+    console.info(e)
+  }
+  list.push(<Partial<Form>>{uuid: newForm.uuid})
+  await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
+  console.debug(`did update list`)
 }
