@@ -2,7 +2,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { decryptForm, signMessage } from '../../util/crypto'
 import Store from '../../store'
 import { Route } from '../router'
-import { Form } from '../../form-format'
+import { Form, Question } from '../../form-format'
 
 const {blockstack} = window as any
 
@@ -76,11 +76,28 @@ async function getList ():Promise<Partial<Form>[]> {
   return list
 }
 
+export async function init () {
+  update()// initial render
+
+  const list = await getList()
+
+  const forms:Form[] = list
+    .filter(form => form.created && form.uuid && form.name)
+    .map(form => {
+      form.created = new Date(form.created)
+      form.modified = new Date(form.modified)
+      form.questions = (form.questions instanceof Array) ? form.questions : []
+      return form
+    }) as Form[] // now they're sanitized
+
+  console.debug("In:",list)
+  console.debug("Valid:",forms)
+
+  Store.setFormsAction(forms)
+}
 
 export function update () {
   const {forms} = Store.store
-
-  getList().then(list => Store.setFormsAction(list as any))
 
   // test test
   sessionStorage.data && forms.length === 0 && forms.push(<Form>{
@@ -97,7 +114,6 @@ export function update () {
   const formsList:Form[] = forms as any // convert to view model
 
   const formsListTpl = formsList
-    .filter(form => !!form.created)
     .sort((a, b) => a.created.getTime() - b.created.getTime())
     .map(form => html`
 <div class="grid-x">

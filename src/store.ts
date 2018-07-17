@@ -46,7 +46,6 @@ export default class Store {
     for (let f of value) {
       this._store.forms.push(f)
     }
-    console.debug(this.store.forms)
     Store.callReducers(Store.setFormsAction)
   }
 
@@ -62,7 +61,7 @@ export default class Store {
 
 // glue together actions and reducers
 Store.reducers.set(Store.setFormsAction, new Set([
-  (store:DefaultState) => (store.route === Route.FormsList) && (store.forms.length === 0) && listUpdate(),
+  (store:DefaultState) => (store.route === Route.FormsList) && listUpdate(),
 ]))
 
 Store.reducers.set(Store.setRouteAction, new Set([
