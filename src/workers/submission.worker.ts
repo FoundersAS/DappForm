@@ -33,21 +33,15 @@ function initLocalStorage (blockstackData: any) {
 }
 
 function startPolling () {
-  const privateKey = blockstack.loadUserData().appPrivateKey
-  const publicKey = blockstack.getPublicKeyFromPrivate(privateKey)
-
-  const bench = new Bench(privateKey, publicKey)
-  bench.postFile(createDummySubmission('12345'))
-  setInterval(()=> {
-    bench.postFile(createDummySubmission('12345'))
-  }, 1000*60*5)
 
   doPoll()
 
   // TODO: Potential race condition when cleaning bench - could be new submissions
   async function doPoll () {
-    console.debug('Polling for new submissions ...')
-
+    // console.debug('Polling for new submissions ...')
+    const privateKey = blockstack.loadUserData().appPrivateKey
+    const publicKey = blockstack.getPublicKeyFromPrivate(privateKey)
+    const bench = new Bench(privateKey, publicKey)
     const files = await bench.getBenchFiles() as Submission[]
     await updateSubmissionsFromBench(files)
     if (files.length) {
