@@ -51,9 +51,6 @@ export default class Store {
   }
 
   static setRouteAction(value:Route, routeParams:Object = {}) {
-    if (!blockstack.isUserSignedIn()) { // simple redirect if user not logged in
-      value = Route.Login
-    }
     this._store.route = value
     this._store.routeParams = routeParams
     Store.callReducers(Store.setRouteAction)
