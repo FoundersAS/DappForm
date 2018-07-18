@@ -85493,7 +85493,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "e4b2bc65b5b43ac6e42d.worker.js");
+  return new Worker(__webpack_require__.p + "1095ccca87fc16133794.worker.js");
 };
 
 /***/ }),
@@ -86705,27 +86705,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store */ "./src/store.ts");
 /* harmony import */ var _components_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/router */ "./src/components/router.ts");
+/* harmony import */ var _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./util/fakeLocalStorage */ "./src/util/fakeLocalStorage.ts");
+
 
 
 
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-function fetchSubmissions() {
+function initSubmissionFetching() {
     const submissionWorker = new worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0___default.a();
     submissionWorker.onmessage = function (e) {
+        // TODO: Handle event to reload in view
         console.log('message from worker: ', e.data);
-    };
-    const blockstackData = {
-        blockstack: localStorage.getItem('blockstack'),
-        gaia: localStorage.getItem('blockstack-gaia-hub-config'),
-        key: localStorage.getItem('blockstack-transit-private-key')
     };
     submissionWorker.postMessage({
         cmd: 'start',
-        blockstackData
+        blockstackData: Object(_util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_3__["getBlockstackData"])(localStorage)
     });
 }
 function routeLoggedIn() {
-    fetchSubmissions();
+    initSubmissionFetching();
     const savedRoute = parseInt(sessionStorage.route, 10);
     const route = (_components_router__WEBPACK_IMPORTED_MODULE_2__["Route"][savedRoute]) ? savedRoute : _components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormsList;
     _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(route);
@@ -86929,6 +86927,46 @@ function decryptFile(cipherObj) {
 
 /***/ }),
 
+/***/ "./src/util/fakeLocalStorage.ts":
+/*!**************************************!*\
+  !*** ./src/util/fakeLocalStorage.ts ***!
+  \**************************************/
+/*! exports provided: localStorage, getBlockstackData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "localStorage", function() { return localStorage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlockstackData", function() { return getBlockstackData; });
+const cache = {};
+function getItem(key) {
+    return cache[key];
+}
+;
+function setItem(key, item) {
+    cache[key] = item;
+}
+;
+function removeItem(key) {
+    cache[key] = null;
+}
+;
+const localStorage = {
+    getItem: getItem,
+    setItem: setItem,
+    removeItem: removeItem
+};
+function getBlockstackData(ls) {
+    return {
+        blockstack: ls.getItem('blockstack'),
+        gaia: ls.getItem('blockstack-gaia-hub-config'),
+        key: ls.getItem('blockstack-transit-private-key')
+    };
+}
+
+
+/***/ }),
+
 /***/ 0:
 /*!************************!*\
   !*** buffer (ignored) ***!
@@ -86985,4 +87023,4 @@ function decryptFile(cipherObj) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=422e4c8a4fca1b535d1f.bundle.js.map
+//# sourceMappingURL=a865385fc57a69e2fdeb.bundle.js.map

@@ -85484,12 +85484,13 @@ function decryptFile(cipherObj) {
 /*!**************************************!*\
   !*** ./src/util/fakeLocalStorage.ts ***!
   \**************************************/
-/*! exports provided: localStorage */
+/*! exports provided: localStorage, getBlockstackData */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "localStorage", function() { return localStorage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlockstackData", function() { return getBlockstackData; });
 const cache = {};
 function getItem(key) {
     return cache[key];
@@ -85508,6 +85509,13 @@ const localStorage = {
     setItem: setItem,
     removeItem: removeItem
 };
+function getBlockstackData(ls) {
+    return {
+        blockstack: ls.getItem('blockstack'),
+        gaia: ls.getItem('blockstack-gaia-hub-config'),
+        key: ls.getItem('blockstack-transit-private-key')
+    };
+}
 
 
 /***/ }),
@@ -85604,4 +85612,4 @@ async function getFile(path) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=e4b2bc65b5b43ac6e42d.worker.js.map
+//# sourceMappingURL=1095ccca87fc16133794.worker.js.map
