@@ -16,8 +16,8 @@ export function update() {
     (evt.target as HTMLButtonElement).disabled = true
     const newForm = collectForm()
     await Promise.all([
-      blockstack.putFile(`/forms/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: true}),
-      blockstack.putFile(`/published/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: false}),
+      blockstack.putFile(`forms/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: true}),
+      blockstack.putFile(`published/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: false}),
       addToList(newForm),
     ])
     Store.setFormsAction([...Store.store.forms, newForm])
