@@ -3,8 +3,8 @@ import { Form, Question } from '../../form-format'
 import Store from '../../store'
 import { Route } from '../router'
 
-const uuidv4 = require('../../../node_modules/uuid/v4')
-const {blockstack} = window as any
+import { v4 as uuid } from 'uuid'
+const blockstack = require('blockstack')
 
 const questions = <Question[]>[]
 
@@ -28,31 +28,31 @@ export function update() {
   <div class="cell small-6">
     <label>
         Human-readable name
-        <input type="text" name="form-name">    
+        <input type="text" name="form-name">
     </label>
   </div>
   <div class="cell small-6">
     <label>
         Intro text
-        <input type="text" name="intro-text">    
+        <input type="text" name="intro-text">
     </label>
   </div>
-  
+
   <div class="cell small-12">
     ${questionsListTpl}
   </div>
-    
-  <div class="cell small-12">  
+
+  <div class="cell small-12">
     <div class="grid-x">
       <div class="cell auto">
-          <button on-click="${() => {addField(questions); update()}}" class="hollow button" type="button">Add text</button>      
+          <button on-click="${() => {addField(questions); update()}}" class="hollow button" type="button">Add text</button>
       </div>
       <div class="cell shrink">
-          <button on-click="${(evt:MouseEvent) => save(evt)}" class="hollow button primary" type="button">Save</button>      
-      </div> 
+          <button on-click="${(evt:MouseEvent) => save(evt)}" class="hollow button primary" type="button">Save</button>
+      </div>
     </div>
-  </div>   
-</form>  
+  </div>
+</form>
 `
 
   render(tpl, el)
@@ -61,7 +61,7 @@ export function update() {
 function collectForm ():Form {
   // basics
   const newFrom = <Form>{
-    uuid: uuidv4(),
+    uuid: uuid(),
     created: new Date(),
     modified: new Date(),
     questions: [],
@@ -75,7 +75,7 @@ function collectForm ():Form {
       const [label] = Array.from(el.querySelectorAll('input')).map(el => el.value)
       const [type] = Array.from(el.querySelectorAll('select')).map(el => el.value)
       return <Question>{
-        uuid: uuidv4(),
+        uuid: uuid(),
         label,
         name: label,
         type,
@@ -90,17 +90,17 @@ function collectForm ():Form {
 
 function addField (questions:Question[]) {
   const q = <Question>{
-    uuid: uuidv4()
+    uuid: uuid()
   }
   questions.push(q)
 }
 
 function renderLeaf(q:Question) {
   return html`
-<div class="grid-x grid-margin-x grid-margin-y question-item"> 
-  <div class="cell small-8"> 
+<div class="grid-x grid-margin-x grid-margin-y question-item">
+  <div class="cell small-8">
     <label>Question label
-      <input type='text' name="${q.name}" placeholder="Question label">   
+      <input type='text' name="${q.name}" placeholder="Question label">
     </label>
   </div>
   <div class="cell small-4">

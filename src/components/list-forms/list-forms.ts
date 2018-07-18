@@ -3,7 +3,7 @@ import Store from '../../store'
 import { Route } from '../router'
 import { Form } from '../../form-format'
 
-const {blockstack} = window as any
+const blockstack = require('blockstack')
 
 export async function create() {
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
