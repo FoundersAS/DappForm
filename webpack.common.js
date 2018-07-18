@@ -4,7 +4,6 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExternalDepsPlugin = new CopyWebpackPlugin([
   { from: 'src/assets/icon.png', to: 'assets/icon.png' },
-  { from: 'src/assets/manifest.json', to: 'manifest.json' },
   { from: 'node_modules/foundation-sites/dist/css/foundation.min.css', to: 'assets/foundation.min.css' },
   { from: 'node_modules/foundation-sites/dist/css/foundation.min.css.map', to: 'assets/foundation.min.css.map' }
 ]);
