@@ -18,7 +18,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 module.exports = {
   entry: './src/main.ts',
   output: {
-    path: path.resolve('dist'),
+    path: path.resolve('docs'),
     filename: '[name].bundle.js',
   },
   resolve: {
