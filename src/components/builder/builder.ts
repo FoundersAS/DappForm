@@ -15,8 +15,11 @@ export function update() {
   const save = async (evt:MouseEvent) => {
     (evt.target as HTMLButtonElement).disabled = true
     const newForm = collectForm()
-    await uploadShare(newForm)
-    await addToList(newForm)
+    await Promise.all([
+      blockstack.putFile(`/forms/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: true}),
+      blockstack.putFile(`/published/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: false}),
+      addToList(newForm),
+    ])
     Store.setFormsAction([...Store.store.forms, newForm])
     Store.setRouteAction(Route.FormsList)
   }
@@ -119,31 +122,6 @@ function renderLeaf(q:Question) {
   `
 }
 
-async function uploadShare (newForm:Form) {
-  // console.assert(blockstack.isUserSignedIn(), "User is not logged id")
-  // const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
-  // const recipientPubKey = '0304eb59f9d33acdc46825c160405b1154ccabfff226fb777e4ce5df4c8f8cacd4'
-
-  // const quickForm = {
-  //   id: 43,
-  //   name: "The real questions.",
-  //   questions: [
-  //     {label: "Do you like privacy?"},
-  //   ],
-  //   submissions: <Object[]>[],
-  // }
-  // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
-  // await putFile(`forms/${quickForm.id}.json`, quickForm)
-
-  await blockstack.putFile(`forms/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: false})
-
-  // Object.values(blockstack.loadUserData().profile.apps)[0]
-  // lookupProfile
-
-  // target to find: https://gaia.blockstack.org/hub/14ktrFjBTrQhmvZYdEgVZPEvceo6uKiyLZ/forms/43.json
-  // where the hash is the app public address
-  console.debug(`did put stuff`)
-}
 
 const formsListRemoteFile = 'forms.json'
 
@@ -166,4 +144,8 @@ async function addToList (newForm:Form) {
   })
   await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
   console.debug(`did update list`)
+}
+
+function publishForm (form:Form) {
+  // await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
 }
