@@ -5,29 +5,7 @@ import { Route } from '../router'
 
 const blockstack = require('blockstack')
 
-export async function create() {
-  const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
-  const body = {key: authorPubkey}
-  const res1 = await fetch('https://bench.takectrl.io/create', {
-    method: 'POST',
-    body: JSON.stringify(body),
-    mode: 'cors',
-    headers: {
-      'Content-Type': "application/json",
-    }
-  })
-  if (res1.status === 409) {
-    console.log("OK already created")
-  }
-}
-
 export async function fetchForms():Promise<Array<Object>> {
-  try {
-    await create()
-  }
-  catch (e) {
-    console.error('err creating', e)
-  }
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
 
   const signature = signString('/get', blockstack.loadUserData().appPrivateKey)

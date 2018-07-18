@@ -44,6 +44,7 @@ function startPolling () {
 
   doPoll()
 
+  // TODO: Potential race condition when cleaning bench - could be new submissions
   async function doPoll () {
     console.debug('Polling for new submissions ...')
 

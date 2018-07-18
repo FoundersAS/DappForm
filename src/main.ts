@@ -29,6 +29,7 @@ function main () {
 
 function fetchSubmissions () {
   const submissionWorker = new SubmissionWorker()
+
   submissionWorker.onmessage = function (e: any) {
     console.log('message from worker: ', e.data)
   }

@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "node node_modules/http-server/bin/http-server --cors -o",
-    "build": "webpack",
-    "develop": "webpack-dev-server",
-    "publish": "git add dist; git commit -m build; git push; open http://dappform.takectrl.io"
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config webpack.dev.js",
+    "publish": "yarn run build && git add dist; git commit -m build; git push; open http://dappform.takectrl.io"
   },
   "author": "",
   "license": "ISC",
@@ -29,10 +28,12 @@
     "style-loader": "^0.21.0",
     "ts-loader": "^4.4.2",
     "typescript": "^2.9.2",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^1.0.1",
     "webpack": "^4.16.1",
     "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.3",
     "worker-loader": "^2.0.0"
   },
   "repository": {
