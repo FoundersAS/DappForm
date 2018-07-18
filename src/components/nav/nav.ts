@@ -24,6 +24,6 @@ export function update() {
         </div>
 `
 
-  const tpl = (route === Route.Fill) ? anon : normal
+  const tpl = (location.toString().includes('form-id')) ? anon : normal
   render(tpl, nav)
 }
