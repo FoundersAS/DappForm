@@ -5,11 +5,25 @@ const blockstack = require('blockstack')
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 
 export function update() {
+  if (blockstack.isUserSignedIn()) {
+    Store.setRouteAction(Route.FormsList)
+  }
+  else if (blockstack.isSignInPending()) {
+    blockstack.handlePendingSignIn()
+    .then(() => {
+      Store.setRouteAction(Route.FormsList)
+    })
+    .catch(console.warn)
+  }
+
   const el = document.querySelector('login')
 
   const login = (evt:Event) => {
     (evt.target as HTMLButtonElement).disabled = true
-    blockstackLogin()
+    blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
+      'store_write',
+      'publish_data',
+    ])
   }
 
   const tpl = html`<h1>Login</h1>
@@ -21,27 +35,3 @@ export function update() {
 export function blockstackSignout () {
   blockstack.signUserOut(location.origin)
 }
-
-function blockstackLogin () {
-  if (blockstack.isUserSignedIn()) {
-    // const userData = blockstack.loadUserData()
-    // const user = new blockstack.Person(this.userData.profile)
-    // const user.username = this.userData.username
-    Store.setRouteAction(Route.FormsList)
-  }
-  else if (blockstack.isSignInPending()) {
-    console.log('pending')
-    blockstack.handlePendingSignIn()
-      .then(() => {
-        Store.setRouteAction(Route.FormsList)
-      })
-      .catch(console.warn)
-  }
-  else {
-    blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
-      'store_write',
-      'publish_data',
-    ])
-  }
-}
-
