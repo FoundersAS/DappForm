@@ -22,7 +22,9 @@ export async function update () {
   let submissionsToForm:Object = {}
   try {
     const json = await blockstack.getFile(submissionsPath)
-    submissionsToForm = JSON.parse(json)
+    if (json) {
+      submissionsToForm = JSON.parse(json)
+    }
   }
   catch (e) {
     console.error(e)
