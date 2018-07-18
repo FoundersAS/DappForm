@@ -1,7 +1,8 @@
 import { Route } from '../router'
 import Store from '../../store'
+
+const blockstack = require('blockstack')
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
-const {blockstack} = window as any
 
 export function update() {
   const el = document.querySelector('login')
@@ -29,6 +30,7 @@ function blockstackLogin () {
     Store.setRouteAction(Route.FormsList)
   }
   else if (blockstack.isSignInPending()) {
+    console.log('pending')
     blockstack.handlePendingSignIn()
       .then(() => {
         Store.setRouteAction(Route.FormsList)
