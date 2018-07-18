@@ -37,7 +37,9 @@ export default class Bench {
   constructor(privateKey: string, publicKey:string) {
     this.privateKey = privateKey
     this.publicKey = publicKey
-    this.headers = generateHeaders(privateKey, publicKey)
+    if (privateKey) {
+      this.headers = generateHeaders(privateKey, publicKey)
+    }
   }
 
   private decryptBenchFiles(files: BenchFile[]): any[] {
