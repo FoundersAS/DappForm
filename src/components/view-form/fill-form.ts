@@ -1,10 +1,10 @@
+const blockstack = require('blockstack')
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission } from '../../form-format'
 import Store from '../../store'
 import { create } from '../list-forms/list-forms'
-const {blockstack} = window as any
-const uuidv4 = require('../../../node_modules/uuid/v4')
-import { encryptForm } from '../../util/crypto'
+import { v4 as uuid } from 'uuid'
+import { encryptFile } from '../../util/crypto'
 
 export async function update () {
   const el = document.querySelector('fill-form')
@@ -29,7 +29,7 @@ export async function update () {
     form = json
   }
   else if (submission) {
-    form = Store.store.forms.find(f => f.uuid === submission.formUuid)
+    form = Store.store.forms.find((f:any) => f.uuid === submission.formUuid)
   }
 
   const questions = ((!form) ? [] : form.questions).map(q => {
@@ -50,11 +50,11 @@ export async function update () {
   }
 
   const tpl = html`
-<h2>${form.name}</h2>    
-<h6>${form.introText}</h6>    
+<h2>${form.name}</h2>
+<h6>${form.introText}</h6>
 <form class="grid-x grid-margin-y">
     ${questions}
-    
+
     <div class="cell small-12">
         <button type="button" class="button submit-button" on-click="${(evt:any)=>submit(evt)}">Submit</button>
     </div>
@@ -81,7 +81,7 @@ function collectAnswers () {
   })
 
   const submission = <Submission>{
-    uuid: uuidv4(),
+    uuid: uuid(),
     created: new Date(),
     answers,
   }
@@ -98,7 +98,7 @@ async function uploadEncrypt (recipientPubKey:string, quickForm:Object) {
   }
 
   // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
-  const cipherObj = encryptForm(recipientPubKey, quickForm)
+  const cipherObj = encryptFile(recipientPubKey, quickForm)
   const body = {
     data: cipherObj,
     key: recipientPubKey,

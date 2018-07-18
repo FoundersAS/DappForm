@@ -1,10 +1,9 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
-import { decryptForm, signMessage } from '../../util/crypto'
 import Store from '../../store'
 import { Route } from '../router'
-import { Form, Question } from '../../form-format'
+import { Form } from '../../form-format'
 
-const {blockstack} = window as any
+const blockstack = require('blockstack')
 
 export async function create() {
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
@@ -62,18 +61,6 @@ export async function init () {
 export function update () {
   const {forms} = Store.store
 
-  // test test
-  sessionStorage.data && forms.length === 0 && forms.push(<Form>{
-    created: new Date(),
-    name: "The hard questions,",
-    uuid: '123',
-    },
-    <Form>{
-    created: new Date(),
-    name: "Typeform tilfredshedsundersøgelse",
-    uuid: '234',
-  })
-
   const formsList:Form[] = forms as any // convert to view model
 
   const formsListTpl = formsList
@@ -94,7 +81,7 @@ export function update () {
 
   const tpl = html`
 <h3>Your forms (${forms.length})</h3>
-   
+
 ${formsListTpl}
 `
   const el:HTMLElement = document.querySelector('forms-list')

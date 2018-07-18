@@ -1,14 +1,15 @@
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
-import { Form, Submission } from '../../form-format'
+const blockstack = require('blockstack')
+import { Submission } from '../../form-format'
 import { Route } from '../router'
-import { decryptForm, signMessage } from '../../util/crypto'
-const {blockstack} = window as any
+import { decryptFile, signString } from '../../util/crypto'
+
 
 async function fetchSubmissions():Promise<Submission[]> {
   const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
 
-  const signature = signMessage('/get', blockstack.loadUserData().appPrivateKey)
+  const signature = signString('/get', blockstack.loadUserData().appPrivateKey)
   const derSign = signature.toDER();
   const sigHeader = JSON.stringify(derSign)
 
@@ -27,7 +28,7 @@ async function fetchSubmissions():Promise<Submission[]> {
       .filter((cipherObj:any) => typeof cipherObj === "object")
       .filter((cipherObj:any) => !!cipherObj.cipherText)
       .filter((cipherObj:any) => Object.keys(cipherObj).length > 0)
-      .map((cipherObj:any) => decryptForm(cipherObj))
+      .map((cipherObj:any) => decryptFile(cipherObj))
 
     const failed = decrypted.filter((form:any) => !form)
 
@@ -73,7 +74,7 @@ export function update (fetch:boolean = true) {
   const submissionsListTpl = submissions
     .map(submission => {
       return html`<div class="grid-x">
-        <div class="cell auto">Submitted on ${submission.created}</div> 
+        <div class="cell auto">Submitted on ${submission.created}</div>
         <div class="cell shrink">
           <button class="clear button link" on-click="${() => seeSubmissions(submission.formUuid, submission.uuid)}">View submission</button>
         </div>
@@ -92,14 +93,14 @@ export function update (fetch:boolean = true) {
   <p>Share URL<br>
       <code>${shareURL.toString()}</code></p>
   </div>
-  
+
   <div class="cell medium-6">
     <h4>Analytics</h4>
     <h5>Submissions (${submissionsListTpl.length})</h5>
     ${submissionsListTpl}
-  </div>    
-    
-</div>    
+  </div>
+
+</div>
 `
   render(tpl, el)
 }

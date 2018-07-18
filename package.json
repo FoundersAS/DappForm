@@ -4,31 +4,36 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "node node_modules/http-server/bin/http-server --cors -o",
-    "build": "webpack",
-    "develop": "webpack --watch",
-    "publish": "git add dist; git commit -m build; git push; open http://dappform.takectrl.io"
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "rm -rf dist/ && webpack --config webpack.prod.js",
+    "publish": "yarn build && git add dist; git commit -m build; git push; open http://dappform.takectrl.io"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/uuid": "^3.4.3",
-    "bigi": "^1.4.2",
-    "bitcoinjs-lib": "^3.3.2",
     "blockstack": "^17.2.0",
     "elliptic": "^6.4.0",
     "foundation-sites": "^6.5.0-rc.2",
     "lit-html": "^0.10.2",
-    "nano-sql": "^1.7.0",
-    "nano-trivial": "git+https://github.com/FoundersAS/nano-trival.git",
-    "trivialdb": "^3.0.0-rc.2",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/node": "^10.5.2",
-    "http-server": "^0.11.1",
+    "@types/uuid": "^3.4.3",
+    "copy-webpack-plugin": "^4.5.2",
+    "css-loader": "^1.0.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "source-map": "^0.7.3",
+    "style-loader": "^0.21.0",
     "ts-loader": "^4.4.2",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.16.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.3",
+    "worker-loader": "^2.0.0"
   },
   "repository": {
     "type": "git",
