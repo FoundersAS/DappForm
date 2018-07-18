@@ -21,7 +21,7 @@ ctx.onmessage = (e: any) => {
   switch(data.cmd) {
     case 'start':
       initLocalStorage(data.blockstackData)
-      console.debug('blockstack signed in: ', blockstack.isUserSignedIn())
+      console.debug('SubmissionWorker: Blockstack signin: ', blockstack.isUserSignedIn())
       startPolling()
   }
 }
