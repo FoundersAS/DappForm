@@ -31,10 +31,20 @@ function fetchSubmissions() {
 }
 
 function main () {
-  Store.setRouteAction( parseInt(sessionStorage.route, 10) || Route.Login )
-
-  if (blockstack.isUserSignedIn() && !location.toString().includes('form-id')) {
-    fetchSubmissions()
+  // hax
+  if (location.toString().includes('form-id')) {
+    Store.setRouteAction( Route.Fill )
+  }
+  else {
+    if (!blockstack.isUserSignedIn()) {
+      Store.setRouteAction(Route.Login)
+    }
+    else {
+      fetchSubmissions()
+      const savedRoute:number = parseInt(sessionStorage.route, 10)
+      const route:Route = (Route[savedRoute]) ? savedRoute : Route.FormsList
+      Store.setRouteAction(route)
+    }
   }
 }
 

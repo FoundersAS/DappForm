@@ -59,7 +59,8 @@ export function update () {
 }
 
 export function persist () {
-  if (Route[Store.store.route] && Store.store.route !== Route.Fill) {
+  const route = Store.store.route
+  if (route === Route.FormsList) { // TODO we must
     sessionStorage.route = Store.store.route
   }
 }
