@@ -1,54 +1,13 @@
-import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
+import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
-const blockstack = require('blockstack')
 import { Submission } from '../../form-format'
 import { Route } from '../router'
-import { decryptFile, signString } from '../../util/crypto'
 
+const blockstack = require('blockstack')
 
-async function fetchSubmissions():Promise<Submission[]> {
-  const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
+export async function update () {
+  const submissions = <Submission[]>[]
 
-  const signature = signString('/get', blockstack.loadUserData().appPrivateKey)
-  const derSign = signature.toDER();
-  const sigHeader = JSON.stringify(derSign)
-
-  const res = await fetch('https://bench.takectrl.io/get', {
-    mode: 'cors',
-    headers: {
-      'x-ctrl-key': authorPubkey,
-      'x-ctrl-signature': sigHeader,
-    }
-  })
-  if (res.status === 200) {
-    const json = await res.json()
-    console.debug(json)
-    const decrypted = json
-      .map((entry:any) => entry.data)
-      .filter((cipherObj:any) => typeof cipherObj === "object")
-      .filter((cipherObj:any) => !!cipherObj.cipherText)
-      .filter((cipherObj:any) => Object.keys(cipherObj).length > 0)
-      .map((cipherObj:any) => decryptFile(cipherObj))
-
-    const failed = decrypted.filter((form:any) => !form)
-
-    if (failed.length > 0) {
-      console.info("Failed to decrypt:")
-      console.info(failed)
-    }
-
-    const successfullyDecrypted = decrypted
-      .filter((form:any) => !!form)
-      .map((form:any) => JSON.parse(form))
-
-    return successfullyDecrypted
-  }
-  throw new Error("Failed getting forms")
-}
-
-const submissions = <Submission[]>[]
-
-export function update (fetch:boolean = true) {
   const el = document.querySelector('forms-view')
   const id = Store.store.routeParams.formId
 
@@ -58,13 +17,18 @@ export function update (fetch:boolean = true) {
   shareURL.searchParams.append(`author`, username)
   shareURL.searchParams.append(`form-id`, id)
 
-  if (fetch) {
-    fetchSubmissions().then(ss => {
-      console.log(ss)
-      ss.forEach(s => submissions.push(s))
-      console.debug(submissions)
-      update(false)
-    })
+  const submissionsPath = `submissions/${id}.json`
+
+  let submissionsToForm:Object = {}
+  try {
+    const json = await blockstack.getFile(submissionsPath)
+    submissionsToForm = JSON.parse(json)
+  }
+  catch (e) {
+    console.error(e)
+  }
+  finally {
+    Object.values(submissionsToForm).forEach(s => submissions.push(s as any))
   }
 
   const seeSubmissions = (formId: string, submissionId: string) => {
@@ -81,8 +45,6 @@ export function update (fetch:boolean = true) {
     </div>`
     })
 
-  console.debug(submissionsListTpl, submissions)
-
   const tpl = html`
     <h3>Form dashboard</h3>
     <p><small>(id: ${id})</small>
@@ -92,6 +54,7 @@ export function update (fetch:boolean = true) {
   <h4>Distribution</h4>
   <p>Share URL<br>
       <code>${shareURL.toString()}</code></p>
+      <p><a href="${shareURL}" target="_blank" class="button large">Open</a></p>
   </div>
 
   <div class="cell medium-6">

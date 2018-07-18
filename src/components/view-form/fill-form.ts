@@ -19,14 +19,14 @@ export async function update () {
   let form:Form
 
   if (author && formId) {
-    const pathToPublicForm = await blockstack.getUserAppFileUrl(`forms/${formId}.json`, author, app)
+    const pathToPublicForm = await blockstack.getUserAppFileUrl(`published/${formId}.json`, author, app)
     const res = await fetch(pathToPublicForm, {
       mode: 'cors'
     })
-    const json = await res.json()
-
-    // make view model
-    form = json
+    if (res.status === 200) {
+      const json = await res.json()
+      form = json
+    }
   }
   else if (submission) {
     form = Store.store.forms.find((f:any) => f.uuid === submission.formUuid)
