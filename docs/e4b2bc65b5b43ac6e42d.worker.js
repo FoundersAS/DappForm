@@ -78307,7 +78307,7 @@ ctx.onmessage = (e) => {
     switch (data.cmd) {
         case 'start':
             initLocalStorage(data.blockstackData);
-            console.debug('blockstack signed in: ', blockstack.isUserSignedIn());
+            console.debug('SubmissionWorker: Blockstack signin: ', blockstack.isUserSignedIn());
             startPolling();
     }
 };
@@ -85604,4 +85604,4 @@ async function getFile(path) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=8996d1be7234d492c74f.worker.js.map
+//# sourceMappingURL=e4b2bc65b5b43ac6e42d.worker.js.map

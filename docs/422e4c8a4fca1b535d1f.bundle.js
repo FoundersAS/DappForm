@@ -85493,7 +85493,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "8996d1be7234d492c74f.worker.js");
+  return new Worker(__webpack_require__.p + "e4b2bc65b5b43ac6e42d.worker.js");
 };
 
 /***/ }),
@@ -86373,43 +86373,33 @@ ${formsListTpl}
 /*!***************************************!*\
   !*** ./src/components/login/login.ts ***!
   \***************************************/
-/*! exports provided: update, blockstackSignout */
+/*! exports provided: update, blockStackSignin, blockstackSignout */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockStackSignin", function() { return blockStackSignin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockstackSignout", function() { return blockstackSignout; });
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
-
-
+/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
 
 function update() {
-    if (blockstack.isUserSignedIn()) {
-        _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].FormsList);
-    }
-    else if (blockstack.isSignInPending()) {
-        blockstack.handlePendingSignIn()
-            .then(() => {
-            _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].FormsList);
-        })
-            .catch(console.warn);
-    }
     const el = document.querySelector('login');
     const login = (evt) => {
         evt.target.disabled = true;
-        blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
-            'store_write',
-            'publish_data',
-        ]);
+        blockStackSignin();
     };
-    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_2__["html"] `<h1>Login</h1>
+    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<h1>Login</h1>
     <button on-click="${(evt) => login(evt)}" type="button" class="login-button button large">Blockstack</button>
 `;
-    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_2__["render"])(tpl, el);
+    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
+}
+function blockStackSignin() {
+    blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
+        'store_write',
+        'publish_data',
+    ]);
 }
 function blockstackSignout() {
     blockstack.signUserOut(location.origin);
@@ -86719,8 +86709,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-window.ctrl = window.ctrl || {};
-window.ctrl.blockstack = blockstack;
 function fetchSubmissions() {
     const submissionWorker = new worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0___default.a();
     submissionWorker.onmessage = function (e) {
@@ -86736,21 +86724,27 @@ function fetchSubmissions() {
         blockstackData
     });
 }
+function routeLoggedIn() {
+    fetchSubmissions();
+    const savedRoute = parseInt(sessionStorage.route, 10);
+    const route = (_components_router__WEBPACK_IMPORTED_MODULE_2__["Route"][savedRoute]) ? savedRoute : _components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormsList;
+    _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(route);
+}
 function main() {
     // hax
     if (location.toString().includes('form-id')) {
         _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Fill);
     }
+    else if (blockstack.isUserSignedIn()) {
+        routeLoggedIn();
+    }
+    else if (blockstack.isSignInPending()) {
+        blockstack.handlePendingSignIn()
+            .then(routeLoggedIn)
+            .catch(console.warn);
+    }
     else {
-        if (!blockstack.isUserSignedIn()) {
-            _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Login);
-        }
-        else {
-            fetchSubmissions();
-            const savedRoute = parseInt(sessionStorage.route, 10);
-            const route = (_components_router__WEBPACK_IMPORTED_MODULE_2__["Route"][savedRoute]) ? savedRoute : _components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormsList;
-            _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(route);
-        }
+        _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Login);
     }
 }
 // side effects
@@ -86991,4 +86985,4 @@ function decryptFile(cipherObj) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=745fb1c194b53c26958d.bundle.js.map
+//# sourceMappingURL=422e4c8a4fca1b535d1f.bundle.js.map

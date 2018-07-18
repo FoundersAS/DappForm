@@ -1,29 +1,26 @@
 import {default as SubmissionWorker} from "worker-loader!./workers/submission.worker";
 import Store from './store'
 import { Route } from './components/router'
+import { getBlockstackData } from "./util/fakeLocalStorage";
 const blockstack = require('blockstack')
 
-function fetchSubmissions() {
+function initSubmissionFetching() {
   const submissionWorker = new SubmissionWorker()
 
   submissionWorker.onmessage = function (e: any) {
+    // TODO: Handle event to reload in view
     console.log('message from worker: ', e.data)
-  }
-
-  const blockstackData = {
-    blockstack: localStorage.getItem('blockstack'),
-    gaia: localStorage.getItem('blockstack-gaia-hub-config'),
-    key: localStorage.getItem('blockstack-transit-private-key')
   }
 
   submissionWorker.postMessage({
     cmd: 'start',
-    blockstackData
+    blockstackData: getBlockstackData(localStorage)
   })
 }
 
 function routeLoggedIn () {
-  fetchSubmissions()
+  initSubmissionFetching()
+
   const savedRoute: number = parseInt(sessionStorage.route, 10)
   const route: Route = (Route[savedRoute]) ? savedRoute : Route.FormsList
   Store.setRouteAction(route)

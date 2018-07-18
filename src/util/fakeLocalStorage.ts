@@ -17,3 +17,11 @@ export const localStorage = {
   setItem: setItem,
   removeItem: removeItem
 } as any
+
+export function getBlockstackData (ls:Storage) {
+  return {
+    blockstack: ls.getItem('blockstack'),
+    gaia: ls.getItem('blockstack-gaia-hub-config'),
+    key: ls.getItem('blockstack-transit-private-key')
+  } as any
+}
