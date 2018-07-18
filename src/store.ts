@@ -1,6 +1,7 @@
 import { update as listUpdate } from './components/list-forms/list-forms'
 import { persist, Route, update as routeUpdate } from './components/router'
 import { Form } from './form-format'
+import { update as navUpdate } from './components/nav/nav'
 const {blockstack} = window as any
 
 interface Dict {[k: string]: any}
@@ -66,5 +67,6 @@ Store.reducers.set(Store.setFormsAction, new Set([
 
 Store.reducers.set(Store.setRouteAction, new Set([
   routeUpdate,
+  navUpdate,
   persist,
 ]))

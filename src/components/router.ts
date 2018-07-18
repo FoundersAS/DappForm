@@ -35,11 +35,14 @@ export function update () {
   const el = document.querySelector('router')
   console.assert(!!el)
 
-  let currentRoute:Route = Store.store.route as any
+  let currentRoute:Route = Store.store.route
+  let redirect:Route
 
+  // fill form has to be detected from URL query params
   if (location.toString().includes('form-id')) {
-    currentRoute = Route.Fill
+    redirect = Route.Fill
   }
+
   if (lastRoute !== currentRoute) {
     const tpl = map.get(currentRoute) || `View ${Route[currentRoute]} doesn't exist`
     el.innerHTML = tpl
@@ -47,11 +50,16 @@ export function update () {
     const initFunc = viewInitMap.get(currentRoute)
     initFunc()
     lastRoute = currentRoute
+
+    if (redirect) {
+      console.debug('redirect',Route[redirect])
+      Store.setRouteAction(redirect)
+    }
   }
 }
 
 export function persist () {
-  if (Route[Store.store.route as any]) {
+  if (Route[Store.store.route] && Store.store.route !== Route.Fill) {
     sessionStorage.route = Store.store.route
   }
 }
