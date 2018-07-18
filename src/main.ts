@@ -34,7 +34,8 @@ function fetchSubmissions() {
 
 function main () {
   Store.setRouteAction( parseInt(sessionStorage.route, 10) || Route.Login )
-  fetchSubmissions()
+
+  if (blockstack.isUserSignedIn()) fetchSubmissions()
 }
 
 // side effects

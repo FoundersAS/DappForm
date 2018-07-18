@@ -9,7 +9,7 @@ const ManifestPlugin = new CopyWebpackPlugin([
 ]);
 
 module.exports = merge(common, {
-  mode: 'production',
+  mode: 'development',
   devtool: 'source-map',
   plugins: [
     ManifestPlugin,
