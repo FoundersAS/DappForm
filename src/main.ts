@@ -1,5 +1,3 @@
-const css = require('./css/style.css')
-
 import {default as SubmissionWorker} from "worker-loader!./workers/submission.worker";
 import Store from './store'
 import { Route } from './components/router'
@@ -35,7 +33,9 @@ function fetchSubmissions() {
 function main () {
   Store.setRouteAction( parseInt(sessionStorage.route, 10) || Route.Login )
 
-  if (blockstack.isUserSignedIn()) fetchSubmissions()
+  if (blockstack.isUserSignedIn() && !location.toString().includes('form-id')) {
+    fetchSubmissions()
+  }
 }
 
 // side effects
