@@ -19,7 +19,7 @@ module.exports = {
   entry: './src/main.ts',
   output: {
     path: path.resolve('docs'),
-    filename: '[name].bundle.js',
+    filename: '[chunkhash].bundle.js',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
