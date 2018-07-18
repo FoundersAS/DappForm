@@ -1,10 +1,10 @@
-const blockstack = require('blockstack')
-import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
+import Bench from '../../util/bench'
+import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission } from '../../form-format'
 import Store from '../../store'
-import { create } from '../list-forms/list-forms'
 import { v4 as uuid } from 'uuid'
-import { encryptFile } from '../../util/crypto'
+
+const blockstack = require('blockstack')
 
 export async function update () {
   const el = document.querySelector('fill-form')
@@ -44,9 +44,9 @@ export async function update () {
     (evt.target as HTMLButtonElement).disabled = true
     const submission = collectAnswers()
     submission.formUuid = form.uuid
-    console.debug("to submit",submission)
     const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey ) // be visible to me self!! YArrrrg
-    await uploadEncrypt(authorPubkey, submission)
+    const bench = new Bench('', authorPubkey)
+    await bench.postFile(submission)
   }
 
   const tpl = html`
@@ -87,32 +87,4 @@ function collectAnswers () {
   }
 
   return submission
-}
-
-async function uploadEncrypt (recipientPubKey:string, quickForm:Object) {
-  try {
-    await create()
-  }
-  catch (e) {
-    console.error('err creating', e)
-  }
-
-  // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
-  const cipherObj = encryptFile(recipientPubKey, quickForm)
-  const body = {
-    data: cipherObj,
-    key: recipientPubKey,
-  }
-
-  const res1 = await fetch('https://bench.takectrl.io/', {
-    method: 'POST',
-    body: JSON.stringify(body),
-    mode: 'cors',
-    headers: {
-      'Content-Type': "application/json",
-    }
-  })
-  if (res1.status !== 200) {
-    throw new Error('failed upload')
-  }
 }
