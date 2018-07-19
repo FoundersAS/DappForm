@@ -43,15 +43,23 @@ export async function update () {
 <div class="grid-x grid-margin-x">
   <div class="cell medium-6">
   <h4>Distribution</h4>
-  <p>Share URL<br>
-      <code>${shareURL.toString()}</code></p>
-      <p><a href="${shareURL}" target="_blank" class="button large">Open</a>
-      <button on-click="${(evt: Event) => deleteForm(uuid)}" class="alert button large">Delete</button></p>
+  <form class="grid-x grid-margin-y">
+    <div class="cell small-12">
+      <label>Share URL
+            <input value="${shareURL.toString()}" type="text">
+      </label>
+    </div>
+  </form>
+  
+      <p>
+          <a href="${shareURL}" target="_blank" class="button large">Open</a>
+          <button on-click="${(evt: Event) => deleteForm(uuid)}" class="alert button large">Delete</button>
+      </p>
   </div>
 
   <div class="cell medium-6">
     <h4>Analytics</h4>
-    <h5>Submissions (${submissionsListTpl.length})</h5>
+    <h6>Submissions (${submissionsListTpl.length})</h6>
     ${submissionsListTpl}
   </div>
 
