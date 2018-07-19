@@ -28,8 +28,8 @@ export function createLocalStorage(initData: any) {
 
 export function getBlockstackData (ls:any) {
   return {
-    blockstack: ls.getItem('blockstack'),
-    gaia: ls.getItem('blockstack-gaia-hub-config'),
-    key: ls.getItem('blockstack-transit-private-key')
+    'blockstack': ls.getItem('blockstack'),
+    'blockstack-gaia-hub-config': ls.getItem('blockstack-gaia-hub-config'),
+    'blockstack-transit-private-key': ls.getItem('blockstack-transit-private-key')
   } as any
 }

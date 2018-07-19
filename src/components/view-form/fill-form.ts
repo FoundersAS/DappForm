@@ -3,7 +3,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission } from '../../form-format'
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
-import { getFile, getForm } from '../../util/write'
+import { getForm } from '../../forms';
 
 const blockstack = require('blockstack')
 
@@ -12,7 +12,7 @@ export async function update () {
 
   const url = new URL(location.toString())
   const author = url.searchParams.get('author')
-  let formId:string = url.searchParams.get('form-id')
+  let formUuid:string = url.searchParams.get('form-id')
   const app = location.origin
 
   const submission:Submission = Store.store.routeParams.submission
@@ -31,8 +31,8 @@ export async function update () {
   // }
   let form:Form
 
-  if (author && formId) {
-    const pathToPublicForm = await blockstack.getUserAppFileUrl(`published/${formId}.json`, author, app)
+  if (author && formUuid) {
+    const pathToPublicForm = await blockstack.getUserAppFileUrl(`published/${formUuid}.json`, author, app)
     const res = await fetch(pathToPublicForm, {
       mode: 'cors'
     })
@@ -42,9 +42,9 @@ export async function update () {
     }
   }
   else if (submission) {
-    formId = submission.formUuid
-    form = await getForm(formId) as Form
-    console.assert(form, 'Didnt find form '+ `forms/${formId}.json`)
+    formUuid = submission.formUuid
+    form = await getForm(formUuid)
+    console.assert(form, 'Didnt find form '+ `forms/${formUuid}.json`)
   }
   console.debug(form)
   const questions = ((!form) ? [] : form.questions)
@@ -64,7 +64,7 @@ export async function update () {
     return html`
 <div class="cell medium-12">
     <label>${q.label}</label>
-    ${inputTpl}    
+    ${inputTpl}
 </div>`
   })
 

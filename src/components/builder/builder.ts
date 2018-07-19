@@ -4,6 +4,7 @@ import Store from '../../store'
 import { Route } from '../router'
 
 import { v4 as uuid } from 'uuid'
+import { createForm } from '../../forms';
 const blockstack = require('blockstack')
 
 const questions = <Question[]>[]
@@ -15,11 +16,9 @@ export function update() {
   const save = async (evt:MouseEvent) => {
     (evt.target as HTMLButtonElement).disabled = true
     const newForm = collectForm()
-    await Promise.all([
-      blockstack.putFile(`forms/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: true}),
-      blockstack.putFile(`published/${newForm.uuid}.json`, JSON.stringify(newForm), {encrypt: false}),
-      addToList(newForm),
-    ])
+
+    await createForm(newForm)
+
     Store.setFormsAction([...Store.store.forms, newForm])
     Store.setRouteAction(Route.FormsList)
   }
@@ -122,34 +121,4 @@ function renderLeaf(q:Question) {
   </div>
 </div>
   `
-}
-
-
-const formsListRemoteFile = 'forms.json'
-
-async function addToList (newForm:Form) {
-  let list = <Partial<Form>[]>[]
-  try {
-    const json = await blockstack.getFile(formsListRemoteFile)
-    if (json) {
-      list = JSON.parse(json)
-    }
-  }
-  catch (e) {
-    console.info('Problem getting list:')
-    console.info(e)
-  }
-  list.push(<Partial<Form>>{
-    uuid: newForm.uuid,
-    name: newForm.name,
-    created: newForm.created,
-    modified: newForm.modified,
-    authorPubKey: newForm.authorPubKey,
-  })
-  await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
-  console.debug(`did update list`)
-}
-
-function publishForm (form:Form) {
-  // await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
 }

@@ -1,32 +1,32 @@
-import { Form } from '../form-format'
-
 const blockstack = require('blockstack')
 
-export async function putFile(path: string, contents: Object): Promise<Object | Boolean> {
+export async function putFile(path: string, contents: Object, encrypt=true): Promise<void> {
   try {
-    const result = await blockstack.putFile(path, JSON.stringify(contents))
-    return result
+    await blockstack.putFile(path, JSON.stringify(contents), {encrypt})
   }
   catch (e) {
     console.error(e)
-    return false
   }
 }
 
-export async function getFile (path: string): Promise<Object | Boolean> {
+export async function getFile(path: string): Promise<Object | Boolean> {
+  let json
+  let parsed
   try {
-    console.log('he')
-    const contents = await blockstack.getFile(path)
-    console.log("xxx", contents)
-    return JSON.parse(contents)
+    json = await blockstack.getFile(path)
   }
   catch (e) {
+    console.log(`getFile failed`)
     console.error(e)
     return false
   }
-}
-
-export function getForm(uuid:string):Promise<Form|false> {
-  const form = getFile(`forms/${uuid}.json`)
-  return (form as any) || false
+  try {
+    parsed = JSON.parse(json)
+  }
+  catch (e) {
+    console.log(`JSON.parse getFile contents failed`)
+    console.error(e)
+    return false
+  }
+  return parsed
 }
