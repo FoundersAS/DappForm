@@ -17,7 +17,7 @@ async function updateFormSubmissions(forms: FormSubmissionMap) {
     const newSubmissions = forms[formUuid]
     const submissionsPath = `submissions/${formUuid}.json`
 
-    const oldSubmissions = await getFile(submissionsPath) as SubmissionMap | {} as SubmissionMap
+    const oldSubmissions = await getFile(submissionsPath) as SubmissionMap || {} as SubmissionMap
 
     console.debug(`form: ${formUuid} new submissions:`, newSubmissions)
     console.debug(`form: ${formUuid} old submissions:`, oldSubmissions)
