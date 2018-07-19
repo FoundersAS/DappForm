@@ -22,7 +22,7 @@ export async function update() {
     }
   })
   .map(d => {
-    return html`<tr><td>${uuid}</td><td>${d.answers.map(a => html`${a.value}`)}</td></tr>`
+    return html`<tr><td>${uuid}</td>${d.answers.map(a => html`<td>${a.value}</td>`)}</tr>`
   })
 
 
