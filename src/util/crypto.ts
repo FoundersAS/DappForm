@@ -1,6 +1,6 @@
+import { blockstackPrivateKey } from "./blockstack";
 const EllipticCurve = require('elliptic').ec
 const {encryptECIES, decryptECIES} = require('../../node_modules/blockstack/lib/encryption.js')
-const blockstack = require('blockstack')
 
 const ecurve = new EllipticCurve('secp256k1')
 
@@ -25,6 +25,6 @@ export function decryptFileWithKey (privateKey: string, cipherObj:Object): Objec
 }
 
 export function decryptFile(cipherObj:Object): Object {
-  const appPrivateKey = blockstack.loadUserData().appPrivateKey
+  const appPrivateKey = blockstackPrivateKey
   return decryptFileWithKey(appPrivateKey, cipherObj)
 }

@@ -8,21 +8,21 @@ export function update() {
   const route = Store.store.route
 
   const anon = html`
-<div class="cell auto"></div>
-<div class="cell shrink">
-    <h5>Made with dapp form</h5>
-</div>
-`
+  <div class="cell auto"></div>
+  <div class="cell shrink">
+      <h5>Made with dapp form</h5>
+  </div>
+  `
 
   const normal = html`
-        <div class="cell auto nav-item-list">
-            <button class="hollow button" on-click="${() => Store.setRouteAction(Route.FormsList)}">List forms</button>
-            <button class="hollow button" on-click="${() => Store.setRouteAction(Route.Build)}">Build form</button>
-        </div>
-        <div class="cell shrink">
-            <button class="hollow button secondary button-signout" on-click="${() => blockstackSignout()}">Sign out</button>
-        </div>
-`
+  <div class="cell auto nav-item-list">
+    <button class="hollow button" on-click="${() => Store.setRouteAction(Route.FormsList)}">List forms</button>
+    <button class="hollow button" on-click="${() => Store.setRouteAction(Route.Build)}">Build form</button>
+  </div>
+  <div class="cell shrink">
+    <button class="hollow button secondary button-signout" on-click="${() => blockstackSignout()}">Sign out</button>
+  </div>
+  `
 
   const tpl = (location.toString().includes('form-id')) ? anon : normal
   render(tpl, nav)

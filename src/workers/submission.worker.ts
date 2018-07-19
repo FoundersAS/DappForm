@@ -1,8 +1,8 @@
-const blockstack = require('blockstack')
 import Bench from '../util/bench'
 import { createLocalStorage } from '../util/fakeLocalStorage'
 import { updateSubmissionsFromBench } from '../forms'
 import { Submission } from '../form-format';
+import { blockstackPrivateKey, blockstackPublicKey } from '../util/blockstack';
 
 declare global {
   interface WorkerGlobalScope { window:any, localStorage:any }
@@ -21,7 +21,7 @@ ctx.onmessage = (e: any) => {
   switch(data.cmd) {
     case 'start':
       blockstackLocalStorageHack(data.blockstackData)
-      console.debug('SubmissionWorker: Blockstack signin: ', blockstack.isUserSignedIn())
+      console.debug('SubmissionWorker: Started')
       startPolling()
   }
 }
@@ -32,8 +32,8 @@ function startPolling () {
   // TODO: Potential race condition when cleaning bench - could be new submissions
   async function doPoll () {
     console.debug('SubmissionWorker: Polling ...')
-    const privateKey = blockstack.loadUserData().appPrivateKey
-    const publicKey = blockstack.getPublicKeyFromPrivate(privateKey)
+    const privateKey = blockstackPrivateKey
+    const publicKey = blockstackPublicKey
     const bench = new Bench(privateKey, publicKey)
     const files = await bench.getBenchFiles() as Submission[]
     await updateSubmissionsFromBench(files)

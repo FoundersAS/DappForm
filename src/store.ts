@@ -2,7 +2,6 @@ import { update as listUpdate } from './components/list-forms/list-forms'
 import { persist, Route, update as routeUpdate } from './components/router'
 import { Form } from './form-format'
 import { update as navUpdate } from './components/nav/nav'
-const blockstack = require('blockstack')
 
 interface Dict {[k: string]: any}
 

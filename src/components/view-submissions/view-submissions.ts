@@ -1,6 +1,5 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
-import { Submission } from '../../form-format'
 import { Route } from '../router'
 import { getFormSubmissions, getForm } from '../../forms';
 
@@ -12,7 +11,6 @@ export async function update() {
   const submissions = await getFormSubmissions(uuid)
 
   const columns = ['uuid', ...form.questions.map(q => q.label)]
-  console.log(columns)
 
   const tableHead = columns.map(c => html`<th>${c}</th>`)
   const tableRows = Object.keys(submissions)

@@ -16,19 +16,7 @@ export async function update () {
   const app = location.origin
 
   const submission:Submission = Store.store.routeParams.submission
-  //test
-  // const submission = <Submission>{
-  //   formUuid: `36e6005c-e2c9-445c-8a38-88d82febc93f`,
-  //   uuid: `asd`,
-  //   created: new Date(),
-  //   answers: [
-  //     {
-  //       questionUuid: `bb34726e-4f99-4a4e-a805-987d89bce624`,
-  //       value: 'q1 answer',
-  //       name: `q1`
-  //     }
-  //   ]
-  // }
+
   let form:Form
 
   if (author && formUuid) {
@@ -44,15 +32,13 @@ export async function update () {
   else if (submission) {
     formUuid = submission.formUuid
     form = await getForm(formUuid)
-    console.assert(form, 'Didnt find form '+ `forms/${formUuid}.json`)
   }
-  console.debug(form)
+
   const questions = ((!form) ? [] : form.questions)
     .map(q => {
       let value:string = ''
       let inputTpl = html`<input type=${q.type} class="form-answer" data-question-uuid$="${q.uuid}" data-name$="${q.name}">`
       if (submission) {
-        console.debug(submission.answers)
         const answered = submission.answers.find(a => a.questionUuid === q.uuid)
         if (answered) {
           value = answered.value
@@ -62,18 +48,19 @@ export async function update () {
              type=${q.type} class="form-answer">`
       }
     return html`
-<div class="cell medium-12">
-    <label>${q.label}</label>
-    ${inputTpl}
-</div>`
+    <div class="cell medium-12">
+      <label>${q.label}</label>
+      ${inputTpl}
+    </div>`
   })
 
   const submit = async (evt:Event) => {
     evt.preventDefault();
     (el.querySelector('[type="submit"]') as HTMLButtonElement).disabled = true
+
     const submission = collectAnswers()
     submission.formUuid = form.uuid
-    console.debug('new submission',submission)
+
     const authorPubkey = form.authorPubKey
     const bench = new Bench('', authorPubkey)
     await bench.postFile(submission)
@@ -84,7 +71,7 @@ export async function update () {
 
   const tpl = html`
   <h2>${form.name}</h2>
-  
+
   <div class="callout success confirmation-text hide">
       <h5 class="">${form.confirmationText || "Thanks!"}</h5>
   </div>
@@ -92,14 +79,14 @@ export async function update () {
       <h5 class="">${form.introText}</h5>
   </div>
 
-<form class="grid-x grid-margin-y" on-submit="${(evt:any)=> submit(evt)}">
-    ${questions}
+  <form class="grid-x grid-margin-y" on-submit="${(evt:any)=> submit(evt)}">
+      ${questions}
 
-    ${submission ? null :html`<div class="cell small-12">
-        <button type="submit" class="button submit-button">Submit</button>
-    </div>`}
-</form>
-`
+      ${submission ? null :html`<div class="cell small-12">
+          <button type="submit" class="button submit-button">Submit</button>
+      </div>`}
+  </form>
+  `
 
   render(tpl, el)
 

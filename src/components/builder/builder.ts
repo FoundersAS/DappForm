@@ -5,7 +5,7 @@ import { Route } from '../router'
 
 import { v4 as uuid } from 'uuid'
 import { createForm } from '../../forms';
-const blockstack = require('blockstack')
+import { blockstackPublicKey } from '../../util/blockstack';
 
 const questions = <Question[]>[]
 
@@ -68,7 +68,7 @@ export function update() {
 
 function collectForm ():Form {
   // basics
-  const authorPubKey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey ) // be visible to me self!! YArrrrg
+  const authorPubKey = blockstackPublicKey
   const newFrom = <Form>{
     authorPubKey,
     uuid: uuid(),

@@ -1,6 +1,3 @@
-import { Route } from '../router'
-import Store from '../../store'
-
 const blockstack = require('blockstack')
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
 
@@ -12,9 +9,10 @@ export function update() {
     blockStackSignin()
   }
 
-  const tpl = html`<h1>Login</h1>
-    <button on-click="${(evt:Event) => login(evt)}" type="button" class="login-button button large">Blockstack</button>
-`
+  const tpl = html`
+  <h1>Login</h1>
+  <button on-click="${(evt:Event) => login(evt)}" type="button" class="login-button button large">Blockstack</button>
+  `
   render(tpl, el)
 }
 
