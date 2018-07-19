@@ -19,7 +19,6 @@ export function update() {
 
     await createForm(newForm)
 
-    Store.setFormsAction([...Store.store.forms, newForm])
     Store.setRouteAction(Route.FormsList)
   }
 
