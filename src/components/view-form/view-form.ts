@@ -8,8 +8,6 @@ import { deleteForm, getFormSubmissions } from '../../forms';
 const blockstack = require('blockstack')
 
 export async function update () {
-  const submissions = <Submission[]>[]
-
   const el = document.querySelector('forms-view')
   const uuid:string = Store.store.routeParams.formId
 
@@ -19,22 +17,8 @@ export async function update () {
   shareURL.searchParams.append(`author`, username)
   shareURL.searchParams.append(`form-id`, uuid)
 
-  const submissionsToForm = await getFormSubmissions(uuid)
-  Object.values(submissionsToForm).forEach(s => submissions.push(s as any))
-
-  const seeSubmissions = (formId: string, submissionId: string) => {
-    Store.setRouteAction(Route.Fill, {submission: submissions.find(s => s.uuid === submissionId)})
-  }
-
-  const submissionsListTpl = submissions
-    .map(submission => {
-      return html`<div class="grid-x">
-        <div class="cell auto">Submitted on ${submission.created}</div>
-        <div class="cell shrink">
-          <button class="clear button link" on-click="${() => seeSubmissions(submission.formUuid, submission.uuid)}">View submission</button>
-        </div>
-    </div>`
-    })
+  const submissions = await getFormSubmissions(uuid)
+  console.log(submissions)
 
   const tpl = html`
     <h3>Form dashboard</h3>
@@ -50,7 +34,7 @@ export async function update () {
       </label>
     </div>
   </form>
-  
+
       <p>
           <a href="${shareURL}" target="_blank" class="button large">Open</a>
           <button on-click="${(evt: Event) => deleteForm(uuid)}" class="alert button large">Delete</button>
@@ -59,8 +43,8 @@ export async function update () {
 
   <div class="cell medium-6">
     <h4>Analytics</h4>
-    <h6>Submissions (${submissionsListTpl.length})</h6>
-    ${submissionsListTpl}
+    <h6>Submissions (${Object.keys(submissions).length})</h6>
+    <button class="clear button link" on-click="${() => Store.setRouteAction(Route.SubmissionsView, { formId: uuid }) }">View Submissions</button>
   </div>
 
 </div>
