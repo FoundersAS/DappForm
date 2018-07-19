@@ -39,6 +39,12 @@ export function update() {
         <input type="text" name="intro-text">
     </label>
   </div>
+  <div class="cell small-6">
+    <label>
+        Confirmation text
+        <input type="text" name="confirmation-text">
+    </label>
+  </div>
 
   <div class="cell small-12">
     ${questionsListTpl}
@@ -71,6 +77,7 @@ function collectForm ():Form {
     questions: [],
     name: (document.querySelector('[name=form-name]') as HTMLInputElement).value,
     introText: (document.querySelector('[name=intro-text]') as HTMLInputElement).value,
+    confirmationText: (document.querySelector('[name=confirmation-text]') as HTMLInputElement).value,
   }
 
   // questions
