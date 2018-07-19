@@ -3,7 +3,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission } from '../../form-format'
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
-import { getForm } from '../../forms';
+import { getForm, getPublishPath } from '../../forms'
 
 const blockstack = require('blockstack')
 
@@ -32,7 +32,7 @@ export async function update () {
   let form:Form
 
   if (author && formUuid) {
-    const pathToPublicForm = await blockstack.getUserAppFileUrl(`published/${formUuid}.json`, author, app)
+    const pathToPublicForm = await blockstack.getUserAppFileUrl(getPublishPath(formUuid), author, app)
     const res = await fetch(pathToPublicForm, {
       mode: 'cors'
     })
