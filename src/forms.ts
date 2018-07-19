@@ -29,7 +29,13 @@ async function getFormsFile() {
 }
 
 export async function getForms(): Promise<Partial<Form>[]> {
-  return await getFormsFile() as Partial<Form>[]
+  const forms = await getFormsFile() as Partial<Form>[]
+  if (!forms) await initForms()
+  return forms || [] as Partial<Form>[]
+}
+
+async function initForms() {
+  return await putFile(formsListFile, [])
 }
 
 // TODO: make the request concurrent for performance if needed

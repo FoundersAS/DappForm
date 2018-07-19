@@ -57,7 +57,8 @@ export default class Bench {
       if (benchFiles.length > 0) console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`)
       return this.decryptBenchFiles(benchFiles)
     }
-    console.debug(`bench: ${this.publicKey} - error fetching files:`, res)
+    if (res.status === 404) return // no files waiting / bucket not existing
+    console.error(`bench: ${this.publicKey} - error fetching files:`, res)
   }
 
   async cleanBench() {
