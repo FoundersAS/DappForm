@@ -17271,6 +17271,7 @@ function uploadToGaiaHub(filename, contents, hubConfig) {
     body: contents }).then(function (response) {
     return response.text();
   }).then(function (responseText) {
+
     return JSON.parse(responseText);
   }).then(function (responseJSON) {
     return responseJSON.publicURL;
@@ -17361,6 +17362,7 @@ function getBucketUrl(gaiaHubUrl, appPrivateKey) {
     return bucketUrl;
   });
 }
+
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -17468,7 +17470,6 @@ function decryptContent(content, options) {
   if (!opt.privateKey) {
     opt.privateKey = (0, _auth.loadUserData)().appPrivateKey;
   }
-
   var cipherObject = JSON.parse(content);
   return (0, _encryption.decryptECIES)(opt.privateKey, cipherObject);
 }
@@ -17592,6 +17593,7 @@ exports.connectToGaiaHub = _hub.connectToGaiaHub;
 exports.uploadToGaiaHub = _hub.uploadToGaiaHub;
 exports.BLOCKSTACK_GAIA_HUB_LABEL = _hub.BLOCKSTACK_GAIA_HUB_LABEL;
 exports.GaiaHubConfig = _hub.GaiaHubConfig;
+
 
 /***/ }),
 
@@ -85493,7 +85495,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "1095ccca87fc16133794.worker.js");
+  return new Worker(__webpack_require__.p + "61971a34aa5287c6dea9.worker.js");
 };
 
 /***/ }),
@@ -86136,6 +86138,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../forms */ "./src/forms.ts");
+
 
 
 
@@ -86148,11 +86152,7 @@ function update() {
     const save = async (evt) => {
         evt.target.disabled = true;
         const newForm = collectForm();
-        await Promise.all([
-            blockstack.putFile(`forms/${newForm.uuid}.json`, JSON.stringify(newForm), { encrypt: true }),
-            blockstack.putFile(`published/${newForm.uuid}.json`, JSON.stringify(newForm), { encrypt: false }),
-            addToList(newForm),
-        ]);
+        await Object(_forms__WEBPACK_IMPORTED_MODULE_4__["createForm"])(newForm);
         _store__WEBPACK_IMPORTED_MODULE_1__["default"].setFormsAction([..._store__WEBPACK_IMPORTED_MODULE_1__["default"].store.forms, newForm]);
         _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormsList);
     };
@@ -86193,7 +86193,9 @@ function update() {
 }
 function collectForm() {
     // basics
+    const authorPubKey = blockstack.getPublicKeyFromPrivate(blockstack.loadUserData().appPrivateKey); // be visible to me self!! YArrrrg
     const newFrom = {
+        authorPubKey,
         uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_3__["v4"])(),
         created: new Date(),
         modified: new Date(),
@@ -86247,30 +86249,6 @@ function renderLeaf(q) {
 </div>
   `;
 }
-const formsListRemoteFile = 'forms.json';
-async function addToList(newForm) {
-    let list = [];
-    try {
-        const json = await blockstack.getFile(formsListRemoteFile);
-        if (json) {
-            list = JSON.parse(json);
-        }
-    }
-    catch (e) {
-        console.info('Problem getting list:');
-        console.info(e);
-    }
-    list.push({
-        uuid: newForm.uuid,
-        name: newForm.name,
-        created: newForm.created,
-    });
-    await blockstack.putFile(formsListRemoteFile, JSON.stringify(list));
-    console.debug(`did update list`);
-}
-function publishForm(form) {
-    // await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
-}
 
 
 /***/ }),
@@ -86290,6 +86268,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../forms */ "./src/forms.ts");
+
 
 
 
@@ -86309,30 +86289,14 @@ async function create() {
         console.log("OK already created");
     }
 }
-const formsListRemoteFile = 'forms.json';
-async function getList() {
-    let list = [];
-    try {
-        const json = await blockstack.getFile(formsListRemoteFile);
-        if (json) {
-            list = JSON.parse(json);
-        }
-    }
-    catch (e) {
-        console.info('Problem getting list:');
-        console.info(e);
-    }
-    return list;
-}
 async function init() {
     update(); // initial render
-    const list = await getList();
+    const list = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getForms"])();
     const forms = list
         .filter(form => form.created && form.uuid && form.name)
         .map(form => {
         form.created = new Date(form.created);
         form.modified = new Date(form.modified);
-        form.questions = (form.questions instanceof Array) ? form.questions : [];
         return form;
     }); // now they're sanitized
     console.debug("In:", list);
@@ -86341,7 +86305,8 @@ async function init() {
 }
 function update() {
     const { forms } = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store;
-    const formsList = forms; // convert to view model
+    const formsList = forms;
+    console.debug(forms);
     const formsListTpl = formsList
         .sort((a, b) => a.created.getTime() - b.created.getTime())
         .map(form => _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
@@ -86437,8 +86402,8 @@ function update() {
 `;
     const normal = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_3__["html"] `
         <div class="cell auto nav-item-list">
-            <button class="clear button" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].FormsList)}">List forms</button>
-            <button class="clear button" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].Build)}">Build form</button>
+            <button class="hollow button" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].FormsList)}">List forms</button>
+            <button class="hollow button" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].Build)}">Build form</button>
         </div>
         <div class="cell shrink">
             <button class="hollow button secondary button-signout" on-click="${() => Object(_login_login__WEBPACK_IMPORTED_MODULE_2__["blockstackSignout"])()}">Sign out</button>
@@ -86513,7 +86478,7 @@ function update() {
 }
 function persist() {
     const route = _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route;
-    if (route === Route.FormsList) { // TODO we must
+    if (route === Route.FormsList || route === Route.Build) {
         sessionStorage.route = _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route;
     }
 }
@@ -86536,6 +86501,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../forms */ "./src/forms.ts");
+
 
 
 
@@ -86545,12 +86512,25 @@ async function update() {
     const el = document.querySelector('fill-form');
     const url = new URL(location.toString());
     const author = url.searchParams.get('author');
-    const formId = url.searchParams.get('form-id');
+    let formUuid = url.searchParams.get('form-id');
     const app = location.origin;
     const submission = _store__WEBPACK_IMPORTED_MODULE_2__["default"].store.routeParams.submission;
+    //test
+    // const submission = <Submission>{
+    //   formUuid: `36e6005c-e2c9-445c-8a38-88d82febc93f`,
+    //   uuid: `asd`,
+    //   created: new Date(),
+    //   answers: [
+    //     {
+    //       questionUuid: `bb34726e-4f99-4a4e-a805-987d89bce624`,
+    //       value: 'q1 answer',
+    //       name: `q1`
+    //     }
+    //   ]
+    // }
     let form;
-    if (author && formId) {
-        const pathToPublicForm = await blockstack.getUserAppFileUrl(`published/${formId}.json`, author, app);
+    if (author && formUuid) {
+        const pathToPublicForm = await blockstack.getUserAppFileUrl(`published/${formUuid}.json`, author, app);
         const res = await fetch(pathToPublicForm, {
             mode: 'cors'
         });
@@ -86560,20 +86540,37 @@ async function update() {
         }
     }
     else if (submission) {
-        form = _store__WEBPACK_IMPORTED_MODULE_2__["default"].store.forms.find((f) => f.uuid === submission.formUuid);
+        formUuid = submission.formUuid;
+        form = await Object(_forms__WEBPACK_IMPORTED_MODULE_4__["getForm"])(formUuid);
+        console.assert(form, 'Didnt find form ' + `forms/${formUuid}.json`);
     }
-    const questions = ((!form) ? [] : form.questions).map(q => {
+    console.debug(form);
+    const questions = ((!form) ? [] : form.questions)
+        .map(q => {
+        let value = '';
+        let inputTpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_1__["html"] `<input type=${q.type} class="form-answer" data-question-uuid$="${q.uuid}" data-name$="${q.name}">`;
+        if (submission) {
+            console.debug(submission.answers);
+            const answered = submission.answers.find(a => a.questionUuid === q.uuid);
+            if (answered) {
+                value = answered.value;
+            }
+            inputTpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_1__["html"] `
+            <input disabled value="${value}"
+             type=${q.type} class="form-answer">`;
+        }
         return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_1__["html"] `
 <div class="cell medium-12">
     <label>${q.label}</label>
-    <input type=${q.type} class="form-answer" data-question-uuid="${q.uuid}" data-name="${q.name}" value="">
+    ${inputTpl}
 </div>`;
     });
     const submit = async (evt) => {
         evt.target.disabled = true;
         const submission = collectAnswers();
         submission.formUuid = form.uuid;
-        const authorPubkey = blockstack.getPublicKeyFromPrivate(blockstack.loadUserData().appPrivateKey); // be visible to me self!! YArrrrg
+        console.debug('new submission', submission);
+        const authorPubkey = form.authorPubKey;
         const bench = new _util_bench__WEBPACK_IMPORTED_MODULE_0__["default"]('', authorPubkey);
         await bench.postFile(submission);
     };
@@ -86583,21 +86580,16 @@ async function update() {
 <form class="grid-x grid-margin-y">
     ${questions}
 
-    <div class="cell small-12">
+    ${submission ? null : _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_1__["html"] `<div class="cell small-12">
         <button type="button" class="button submit-button" on-click="${(evt) => submit(evt)}">Submit</button>
-    </div>
+    </div>`}
 </form>
-
-<p>Submissions:</p>
-<pre>${JSON.stringify(submission, null, 2)}</pre>
 `;
     Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_1__["render"])(tpl, el);
-    if (submission) {
-        // fill out
-    }
 }
 function collectAnswers() {
-    const answers = Array.from(document.querySelectorAll('.form-answer')).map((el) => {
+    const answers = Array.from(document.querySelectorAll('.form-answer'))
+        .map((el) => {
         return {
             value: el.value,
             name: el.getAttribute('data-name'),
@@ -86628,6 +86620,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../forms */ "./src/forms.ts");
+
 
 
 
@@ -86635,25 +86629,13 @@ const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockst
 async function update() {
     const submissions = [];
     const el = document.querySelector('forms-view');
-    const id = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.formId;
+    const uuid = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.formId;
     const username = blockstack.loadUserData().username;
     const shareURL = new URL(location.origin);
     shareURL.searchParams.append(`author`, username);
-    shareURL.searchParams.append(`form-id`, id);
-    const submissionsPath = `submissions/${id}.json`;
-    let submissionsToForm = {};
-    try {
-        const json = await blockstack.getFile(submissionsPath);
-        if (json) {
-            submissionsToForm = JSON.parse(json);
-        }
-    }
-    catch (e) {
-        console.error(e);
-    }
-    finally {
-        Object.values(submissionsToForm).forEach(s => submissions.push(s));
-    }
+    shareURL.searchParams.append(`form-id`, uuid);
+    const submissionsToForm = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getFormSubmissions"])(uuid);
+    Object.values(submissionsToForm).forEach(s => submissions.push(s));
     const seeSubmissions = (formId, submissionId) => {
         _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Fill, { submission: submissions.find(s => s.uuid === submissionId) });
     };
@@ -86668,25 +86650,144 @@ async function update() {
     });
     const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
     <h3>Form dashboard</h3>
-    <p><small>(id: ${id})</small>
+    <p><small>(uuid: ${uuid})</small>
 
 <div class="grid-x grid-margin-x">
   <div class="cell medium-6">
   <h4>Distribution</h4>
-  <p>Share URL<br>
-      <code>${shareURL.toString()}</code></p>
-      <p><a href="${shareURL}" target="_blank" class="button large">Open</a></p>
+  <form class="grid-x grid-margin-y">
+    <div class="cell small-12">
+      <label>Share URL
+            <input value="${shareURL.toString()}" type="text">
+      </label>
+    </div>
+  </form>
+  
+      <p>
+          <a href="${shareURL}" target="_blank" class="button large">Open</a>
+          <button on-click="${(evt) => Object(_forms__WEBPACK_IMPORTED_MODULE_3__["deleteForm"])(uuid)}" class="alert button large">Delete</button>
+      </p>
   </div>
 
   <div class="cell medium-6">
     <h4>Analytics</h4>
-    <h5>Submissions (${submissionsListTpl.length})</h5>
+    <h6>Submissions (${submissionsListTpl.length})</h6>
     ${submissionsListTpl}
   </div>
 
 </div>
 `;
     Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
+}
+
+
+/***/ }),
+
+/***/ "./src/forms.ts":
+/*!**********************!*\
+  !*** ./src/forms.ts ***!
+  \**********************/
+/*! exports provided: getForms, updateSubmissionsFromBench, getFormSubmissions, getForm, publishForm, addFormToList, createForm, createDummySubmission, unpublishForm, deleteForm */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getForms", function() { return getForms; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSubmissionsFromBench", function() { return updateSubmissionsFromBench; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormSubmissions", function() { return getFormSubmissions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getForm", function() { return getForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "publishForm", function() { return publishForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addFormToList", function() { return addFormToList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createForm", function() { return createForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createDummySubmission", function() { return createDummySubmission; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unpublishForm", function() { return unpublishForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteForm", function() { return deleteForm; });
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util_write__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/write */ "./src/util/write.ts");
+
+
+function sortSubmissions(submissions) {
+    return submissions.reduce((acc, cur) => {
+        acc[cur.formUuid] = acc[cur.formUuid] || {};
+        acc[cur.formUuid][cur.uuid] = cur;
+        return acc;
+    }, {});
+}
+const formsListFile = 'forms.json';
+function getSubmissionsPath(formUuid) {
+    return `submissions/${formUuid}.json`;
+}
+function getFormPath(formUuid) {
+    return `forms/${formUuid}.json`;
+}
+function getPublishPath(formUuid) {
+    return `published/${formUuid}.json`;
+}
+async function getFormsFile() {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(formsListFile);
+}
+async function getForms() {
+    return await getFormsFile();
+}
+// TODO: make the request concurrent for performance if needed
+async function updateFormSubmissions(forms) {
+    for (const formUuid in forms) {
+        const newSubmissions = forms[formUuid];
+        const submissionsPath = getSubmissionsPath(formUuid);
+        const oldSubmissions = await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(submissionsPath) || {};
+        console.debug(`form: ${formUuid} new submissions:`, newSubmissions);
+        console.debug(`form: ${formUuid} old submissions:`, oldSubmissions);
+        console.debug(`form: ${formUuid} old + new: `, Object.assign({}, oldSubmissions, newSubmissions));
+        await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(submissionsPath, Object.assign({}, oldSubmissions, newSubmissions));
+    }
+}
+async function updateSubmissionsFromBench(submissions) {
+    return updateFormSubmissions(sortSubmissions(submissions));
+}
+async function getFormSubmissions(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(getSubmissionsPath(formUuid)) || [];
+}
+async function getForm(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(getFormPath(formUuid)) || undefined;
+}
+function publishForm(form) {
+    return Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getPublishPath(form.uuid), form, false);
+}
+async function addFormToList(form) {
+    const forms = await getForms();
+    Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(formsListFile, [...forms, form]);
+}
+function createForm(form) {
+    return Promise.all([
+        Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getFormPath(form.uuid), form),
+        publishForm(form),
+        addFormToList(form)
+    ]);
+}
+function createDummySubmission(formUuid) {
+    return {
+        uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])(),
+        formUuid,
+        created: new Date(),
+        answers: [{ questionUuid: '12345', name: 'privacy', value: 'IS GREAT' }]
+    };
+}
+async function deleteFormSubmissions(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getSubmissionsPath(formUuid), {});
+}
+async function removeFormFromList(formUuid) {
+    const forms = await getForms();
+    Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(formsListFile, forms.filter(f => f.uuid !== formUuid));
+}
+async function unpublishForm(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getPublishPath(formUuid), {});
+}
+async function deleteForm(formUuid) {
+    await unpublishForm(formUuid);
+    await deleteFormSubmissions(formUuid);
+    await removeFormFromList(formUuid);
+    await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getFormPath(formUuid), {});
 }
 
 
@@ -86855,12 +86956,14 @@ class Bench {
         });
         if (res.status === 200) {
             const benchFiles = await res.json();
-            console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`);
+            if (benchFiles.length > 0)
+                console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`);
             return this.decryptBenchFiles(benchFiles);
         }
+        console.debug(`bench: ${this.publicKey} - error fetching files:`, res);
     }
     async cleanBench() {
-        console.debug(`bench: ${this.publicKey} - cleaning`);
+        // console.debug(`bench: ${this.publicKey} - cleaning`)
         const res = await fetch('https://bench.takectrl.io/clean', {
             method: 'POST',
             mode: 'cors',
@@ -86868,7 +86971,7 @@ class Bench {
         });
         if (res.status === 200)
             return console.debug(`bench: ${this.publicKey} - cleaned`);
-        console.error(`bench: ${this.publicKey} - cleaning failed: ${res}`);
+        console.error(`bench: ${this.publicKey} - cleaning failed:`, res);
     }
     async postFile(file) {
         const res = await fetch('https://bench.takectrl.io/', {
@@ -86884,7 +86987,7 @@ class Bench {
         });
         if (res.status === 200)
             return console.debug(`bench: ${this.publicKey} - file posted`);
-        console.error(`bench: ${this.publicKey} - file post failed: ${res}`);
+        console.error(`bench: ${this.publicKey} - file post failed: `, res);
     }
 }
 
@@ -86931,12 +87034,12 @@ function decryptFile(cipherObj) {
 /*!**************************************!*\
   !*** ./src/util/fakeLocalStorage.ts ***!
   \**************************************/
-/*! exports provided: localStorage, getBlockstackData */
+/*! exports provided: createLocalStorage, getBlockstackData */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "localStorage", function() { return localStorage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createLocalStorage", function() { return createLocalStorage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlockstackData", function() { return getBlockstackData; });
 const cache = {};
 function getItem(key) {
@@ -86951,17 +87054,72 @@ function removeItem(key) {
     cache[key] = null;
 }
 ;
-const localStorage = {
-    getItem: getItem,
-    setItem: setItem,
-    removeItem: removeItem
-};
+function createLocalStorage(initData) {
+    const storage = {
+        getItem: getItem,
+        setItem: setItem,
+        removeItem: removeItem
+    };
+    Object.keys(initData).forEach(key => {
+        storage.setItem(key, initData[key]);
+    });
+    return storage;
+}
 function getBlockstackData(ls) {
     return {
-        blockstack: ls.getItem('blockstack'),
-        gaia: ls.getItem('blockstack-gaia-hub-config'),
-        key: ls.getItem('blockstack-transit-private-key')
+        'blockstack': ls.getItem('blockstack'),
+        'blockstack-gaia-hub-config': ls.getItem('blockstack-gaia-hub-config'),
+        'blockstack-transit-private-key': ls.getItem('blockstack-transit-private-key')
     };
+}
+
+
+/***/ }),
+
+/***/ "./src/util/write.ts":
+/*!***************************!*\
+  !*** ./src/util/write.ts ***!
+  \***************************/
+/*! exports provided: putFile, getFile */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "putFile", function() { return putFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFile", function() { return getFile; });
+const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
+async function putFile(path, contents, encrypt = true) {
+    try {
+        await blockstack.putFile(path, JSON.stringify(contents), { encrypt });
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+async function getFile(path) {
+    let json;
+    let parsed;
+    try {
+        json = await blockstack.getFile(path);
+    }
+    catch (e) {
+        console.log(`getFile failed`);
+        console.error(e);
+        return false;
+    }
+    if (!json) {
+        console.info("Empty file. Form was probably deleted. " + path);
+        return false;
+    }
+    try {
+        parsed = JSON.parse(json);
+    }
+    catch (e) {
+        console.log(`JSON.parse getFile contents failed`);
+        console.error(e);
+        return false;
+    }
+    return parsed;
 }
 
 
@@ -87023,4 +87181,4 @@ function getBlockstackData(ls) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=a865385fc57a69e2fdeb.bundle.js.map
+//# sourceMappingURL=db973ab104a64df3c425.bundle.js.map

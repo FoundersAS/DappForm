@@ -17271,6 +17271,7 @@ function uploadToGaiaHub(filename, contents, hubConfig) {
     body: contents }).then(function (response) {
     return response.text();
   }).then(function (responseText) {
+
     return JSON.parse(responseText);
   }).then(function (responseJSON) {
     return responseJSON.publicURL;
@@ -17361,6 +17362,7 @@ function getBucketUrl(gaiaHubUrl, appPrivateKey) {
     return bucketUrl;
   });
 }
+
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -17468,7 +17470,6 @@ function decryptContent(content, options) {
   if (!opt.privateKey) {
     opt.privateKey = (0, _auth.loadUserData)().appPrivateKey;
   }
-
   var cipherObject = JSON.parse(content);
   return (0, _encryption.decryptECIES)(opt.privateKey, cipherObject);
 }
@@ -17592,6 +17593,7 @@ exports.connectToGaiaHub = _hub.connectToGaiaHub;
 exports.uploadToGaiaHub = _hub.uploadToGaiaHub;
 exports.BLOCKSTACK_GAIA_HUB_LABEL = _hub.BLOCKSTACK_GAIA_HUB_LABEL;
 exports.GaiaHubConfig = _hub.GaiaHubConfig;
+
 
 /***/ }),
 
@@ -78298,29 +78300,25 @@ const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockst
 
 
 
-self.localStorage = _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"];
-self.window = { localStorage: _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"], location: '' };
-// End Hack
+function blockstackLocalStorageHack(blockstackData) {
+    self.localStorage = Object(_util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["createLocalStorage"])(blockstackData);
+    self.window = { localStorage: self.localStorage, location: '' };
+}
 const ctx = self;
 ctx.onmessage = (e) => {
     const data = e.data;
     switch (data.cmd) {
         case 'start':
-            initLocalStorage(data.blockstackData);
+            blockstackLocalStorageHack(data.blockstackData);
             console.debug('SubmissionWorker: Blockstack signin: ', blockstack.isUserSignedIn());
             startPolling();
     }
 };
-function initLocalStorage(blockstackData) {
-    _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"].setItem('blockstack', blockstackData.blockstack);
-    _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"].setItem('blockstack-gaia-hub-config', blockstackData.gaia);
-    _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"].setItem('blockstack-transit-private-key', blockstackData.key);
-}
 function startPolling() {
     doPoll();
     // TODO: Potential race condition when cleaning bench - could be new submissions
     async function doPoll() {
-        // console.debug('Polling for new submissions ...')
+        // console.debug('SubmissionWorker: Polling ...')
         const privateKey = blockstack.loadUserData().appPrivateKey;
         const publicKey = blockstack.getPublicKeyFromPrivate(privateKey);
         const bench = new _util_bench__WEBPACK_IMPORTED_MODULE_0__["default"](privateKey, publicKey);
@@ -78330,6 +78328,7 @@ function startPolling() {
             await bench.cleanBench();
             ctx.postMessage('new submissions ready');
         }
+        // console.debug('SubmissionWorker: Polling Done')
         setTimeout(doPoll, 5000);
     }
 }
@@ -85320,13 +85319,21 @@ function getZoneFileTemplate() {
 /*!**********************!*\
   !*** ./src/forms.ts ***!
   \**********************/
-/*! exports provided: updateSubmissionsFromBench, createDummySubmission */
+/*! exports provided: getForms, updateSubmissionsFromBench, getFormSubmissions, getForm, publishForm, addFormToList, createForm, createDummySubmission, unpublishForm, deleteForm */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getForms", function() { return getForms; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSubmissionsFromBench", function() { return updateSubmissionsFromBench; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFormSubmissions", function() { return getFormSubmissions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getForm", function() { return getForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "publishForm", function() { return publishForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addFormToList", function() { return addFormToList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createForm", function() { return createForm; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createDummySubmission", function() { return createDummySubmission; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unpublishForm", function() { return unpublishForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteForm", function() { return deleteForm; });
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _util_write__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/write */ "./src/util/write.ts");
@@ -85339,12 +85346,28 @@ function sortSubmissions(submissions) {
         return acc;
     }, {});
 }
+const formsListFile = 'forms.json';
+function getSubmissionsPath(formUuid) {
+    return `submissions/${formUuid}.json`;
+}
+function getFormPath(formUuid) {
+    return `forms/${formUuid}.json`;
+}
+function getPublishPath(formUuid) {
+    return `published/${formUuid}.json`;
+}
+async function getFormsFile() {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(formsListFile);
+}
+async function getForms() {
+    return await getFormsFile();
+}
 // TODO: make the request concurrent for performance if needed
 async function updateFormSubmissions(forms) {
     for (const formUuid in forms) {
         const newSubmissions = forms[formUuid];
-        const submissionsPath = `submissions/${formUuid}.json`;
-        const oldSubmissions = await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(submissionsPath);
+        const submissionsPath = getSubmissionsPath(formUuid);
+        const oldSubmissions = await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(submissionsPath) || {};
         console.debug(`form: ${formUuid} new submissions:`, newSubmissions);
         console.debug(`form: ${formUuid} old submissions:`, oldSubmissions);
         console.debug(`form: ${formUuid} old + new: `, Object.assign({}, oldSubmissions, newSubmissions));
@@ -85354,6 +85377,26 @@ async function updateFormSubmissions(forms) {
 async function updateSubmissionsFromBench(submissions) {
     return updateFormSubmissions(sortSubmissions(submissions));
 }
+async function getFormSubmissions(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(getSubmissionsPath(formUuid)) || [];
+}
+async function getForm(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(getFormPath(formUuid)) || undefined;
+}
+function publishForm(form) {
+    return Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getPublishPath(form.uuid), form, false);
+}
+async function addFormToList(form) {
+    const forms = await getForms();
+    Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(formsListFile, [...forms, form]);
+}
+function createForm(form) {
+    return Promise.all([
+        Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getFormPath(form.uuid), form),
+        publishForm(form),
+        addFormToList(form)
+    ]);
+}
 function createDummySubmission(formUuid) {
     return {
         uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])(),
@@ -85361,6 +85404,22 @@ function createDummySubmission(formUuid) {
         created: new Date(),
         answers: [{ questionUuid: '12345', name: 'privacy', value: 'IS GREAT' }]
     };
+}
+async function deleteFormSubmissions(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getSubmissionsPath(formUuid), {});
+}
+async function removeFormFromList(formUuid) {
+    const forms = await getForms();
+    Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(formsListFile, forms.filter(f => f.uuid !== formUuid));
+}
+async function unpublishForm(formUuid) {
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getPublishPath(formUuid), {});
+}
+async function deleteForm(formUuid) {
+    await unpublishForm(formUuid);
+    await deleteFormSubmissions(formUuid);
+    await removeFormFromList(formUuid);
+    await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(getFormPath(formUuid), {});
 }
 
 
@@ -85408,12 +85467,14 @@ class Bench {
         });
         if (res.status === 200) {
             const benchFiles = await res.json();
-            console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`);
+            if (benchFiles.length > 0)
+                console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`);
             return this.decryptBenchFiles(benchFiles);
         }
+        console.debug(`bench: ${this.publicKey} - error fetching files:`, res);
     }
     async cleanBench() {
-        console.debug(`bench: ${this.publicKey} - cleaning`);
+        // console.debug(`bench: ${this.publicKey} - cleaning`)
         const res = await fetch('https://bench.takectrl.io/clean', {
             method: 'POST',
             mode: 'cors',
@@ -85421,7 +85482,7 @@ class Bench {
         });
         if (res.status === 200)
             return console.debug(`bench: ${this.publicKey} - cleaned`);
-        console.error(`bench: ${this.publicKey} - cleaning failed: ${res}`);
+        console.error(`bench: ${this.publicKey} - cleaning failed:`, res);
     }
     async postFile(file) {
         const res = await fetch('https://bench.takectrl.io/', {
@@ -85437,7 +85498,7 @@ class Bench {
         });
         if (res.status === 200)
             return console.debug(`bench: ${this.publicKey} - file posted`);
-        console.error(`bench: ${this.publicKey} - file post failed: ${res}`);
+        console.error(`bench: ${this.publicKey} - file post failed: `, res);
     }
 }
 
@@ -85484,12 +85545,12 @@ function decryptFile(cipherObj) {
 /*!**************************************!*\
   !*** ./src/util/fakeLocalStorage.ts ***!
   \**************************************/
-/*! exports provided: localStorage, getBlockstackData */
+/*! exports provided: createLocalStorage, getBlockstackData */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "localStorage", function() { return localStorage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createLocalStorage", function() { return createLocalStorage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlockstackData", function() { return getBlockstackData; });
 const cache = {};
 function getItem(key) {
@@ -85504,16 +85565,22 @@ function removeItem(key) {
     cache[key] = null;
 }
 ;
-const localStorage = {
-    getItem: getItem,
-    setItem: setItem,
-    removeItem: removeItem
-};
+function createLocalStorage(initData) {
+    const storage = {
+        getItem: getItem,
+        setItem: setItem,
+        removeItem: removeItem
+    };
+    Object.keys(initData).forEach(key => {
+        storage.setItem(key, initData[key]);
+    });
+    return storage;
+}
 function getBlockstackData(ls) {
     return {
-        blockstack: ls.getItem('blockstack'),
-        gaia: ls.getItem('blockstack-gaia-hub-config'),
-        key: ls.getItem('blockstack-transit-private-key')
+        'blockstack': ls.getItem('blockstack'),
+        'blockstack-gaia-hub-config': ls.getItem('blockstack-gaia-hub-config'),
+        'blockstack-transit-private-key': ls.getItem('blockstack-transit-private-key')
     };
 }
 
@@ -85532,25 +85599,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "putFile", function() { return putFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFile", function() { return getFile; });
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-async function putFile(path, contents) {
+async function putFile(path, contents, encrypt = true) {
     try {
-        const result = await blockstack.putFile(path, JSON.stringify(contents));
-        return result;
+        await blockstack.putFile(path, JSON.stringify(contents), { encrypt });
     }
     catch (e) {
         console.error(e);
-        return false;
     }
 }
 async function getFile(path) {
+    let json;
+    let parsed;
     try {
-        const contents = await blockstack.getFile(path);
-        return JSON.parse(contents);
+        json = await blockstack.getFile(path);
     }
     catch (e) {
+        console.log(`getFile failed`);
         console.error(e);
         return false;
     }
+    if (!json) {
+        console.info("Empty file. Form was probably deleted. " + path);
+        return false;
+    }
+    try {
+        parsed = JSON.parse(json);
+    }
+    catch (e) {
+        console.log(`JSON.parse getFile contents failed`);
+        console.error(e);
+        return false;
+    }
+    return parsed;
 }
 
 
@@ -85612,4 +85692,4 @@ async function getFile(path) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=1095ccca87fc16133794.worker.js.map
+//# sourceMappingURL=61971a34aa5287c6dea9.worker.js.map
