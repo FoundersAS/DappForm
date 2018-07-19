@@ -5,7 +5,8 @@ import { Route } from '../router'
 
 import { v4 as uuid } from 'uuid'
 import { createForm } from '../../forms';
-import { blockstackPublicKey } from '../../util/blockstack';
+
+import { blockstackPublicKey } from '../../util/blockstackUtils';
 
 const questions = <Question[]>[]
 

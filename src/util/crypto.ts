@@ -1,4 +1,4 @@
-import { blockstackPrivateKey } from "./blockstack";
+const blockstack = require('blockstack') // don't change - breaks worker
 const EllipticCurve = require('elliptic').ec
 const {encryptECIES, decryptECIES} = require('../../node_modules/blockstack/lib/encryption.js')
 
@@ -25,6 +25,6 @@ export function decryptFileWithKey (privateKey: string, cipherObj:Object): Objec
 }
 
 export function decryptFile(cipherObj:Object): Object {
-  const appPrivateKey = blockstackPrivateKey
+  const appPrivateKey = blockstack.loadUserData().appPrivateKey
   return decryptFileWithKey(appPrivateKey, cipherObj)
 }

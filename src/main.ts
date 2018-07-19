@@ -1,8 +1,9 @@
+const blockstack = require('blockstack')
+
 import {default as SubmissionWorker} from "worker-loader!./workers/submission.worker";
 import Store from './store'
 import { Route } from './components/router'
 import { getBlockstackData } from "./util/fakeLocalStorage";
-const blockstack = require('blockstack')
 
 function initSubmissionFetching() {
   const submissionWorker = new SubmissionWorker()

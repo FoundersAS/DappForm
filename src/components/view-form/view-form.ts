@@ -2,7 +2,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Route } from '../router'
 import { deleteForm, getFormSubmissions } from '../../forms';
-import { blockstackUsername } from '../../util/blockstack';
+import { blockstackUsername } from '../../util/blockstackUtils';
 
 export async function update () {
   const el = document.querySelector('forms-view')
