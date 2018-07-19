@@ -86707,15 +86707,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
 /* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../forms */ "./src/forms.ts");
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../forms */ "./src/forms.ts");
+
 
 
 
 async function update() {
     const el = document.querySelector('submissions-view');
     const uuid = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.formId;
-    const form = await Object(_forms__WEBPACK_IMPORTED_MODULE_2__["getForm"])(uuid);
-    const submissions = await Object(_forms__WEBPACK_IMPORTED_MODULE_2__["getFormSubmissions"])(uuid);
+    const form = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getForm"])(uuid);
+    const submissions = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getFormSubmissions"])(uuid);
     const columns = ['uuid', ...form.questions.map(q => q.label)];
     console.log(columns);
     const tableHead = columns.map(c => _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<th>${c}</th>`);
@@ -86738,7 +86740,7 @@ async function update() {
   `;
     const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
     <h3>Form Submissions</h3>
-    <p><small>(uuid: ${uuid})</small></p>
+    <p><small><button class="clear button link" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormView, { formId: uuid })}">(uuid: ${uuid})</button></small></p>
     <div class="grid-x grid-margin-x">
       <div class="cell medium-12">
       ${table}
@@ -87257,4 +87259,4 @@ async function getFile(path) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=2a5c0db4f3da7fa9bd75.bundle.js.map
+//# sourceMappingURL=37f0e894b860e4b49d25.bundle.js.map
