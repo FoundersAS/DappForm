@@ -20,7 +20,7 @@ function getFormPath(formUuid: string) {
   return `forms/${formUuid}.json`
 }
 
-function getPublishPath(formUuid: string) {
+export function getPublishPath(formUuid: string) {
   return `published/${formUuid}.json`
 }
 
