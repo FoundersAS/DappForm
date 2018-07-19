@@ -15,13 +15,9 @@ export async function update() {
   console.log(columns)
 
   const tableHead = columns.map(c => html`<th>${c}</th>`)
-  const tableRows = Object.keys(submissions).map(uuid => {
-    return {
-      uuid,
-      answers: submissions[uuid].answers
-    }
-  })
-  .map(d => {
+  const tableRows = Object.keys(submissions)
+    .map(uuid => { return { uuid, answers: submissions[uuid].answers } })
+    .map(d => {
     return html`<tr><td>${uuid}</td>${d.answers.map(a => html`<td>${a.value}</td>`)}</tr>`
   })
 
