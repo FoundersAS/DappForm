@@ -69,7 +69,8 @@ export async function update () {
   })
 
   const submit = async (evt:Event) => {
-    (evt.target as HTMLButtonElement).disabled = true
+    evt.preventDefault();
+    (el.querySelector('[type="submit"]') as HTMLButtonElement).disabled = true
     const submission = collectAnswers()
     submission.formUuid = form.uuid
     console.debug('new submission',submission)
@@ -81,16 +82,21 @@ export async function update () {
   const tpl = html`
 <h2>${form.name}</h2>
 <h6>${form.introText}</h6>
-<form class="grid-x grid-margin-y">
+<form class="grid-x grid-margin-y" on-submit="${(evt:any)=> submit(evt)}">
     ${questions}
 
     ${submission ? null :html`<div class="cell small-12">
-        <button type="button" class="button submit-button" on-click="${(evt:any)=>submit(evt)}">Submit</button>
+        <button type="submit" class="button submit-button">Submit</button>
     </div>`}
 </form>
 `
 
   render(tpl, el)
+
+  Array.from(document.querySelectorAll('input'))
+    .filter((el:HTMLInputElement) => el.getAttribute('required') !== "required")
+    .forEach((el:HTMLInputElement) => el.addEventListener('blur', () => el.setAttribute('required','required'))
+  )
 }
 
 function collectAnswers () {
