@@ -2,6 +2,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Route } from '../router'
 import { Form } from '../../form-format'
+import { getFormsList } from '../../forms';
 
 const blockstack = require('blockstack')
 
@@ -21,27 +22,10 @@ export async function create() {
   }
 }
 
-const formsListRemoteFile = 'forms.json'
-
-async function getList ():Promise<Partial<Form>[]> {
-  let list = <Partial<Form>[]>[]
-  try {
-    const json = await blockstack.getFile(formsListRemoteFile)
-    if (json) {
-      list = JSON.parse(json)
-    }
-  }
-  catch (e) {
-    console.info('Problem getting list:')
-    console.info(e)
-  }
-  return list
-}
-
 export async function init () {
   update()// initial render
 
-  const list = await getList()
+  const list = await getFormsList()
 
   const forms:Form[] = list
     .filter(form => form.created && form.uuid && form.name)
