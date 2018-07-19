@@ -52,9 +52,6 @@ export function update () {
 }
 
 export function persist () {
-  const route = Store.store.route
-
-  if (route === Route.FormsList || route === Route.Build) {
-    sessionStorage.route = Store.store.route
-  }
+  sessionStorage.route = Store.store.route
+  sessionStorage.routeParams = JSON.stringify(Store.store.routeParams)
 }
