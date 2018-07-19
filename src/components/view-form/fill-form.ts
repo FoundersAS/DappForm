@@ -3,6 +3,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission } from '../../form-format'
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
+import { getFile, getForm } from '../../util/write'
 
 const blockstack = require('blockstack')
 
@@ -11,7 +12,7 @@ export async function update () {
 
   const url = new URL(location.toString())
   const author = url.searchParams.get('author')
-  const formId = url.searchParams.get('form-id')
+  let formId:string = url.searchParams.get('form-id')
   const app = location.origin
 
   const submission:Submission = Store.store.routeParams.submission
@@ -29,14 +30,28 @@ export async function update () {
     }
   }
   else if (submission) {
-    form = Store.store.forms.find((f:any) => f.uuid === submission.formUuid)
+    formId = submission.formUuid
+    form = await getForm(formId) as Form
+    console.assert(form, 'Didnt find form '+ `forms/${formId}.json`)
   }
-
-  const questions = ((!form) ? [] : form.questions).map(q => {
+  const questions = ((!form) ? [] : form.questions)
+    .map(q => {
+      let value:string = ''
+      let inputTpl = html`<input type=${q.type} class="form-answer" data-question-uuid="${q.uuid}" data-name="${q.name}">`
+      if (submission) {
+        console.debug(submission.answers)
+        const answered = submission.answers.find(a => a.questionUuid === q.uuid)
+        if (answered) {
+          value = answered.value
+        }
+        inputTpl = html`
+            <input disabled value="${value}"
+             type=${q.type} class="form-answer">`
+      }
     return html`
 <div class="cell medium-12">
     <label>${q.label}</label>
-    <input type=${q.type} class="form-answer" data-question-uuid="${q.uuid}" data-name="${q.name}" value="">
+    ${inputTpl}    
 </div>`
   })
 
@@ -44,7 +59,8 @@ export async function update () {
     (evt.target as HTMLButtonElement).disabled = true
     const submission = collectAnswers()
     submission.formUuid = form.uuid
-    const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey ) // be visible to me self!! YArrrrg
+    console.debug('new submission',submission)
+    const authorPubkey = form.authorPubKey
     const bench = new Bench('', authorPubkey)
     await bench.postFile(submission)
   }
@@ -72,7 +88,8 @@ export async function update () {
 }
 
 function collectAnswers () {
-  const answers:Answer[] = Array.from(document.querySelectorAll('.form-answer')).map((el:HTMLInputElement) => {
+  const answers:Answer[] = Array.from(document.querySelectorAll('.form-answer'))
+    .map((el:HTMLInputElement) => {
     return <Answer>{
       value: el.value,
       name: el.getAttribute('data-name'),

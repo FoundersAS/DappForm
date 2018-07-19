@@ -48,7 +48,6 @@ export async function init () {
     .map(form => {
       form.created = new Date(form.created)
       form.modified = new Date(form.modified)
-      form.questions = (form.questions instanceof Array) ? form.questions : []
       return form
     }) as Form[] // now they're sanitized
 
@@ -61,7 +60,8 @@ export async function init () {
 export function update () {
   const {forms} = Store.store
 
-  const formsList:Form[] = forms as any // convert to view model
+  const formsList:Form[] = forms
+  console.debug(forms)
 
   const formsListTpl = formsList
     .sort((a, b) => a.created.getTime() - b.created.getTime())

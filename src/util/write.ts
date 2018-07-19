@@ -1,3 +1,5 @@
+import { Form } from '../form-format'
+
 const blockstack = require('blockstack')
 
 export async function putFile(path: string, contents: Object): Promise<Object | Boolean> {
@@ -20,4 +22,9 @@ export async function getFile (path: string): Promise<Object | Boolean> {
     console.error(e)
     return false
   }
+}
+
+export function getForm(uuid:string):Promise<Form|false> {
+  const form = getFile(`forms/${uuid}.json`)
+  return (form as any) || false
 }

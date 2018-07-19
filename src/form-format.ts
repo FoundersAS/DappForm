@@ -9,7 +9,8 @@ export interface Question {
 
 export interface Form {
   uuid: string,
-  name: string,
+  name: string
+  authorPubKey: string
 
   created: Date,
   modified: Date,

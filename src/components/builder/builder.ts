@@ -63,7 +63,9 @@ export function update() {
 
 function collectForm ():Form {
   // basics
+  const authorPubKey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey ) // be visible to me self!! YArrrrg
   const newFrom = <Form>{
+    authorPubKey,
     uuid: uuid(),
     created: new Date(),
     modified: new Date(),
@@ -141,6 +143,8 @@ async function addToList (newForm:Form) {
     uuid: newForm.uuid,
     name: newForm.name,
     created: newForm.created,
+    modified: newForm.modified,
+    authorPubKey: newForm.authorPubKey,
   })
   await blockstack.putFile(formsListRemoteFile, JSON.stringify(list))
   console.debug(`did update list`)

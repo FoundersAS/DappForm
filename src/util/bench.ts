@@ -54,13 +54,13 @@ export default class Bench {
 
     if (res.status === 200) {
       const benchFiles: BenchFile[] = await res.json()
-      console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`)
+      if (benchFiles.length > 0) console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`)
       return this.decryptBenchFiles(benchFiles)
     }
   }
 
   async cleanBench() {
-    console.debug(`bench: ${this.publicKey} - cleaning`)
+    // console.debug(`bench: ${this.publicKey} - cleaning`)
     const res = await fetch('https://bench.takectrl.io/clean', {
       method: 'POST',
       mode: 'cors',
