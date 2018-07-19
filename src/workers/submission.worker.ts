@@ -27,7 +27,6 @@ ctx.onmessage = (e: any) => {
 }
 
 function startPolling () {
-
   doPoll()
 
   // TODO: Potential race condition when cleaning bench - could be new submissions
