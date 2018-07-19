@@ -21,7 +21,6 @@ export async function update() {
     return html`<tr><td>${uuid}</td>${d.answers.map(a => html`<td>${a.value}</td>`)}</tr>`
   })
 
-
   const table = html`
   <table>
     <thead>
@@ -35,9 +34,9 @@ export async function update() {
   </table>
   `
 
-    const tpl = html`
+  const tpl = html`
     <h3>Form Submissions</h3>
-    <p><small>(uuid: ${uuid})</small></p>
+    <p><small><button class="clear button link" on-click="${() => Store.setRouteAction(Route.FormView, { formId: uuid })}">(uuid: ${uuid})</button></small></p>
     <div class="grid-x grid-margin-x">
       <div class="cell medium-12">
       ${table}
