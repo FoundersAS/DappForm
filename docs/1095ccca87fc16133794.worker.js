@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/main.ts");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./node_modules/ts-loader/index.js!./src/workers/submission.worker.ts");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -27770,112 +27770,6 @@ exports.constants = {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./src/css/style.css":
-/*!*****************************************************!*\
-  !*** ./node_modules/css-loader!./src/css/style.css ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "html, body {\n}\n\nrouter {\n}\n\nbutton.link {\n    margin: 0;\n    padding: 0;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/lib/css-base.js":
-/*!*************************************************!*\
-  !*** ./node_modules/css-loader/lib/css-base.js ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/css-select/index.js":
 /*!******************************************!*\
   !*** ./node_modules/css-select/index.js ***!
@@ -51663,854 +51557,6 @@ utils.intFromLE = intFromLE;
 /***/ (function(module) {
 
 module.exports = {"name":"elliptic","version":"5.2.1","description":"EC cryptography","main":"lib/elliptic.js","scripts":{"test":"make lint && istanbul test _mocha --reporter=spec test/*-test.js","coveralls":"cat ./coverage/lcov.info | coveralls"},"repository":{"type":"git","url":"git@github.com:indutny/elliptic"},"keywords":["EC","Elliptic","curve","Cryptography"],"author":"Fedor Indutny <fedor@indutny.com>","license":"MIT","bugs":{"url":"https://github.com/indutny/elliptic/issues"},"homepage":"https://github.com/indutny/elliptic","devDependencies":{"browserify":"^3.44.2","coveralls":"^2.11.3","istanbul":"^0.3.17","jscs":"^1.11.3","jshint":"^2.6.0","mocha":"^2.1.0","uglify-js":"^2.4.13"},"dependencies":{"bn.js":"^3.1.1","brorand":"^1.0.1","hash.js":"^1.0.0","inherits":"^2.0.1"}};
-
-/***/ }),
-
-/***/ "./node_modules/lit-html/lib/lit-extended.js":
-/*!***************************************************!*\
-  !*** ./node_modules/lit-html/lib/lit-extended.js ***!
-  \***************************************************/
-/*! exports provided: render, html, svg, extendedPartCallback, BooleanAttributePart, PropertyPart, EventPart */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "html", function() { return html; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svg", function() { return svg; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "extendedPartCallback", function() { return extendedPartCallback; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BooleanAttributePart", function() { return BooleanAttributePart; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PropertyPart", function() { return PropertyPart; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventPart", function() { return EventPart; });
-/* harmony import */ var _lit_html_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lit-html.js */ "./node_modules/lit-html/lit-html.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
-
-
-/**
- * Interprets a template literal as a lit-extended HTML template.
- */
-const html = (strings, ...values) => new _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["TemplateResult"](strings, values, 'html', extendedPartCallback);
-/**
- * Interprets a template literal as a lit-extended SVG template.
- */
-const svg = (strings, ...values) => new _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["SVGTemplateResult"](strings, values, 'svg', extendedPartCallback);
-/**
- * A PartCallback which allows templates to set properties and declarative
- * event handlers.
- *
- * Properties are set by default, instead of attributes. Attribute names in
- * lit-html templates preserve case, so properties are case sensitive. If an
- * expression takes up an entire attribute value, then the property is set to
- * that value. If an expression is interpolated with a string or other
- * expressions then the property is set to the string result of the
- * interpolation.
- *
- * To set an attribute instead of a property, append a `$` suffix to the
- * attribute name.
- *
- * Example:
- *
- *     html`<button class$="primary">Buy Now</button>`
- *
- * To set an event handler, prefix the attribute name with `on-`:
- *
- * Example:
- *
- *     html`<button on-click=${(e)=> this.onClickHandler(e)}>Buy Now</button>`
- *
- */
-const extendedPartCallback = (instance, templatePart, node) => {
-    if (templatePart.type === 'attribute') {
-        if (templatePart.rawName.substr(0, 3) === 'on-') {
-            const eventName = templatePart.rawName.slice(3);
-            return new EventPart(instance, node, eventName);
-        }
-        const lastChar = templatePart.name.substr(templatePart.name.length - 1);
-        if (lastChar === '$') {
-            const name = templatePart.name.slice(0, -1);
-            return new _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["AttributePart"](instance, node, name, templatePart.strings);
-        }
-        if (lastChar === '?') {
-            const name = templatePart.name.slice(0, -1);
-            return new BooleanAttributePart(instance, node, name, templatePart.strings);
-        }
-        return new PropertyPart(instance, node, templatePart.rawName, templatePart.strings);
-    }
-    return Object(_lit_html_js__WEBPACK_IMPORTED_MODULE_0__["defaultPartCallback"])(instance, templatePart, node);
-};
-/**
- * Implements a boolean attribute, roughly as defined in the HTML
- * specification.
- *
- * If the value is truthy, then the attribute is present with a value of
- * ''. If the value is falsey, the attribute is removed.
- */
-class BooleanAttributePart extends _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["AttributePart"] {
-    setValue(values, startIndex) {
-        const s = this.strings;
-        if (s.length === 2 && s[0] === '' && s[1] === '') {
-            const value = Object(_lit_html_js__WEBPACK_IMPORTED_MODULE_0__["getValue"])(this, values[startIndex]);
-            if (value === _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["noChange"]) {
-                return;
-            }
-            if (value) {
-                this.element.setAttribute(this.name, '');
-            }
-            else {
-                this.element.removeAttribute(this.name);
-            }
-        }
-        else {
-            throw new Error('boolean attributes can only contain a single expression');
-        }
-    }
-}
-class PropertyPart extends _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["AttributePart"] {
-    setValue(values, startIndex) {
-        const s = this.strings;
-        let value;
-        if (this._equalToPreviousValues(values, startIndex)) {
-            return;
-        }
-        if (s.length === 2 && s[0] === '' && s[1] === '') {
-            // An expression that occupies the whole attribute value will leave
-            // leading and trailing empty strings.
-            value = Object(_lit_html_js__WEBPACK_IMPORTED_MODULE_0__["getValue"])(this, values[startIndex]);
-        }
-        else {
-            // Interpolation, so interpolate
-            value = this._interpolate(values, startIndex);
-        }
-        if (value !== _lit_html_js__WEBPACK_IMPORTED_MODULE_0__["noChange"]) {
-            this.element[this.name] = value;
-        }
-        this._previousValues = values;
-    }
-}
-class EventPart {
-    constructor(instance, element, eventName) {
-        this.instance = instance;
-        this.element = element;
-        this.eventName = eventName;
-    }
-    setValue(value) {
-        const listener = Object(_lit_html_js__WEBPACK_IMPORTED_MODULE_0__["getValue"])(this, value);
-        if (listener === this._listener) {
-            return;
-        }
-        if (listener == null) {
-            this.element.removeEventListener(this.eventName, this);
-        }
-        else if (this._listener == null) {
-            this.element.addEventListener(this.eventName, this);
-        }
-        this._listener = listener;
-    }
-    handleEvent(event) {
-        if (typeof this._listener === 'function') {
-            this._listener.call(this.element, event);
-        }
-        else if (typeof this._listener.handleEvent === 'function') {
-            this._listener.handleEvent(event);
-        }
-    }
-}
-//# sourceMappingURL=lit-extended.js.map
-
-/***/ }),
-
-/***/ "./node_modules/lit-html/lit-html.js":
-/*!*******************************************!*\
-  !*** ./node_modules/lit-html/lit-html.js ***!
-  \*******************************************/
-/*! exports provided: templateCaches, html, svg, TemplateResult, SVGTemplateResult, defaultTemplateFactory, render, TemplatePart, isTemplatePartActive, Template, getValue, directive, noChange, directiveValue, AttributePart, NodePart, defaultPartCallback, TemplateInstance, reparentNodes, removeNodes */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "templateCaches", function() { return templateCaches; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "html", function() { return html; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svg", function() { return svg; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TemplateResult", function() { return TemplateResult; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SVGTemplateResult", function() { return SVGTemplateResult; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTemplateFactory", function() { return defaultTemplateFactory; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TemplatePart", function() { return TemplatePart; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTemplatePartActive", function() { return isTemplatePartActive; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Template", function() { return Template; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getValue", function() { return getValue; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "directive", function() { return directive; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noChange", function() { return noChange; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "directiveValue", function() { return noChange; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AttributePart", function() { return AttributePart; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NodePart", function() { return NodePart; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultPartCallback", function() { return defaultPartCallback; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TemplateInstance", function() { return TemplateInstance; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reparentNodes", function() { return reparentNodes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeNodes", function() { return removeNodes; });
-/**
- * @license
- * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at
- * http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at
- * http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at
- * http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at
- * http://polymer.github.io/PATENTS.txt
- */
-// The first argument to JS template tags retain identity across multiple
-// calls to a tag for the same literal, so we can cache work done per literal
-// in a Map.
-const templateCaches = new Map();
-/**
- * Interprets a template literal as an HTML template that can efficiently
- * render to and update a container.
- */
-const html = (strings, ...values) => new TemplateResult(strings, values, 'html');
-/**
- * Interprets a template literal as an SVG template that can efficiently
- * render to and update a container.
- */
-const svg = (strings, ...values) => new SVGTemplateResult(strings, values, 'svg');
-/**
- * The return type of `html`, which holds a Template and the values from
- * interpolated expressions.
- */
-class TemplateResult {
-    constructor(strings, values, type, partCallback = defaultPartCallback) {
-        this.strings = strings;
-        this.values = values;
-        this.type = type;
-        this.partCallback = partCallback;
-    }
-    /**
-     * Returns a string of HTML used to create a <template> element.
-     */
-    getHTML() {
-        const l = this.strings.length - 1;
-        let html = '';
-        let isTextBinding = true;
-        for (let i = 0; i < l; i++) {
-            const s = this.strings[i];
-            html += s;
-            // We're in a text position if the previous string closed its tags.
-            // If it doesn't have any tags, then we use the previous text position
-            // state.
-            const closing = findTagClose(s);
-            isTextBinding = closing > -1 ? closing < s.length : isTextBinding;
-            html += isTextBinding ? nodeMarker : marker;
-        }
-        html += this.strings[l];
-        return html;
-    }
-    getTemplateElement() {
-        const template = document.createElement('template');
-        template.innerHTML = this.getHTML();
-        return template;
-    }
-}
-/**
- * A TemplateResult for SVG fragments.
- *
- * This class wraps HTMl in an <svg> tag in order to parse its contents in the
- * SVG namespace, then modifies the template to remove the <svg> tag so that
- * clones only container the original fragment.
- */
-class SVGTemplateResult extends TemplateResult {
-    getHTML() {
-        return `<svg>${super.getHTML()}</svg>`;
-    }
-    getTemplateElement() {
-        const template = super.getTemplateElement();
-        const content = template.content;
-        const svgElement = content.firstChild;
-        content.removeChild(svgElement);
-        reparentNodes(content, svgElement.firstChild);
-        return template;
-    }
-}
-/**
- * The default TemplateFactory which caches Templates keyed on
- * result.type and result.strings.
- */
-function defaultTemplateFactory(result) {
-    let templateCache = templateCaches.get(result.type);
-    if (templateCache === undefined) {
-        templateCache = new Map();
-        templateCaches.set(result.type, templateCache);
-    }
-    let template = templateCache.get(result.strings);
-    if (template === undefined) {
-        template = new Template(result, result.getTemplateElement());
-        templateCache.set(result.strings, template);
-    }
-    return template;
-}
-/**
- * Renders a template to a container.
- *
- * To update a container with new values, reevaluate the template literal and
- * call `render` with the new result.
- *
- * @param result a TemplateResult created by evaluating a template tag like
- *     `html` or `svg`.
- * @param container A DOM parent to render to. The entire contents are either
- *     replaced, or efficiently updated if the same result type was previous
- *     rendered there.
- * @param templateFactory a function to create a Template or retreive one from
- *     cache.
- */
-function render(result, container, templateFactory = defaultTemplateFactory) {
-    const template = templateFactory(result);
-    let instance = container.__templateInstance;
-    // Repeat render, just call update()
-    if (instance !== undefined && instance.template === template &&
-        instance._partCallback === result.partCallback) {
-        instance.update(result.values);
-        return;
-    }
-    // First render, create a new TemplateInstance and append it
-    instance =
-        new TemplateInstance(template, result.partCallback, templateFactory);
-    container.__templateInstance = instance;
-    const fragment = instance._clone();
-    instance.update(result.values);
-    removeNodes(container, container.firstChild);
-    container.appendChild(fragment);
-}
-/**
- * An expression marker with embedded unique key to avoid collision with
- * possible text in templates.
- */
-const marker = `{{lit-${String(Math.random()).slice(2)}}}`;
-/**
- * An expression marker used text-positions, not attribute positions,
- * in template.
- */
-const nodeMarker = `<!--${marker}-->`;
-const markerRegex = new RegExp(`${marker}|${nodeMarker}`);
-/**
- * This regex extracts the attribute name preceding an attribute-position
- * expression. It does this by matching the syntax allowed for attributes
- * against the string literal directly preceding the expression, assuming that
- * the expression is in an attribute-value position.
- *
- * See attributes in the HTML spec:
- * https://www.w3.org/TR/html5/syntax.html#attributes-0
- *
- * "\0-\x1F\x7F-\x9F" are Unicode control characters
- *
- * " \x09\x0a\x0c\x0d" are HTML space characters:
- * https://www.w3.org/TR/html5/infrastructure.html#space-character
- *
- * So an attribute is:
- *  * The name: any character except a control character, space character, ('),
- *    ("), ">", "=", or "/"
- *  * Followed by zero or more space characters
- *  * Followed by "="
- *  * Followed by zero or more space characters
- *  * Followed by:
- *    * Any character except space, ('), ("), "<", ">", "=", (`), or
- *    * (") then any non-("), or
- *    * (') then any non-(')
- */
-const lastAttributeNameRegex = /[ \x09\x0a\x0c\x0d]([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)[ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*)$/;
-/**
- * Finds the closing index of the last closed HTML tag.
- * This has 3 possible return values:
- *   - `-1`, meaning there is no tag in str.
- *   - `string.length`, meaning the last opened tag is unclosed.
- *   - Some positive number < str.length, meaning the index of the closing '>'.
- */
-function findTagClose(str) {
-    const close = str.lastIndexOf('>');
-    const open = str.indexOf('<', close + 1);
-    return open > -1 ? str.length : close;
-}
-/**
- * A placeholder for a dynamic expression in an HTML template.
- *
- * There are two built-in part types: AttributePart and NodePart. NodeParts
- * always represent a single dynamic expression, while AttributeParts may
- * represent as many expressions are contained in the attribute.
- *
- * A Template's parts are mutable, so parts can be replaced or modified
- * (possibly to implement different template semantics). The contract is that
- * parts can only be replaced, not removed, added or reordered, and parts must
- * always consume the correct number of values in their `update()` method.
- *
- * TODO(justinfagnani): That requirement is a little fragile. A
- * TemplateInstance could instead be more careful about which values it gives
- * to Part.update().
- */
-class TemplatePart {
-    constructor(type, index, name, rawName, strings) {
-        this.type = type;
-        this.index = index;
-        this.name = name;
-        this.rawName = rawName;
-        this.strings = strings;
-    }
-}
-const isTemplatePartActive = (part) => part.index !== -1;
-/**
- * An updateable Template that tracks the location of dynamic parts.
- */
-class Template {
-    constructor(result, element) {
-        this.parts = [];
-        this.element = element;
-        const content = this.element.content;
-        // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be null
-        const walker = document.createTreeWalker(content, 133 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
-               NodeFilter.SHOW_TEXT */, null, false);
-        let index = -1;
-        let partIndex = 0;
-        const nodesToRemove = [];
-        // The actual previous node, accounting for removals: if a node is removed
-        // it will never be the previousNode.
-        let previousNode;
-        // Used to set previousNode at the top of the loop.
-        let currentNode;
-        while (walker.nextNode()) {
-            index++;
-            previousNode = currentNode;
-            const node = currentNode = walker.currentNode;
-            if (node.nodeType === 1 /* Node.ELEMENT_NODE */) {
-                if (!node.hasAttributes()) {
-                    continue;
-                }
-                const attributes = node.attributes;
-                // Per https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,
-                // attributes are not guaranteed to be returned in document order. In
-                // particular, Edge/IE can return them out of order, so we cannot assume
-                // a correspondance between part index and attribute index.
-                let count = 0;
-                for (let i = 0; i < attributes.length; i++) {
-                    if (attributes[i].value.indexOf(marker) >= 0) {
-                        count++;
-                    }
-                }
-                while (count-- > 0) {
-                    // Get the template literal section leading up to the first
-                    // expression in this attribute
-                    const stringForPart = result.strings[partIndex];
-                    // Find the attribute name
-                    const attributeNameInPart = lastAttributeNameRegex.exec(stringForPart)[1];
-                    // Find the corresponding attribute
-                    // TODO(justinfagnani): remove non-null assertion
-                    const attribute = attributes.getNamedItem(attributeNameInPart);
-                    const stringsForAttributeValue = attribute.value.split(markerRegex);
-                    this.parts.push(new TemplatePart('attribute', index, attribute.name, attributeNameInPart, stringsForAttributeValue));
-                    node.removeAttribute(attribute.name);
-                    partIndex += stringsForAttributeValue.length - 1;
-                }
-            }
-            else if (node.nodeType === 3 /* Node.TEXT_NODE */) {
-                const nodeValue = node.nodeValue;
-                if (nodeValue.indexOf(marker) < 0) {
-                    continue;
-                }
-                const parent = node.parentNode;
-                const strings = nodeValue.split(markerRegex);
-                const lastIndex = strings.length - 1;
-                // We have a part for each match found
-                partIndex += lastIndex;
-                // Generate a new text node for each literal section
-                // These nodes are also used as the markers for node parts
-                for (let i = 0; i < lastIndex; i++) {
-                    parent.insertBefore((strings[i] === '')
-                        ? document.createComment('')
-                        : document.createTextNode(strings[i]), node);
-                    this.parts.push(new TemplatePart('node', index++));
-                }
-                parent.insertBefore(strings[lastIndex] === '' ?
-                    document.createComment('') :
-                    document.createTextNode(strings[lastIndex]), node);
-                nodesToRemove.push(node);
-            }
-            else if (node.nodeType === 8 /* Node.COMMENT_NODE */ &&
-                node.nodeValue === marker) {
-                const parent = node.parentNode;
-                // Add a new marker node to be the startNode of the Part if any of the
-                // following are true:
-                //  * We don't have a previousSibling
-                //  * previousSibling is being removed (thus it's not the
-                //    `previousNode`)
-                //  * previousSibling is not a Text node
-                //
-                // TODO(justinfagnani): We should be able to use the previousNode here
-                // as the marker node and reduce the number of extra nodes we add to a
-                // template. See https://github.com/PolymerLabs/lit-html/issues/147
-                const previousSibling = node.previousSibling;
-                if (previousSibling === null || previousSibling !== previousNode ||
-                    previousSibling.nodeType !== Node.TEXT_NODE) {
-                    parent.insertBefore(document.createComment(''), node);
-                }
-                else {
-                    index--;
-                }
-                this.parts.push(new TemplatePart('node', index++));
-                nodesToRemove.push(node);
-                // If we don't have a nextSibling add a marker node.
-                // We don't have to check if the next node is going to be removed,
-                // because that node will induce a new marker if so.
-                if (node.nextSibling === null) {
-                    parent.insertBefore(document.createComment(''), node);
-                }
-                else {
-                    index--;
-                }
-                currentNode = previousNode;
-                partIndex++;
-            }
-        }
-        // Remove text binding nodes after the walk to not disturb the TreeWalker
-        for (const n of nodesToRemove) {
-            n.parentNode.removeChild(n);
-        }
-    }
-}
-/**
- * Returns a value ready to be inserted into a Part from a user-provided value.
- *
- * If the user value is a directive, this invokes the directive with the given
- * part. If the value is null, it's converted to undefined to work better
- * with certain DOM APIs, like textContent.
- */
-const getValue = (part, value) => {
-    // `null` as the value of a Text node will render the string 'null'
-    // so we convert it to undefined
-    if (isDirective(value)) {
-        value = value(part);
-        return noChange;
-    }
-    return value === null ? undefined : value;
-};
-const directive = (f) => {
-    f.__litDirective = true;
-    return f;
-};
-const isDirective = (o) => typeof o === 'function' && o.__litDirective === true;
-/**
- * A sentinel value that signals that a value was handled by a directive and
- * should not be written to the DOM.
- */
-const noChange = {};
-/**
- * @deprecated Use `noChange` instead.
- */
-
-const isPrimitiveValue = (value) => value === null ||
-    !(typeof value === 'object' || typeof value === 'function');
-class AttributePart {
-    constructor(instance, element, name, strings) {
-        this.instance = instance;
-        this.element = element;
-        this.name = name;
-        this.strings = strings;
-        this.size = strings.length - 1;
-        this._previousValues = [];
-    }
-    _interpolate(values, startIndex) {
-        const strings = this.strings;
-        const l = strings.length - 1;
-        let text = '';
-        for (let i = 0; i < l; i++) {
-            text += strings[i];
-            const v = getValue(this, values[startIndex + i]);
-            if (v && v !== noChange &&
-                (Array.isArray(v) || typeof v !== 'string' && v[Symbol.iterator])) {
-                for (const t of v) {
-                    // TODO: we need to recursively call getValue into iterables...
-                    text += t;
-                }
-            }
-            else {
-                text += v;
-            }
-        }
-        return text + strings[l];
-    }
-    _equalToPreviousValues(values, startIndex) {
-        for (let i = startIndex; i < startIndex + this.size; i++) {
-            if (this._previousValues[i] !== values[i] ||
-                !isPrimitiveValue(values[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
-    setValue(values, startIndex) {
-        if (this._equalToPreviousValues(values, startIndex)) {
-            return;
-        }
-        const s = this.strings;
-        let value;
-        if (s.length === 2 && s[0] === '' && s[1] === '') {
-            // An expression that occupies the whole attribute value will leave
-            // leading and trailing empty strings.
-            value = getValue(this, values[startIndex]);
-            if (Array.isArray(value)) {
-                value = value.join('');
-            }
-        }
-        else {
-            value = this._interpolate(values, startIndex);
-        }
-        if (value !== noChange) {
-            this.element.setAttribute(this.name, value);
-        }
-        this._previousValues = values;
-    }
-}
-class NodePart {
-    constructor(instance, startNode, endNode) {
-        this.instance = instance;
-        this.startNode = startNode;
-        this.endNode = endNode;
-        this._previousValue = undefined;
-    }
-    setValue(value) {
-        value = getValue(this, value);
-        if (value === noChange) {
-            return;
-        }
-        if (isPrimitiveValue(value)) {
-            // Handle primitive values
-            // If the value didn't change, do nothing
-            if (value === this._previousValue) {
-                return;
-            }
-            this._setText(value);
-        }
-        else if (value instanceof TemplateResult) {
-            this._setTemplateResult(value);
-        }
-        else if (Array.isArray(value) || value[Symbol.iterator]) {
-            this._setIterable(value);
-        }
-        else if (value instanceof Node) {
-            this._setNode(value);
-        }
-        else if (value.then !== undefined) {
-            this._setPromise(value);
-        }
-        else {
-            // Fallback, will render the string representation
-            this._setText(value);
-        }
-    }
-    _insert(node) {
-        this.endNode.parentNode.insertBefore(node, this.endNode);
-    }
-    _setNode(value) {
-        if (this._previousValue === value) {
-            return;
-        }
-        this.clear();
-        this._insert(value);
-        this._previousValue = value;
-    }
-    _setText(value) {
-        const node = this.startNode.nextSibling;
-        value = value === undefined ? '' : value;
-        if (node === this.endNode.previousSibling &&
-            node.nodeType === Node.TEXT_NODE) {
-            // If we only have a single text node between the markers, we can just
-            // set its value, rather than replacing it.
-            // TODO(justinfagnani): Can we just check if _previousValue is
-            // primitive?
-            node.textContent = value;
-        }
-        else {
-            this._setNode(document.createTextNode(value));
-        }
-        this._previousValue = value;
-    }
-    _setTemplateResult(value) {
-        const template = this.instance._getTemplate(value);
-        let instance;
-        if (this._previousValue && this._previousValue.template === template) {
-            instance = this._previousValue;
-        }
-        else {
-            instance = new TemplateInstance(template, this.instance._partCallback, this.instance._getTemplate);
-            this._setNode(instance._clone());
-            this._previousValue = instance;
-        }
-        instance.update(value.values);
-    }
-    _setIterable(value) {
-        // For an Iterable, we create a new InstancePart per item, then set its
-        // value to the item. This is a little bit of overhead for every item in
-        // an Iterable, but it lets us recurse easily and efficiently update Arrays
-        // of TemplateResults that will be commonly returned from expressions like:
-        // array.map((i) => html`${i}`), by reusing existing TemplateInstances.
-        // If _previousValue is an array, then the previous render was of an
-        // iterable and _previousValue will contain the NodeParts from the previous
-        // render. If _previousValue is not an array, clear this part and make a new
-        // array for NodeParts.
-        if (!Array.isArray(this._previousValue)) {
-            this.clear();
-            this._previousValue = [];
-        }
-        // Lets us keep track of how many items we stamped so we can clear leftover
-        // items from a previous render
-        const itemParts = this._previousValue;
-        let partIndex = 0;
-        for (const item of value) {
-            // Try to reuse an existing part
-            let itemPart = itemParts[partIndex];
-            // If no existing part, create a new one
-            if (itemPart === undefined) {
-                // If we're creating the first item part, it's startNode should be the
-                // container's startNode
-                let itemStart = this.startNode;
-                // If we're not creating the first part, create a new separator marker
-                // node, and fix up the previous part's endNode to point to it
-                if (partIndex > 0) {
-                    const previousPart = itemParts[partIndex - 1];
-                    itemStart = previousPart.endNode = document.createTextNode('');
-                    this._insert(itemStart);
-                }
-                itemPart = new NodePart(this.instance, itemStart, this.endNode);
-                itemParts.push(itemPart);
-            }
-            itemPart.setValue(item);
-            partIndex++;
-        }
-        if (partIndex === 0) {
-            this.clear();
-            this._previousValue = undefined;
-        }
-        else if (partIndex < itemParts.length) {
-            const lastPart = itemParts[partIndex - 1];
-            // Truncate the parts array so _previousValue reflects the current state
-            itemParts.length = partIndex;
-            this.clear(lastPart.endNode.previousSibling);
-            lastPart.endNode = this.endNode;
-        }
-    }
-    _setPromise(value) {
-        this._previousValue = value;
-        value.then((v) => {
-            if (this._previousValue === value) {
-                this.setValue(v);
-            }
-        });
-    }
-    clear(startNode = this.startNode) {
-        removeNodes(this.startNode.parentNode, startNode.nextSibling, this.endNode);
-    }
-}
-const defaultPartCallback = (instance, templatePart, node) => {
-    if (templatePart.type === 'attribute') {
-        return new AttributePart(instance, node, templatePart.name, templatePart.strings);
-    }
-    else if (templatePart.type === 'node') {
-        return new NodePart(instance, node, node.nextSibling);
-    }
-    throw new Error(`Unknown part type ${templatePart.type}`);
-};
-/**
- * An instance of a `Template` that can be attached to the DOM and updated
- * with new values.
- */
-class TemplateInstance {
-    constructor(template, partCallback, getTemplate) {
-        this._parts = [];
-        this.template = template;
-        this._partCallback = partCallback;
-        this._getTemplate = getTemplate;
-    }
-    update(values) {
-        let valueIndex = 0;
-        for (const part of this._parts) {
-            if (!part) {
-                valueIndex++;
-            }
-            else if (part.size === undefined) {
-                part.setValue(values[valueIndex]);
-                valueIndex++;
-            }
-            else {
-                part.setValue(values, valueIndex);
-                valueIndex += part.size;
-            }
-        }
-    }
-    _clone() {
-        // Clone the node, rather than importing it, to keep the fragment in the
-        // template's document. This leaves the fragment inert so custom elements
-        // won't upgrade until after the main document adopts the node.
-        const fragment = this.template.element.content.cloneNode(true);
-        const parts = this.template.parts;
-        if (parts.length > 0) {
-            // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
-            // null
-            const walker = document.createTreeWalker(fragment, 133 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
-                   NodeFilter.SHOW_TEXT */, null, false);
-            let index = -1;
-            for (let i = 0; i < parts.length; i++) {
-                const part = parts[i];
-                const partActive = isTemplatePartActive(part);
-                // An inactive part has no coresponding Template node.
-                if (partActive) {
-                    while (index < part.index) {
-                        index++;
-                        walker.nextNode();
-                    }
-                }
-                this._parts.push(partActive ? this._partCallback(this, part, walker.currentNode) : undefined);
-            }
-        }
-        return fragment;
-    }
-}
-/**
- * Reparents nodes, starting from `startNode` (inclusive) to `endNode`
- * (exclusive), into another container (could be the same container), before
- * `beforeNode`. If `beforeNode` is null, it appends the nodes to the
- * container.
- */
-const reparentNodes = (container, start, end = null, before = null) => {
-    let node = start;
-    while (node !== end) {
-        const n = node.nextSibling;
-        container.insertBefore(node, before);
-        node = n;
-    }
-};
-/**
- * Removes nodes, starting from `startNode` (inclusive) to `endNode`
- * (exclusive), from `container`.
- */
-const removeNodes = (container, startNode, endNode = null) => {
-    let node = startNode;
-    while (node !== endNode) {
-        const n = node.nextSibling;
-        container.removeChild(node);
-        node = n;
-    }
-};
-//# sourceMappingURL=lit-html.js.map
 
 /***/ }),
 
@@ -79161,497 +78207,6 @@ function simpleEnd(buf) {
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/lib/addStyles.js":
-/*!****************************************************!*\
-  !*** ./node_modules/style-loader/lib/addStyles.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-
-var stylesInDom = {};
-
-var	memoize = function (fn) {
-	var memo;
-
-	return function () {
-		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-		return memo;
-	};
-};
-
-var isOldIE = memoize(function () {
-	// Test for IE <= 9 as proposed by Browserhacks
-	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
-	// Tests for existence of standard globals is to allow style-loader
-	// to operate correctly into non-standard environments
-	// @see https://github.com/webpack-contrib/style-loader/issues/177
-	return window && document && document.all && !window.atob;
-});
-
-var getTarget = function (target) {
-  return document.querySelector(target);
-};
-
-var getElement = (function (fn) {
-	var memo = {};
-
-	return function(target) {
-                // If passing function in options, then use it for resolve "head" element.
-                // Useful for Shadow Root style i.e
-                // {
-                //   insertInto: function () { return document.querySelector("#foo").shadowRoot }
-                // }
-                if (typeof target === 'function') {
-                        return target();
-                }
-                if (typeof memo[target] === "undefined") {
-			var styleTarget = getTarget.call(this, target);
-			// Special case to return head of iframe instead of iframe itself
-			if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
-				try {
-					// This will throw an exception if access to iframe is blocked
-					// due to cross-origin restrictions
-					styleTarget = styleTarget.contentDocument.head;
-				} catch(e) {
-					styleTarget = null;
-				}
-			}
-			memo[target] = styleTarget;
-		}
-		return memo[target]
-	};
-})();
-
-var singleton = null;
-var	singletonCounter = 0;
-var	stylesInsertedAtTop = [];
-
-var	fixUrls = __webpack_require__(/*! ./urls */ "./node_modules/style-loader/lib/urls.js");
-
-module.exports = function(list, options) {
-	if (typeof DEBUG !== "undefined" && DEBUG) {
-		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-
-	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
-
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
-
-	// By default, add <style> tags to the <head> element
-        if (!options.insertInto) options.insertInto = "head";
-
-	// By default, add <style> tags to the bottom of the target
-	if (!options.insertAt) options.insertAt = "bottom";
-
-	var styles = listToStyles(list, options);
-
-	addStylesToDom(styles, options);
-
-	return function update (newList) {
-		var mayRemove = [];
-
-		for (var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-
-		if(newList) {
-			var newStyles = listToStyles(newList, options);
-			addStylesToDom(newStyles, options);
-		}
-
-		for (var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-
-			if(domStyle.refs === 0) {
-				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
-
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-};
-
-function addStylesToDom (styles, options) {
-	for (var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-
-		if(domStyle) {
-			domStyle.refs++;
-
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles (list, options) {
-	var styles = [];
-	var newStyles = {};
-
-	for (var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = options.base ? item[0] + options.base : item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-
-		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
-		else newStyles[id].parts.push(part);
-	}
-
-	return styles;
-}
-
-function insertStyleElement (options, style) {
-	var target = getElement(options.insertInto)
-
-	if (!target) {
-		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
-	}
-
-	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
-
-	if (options.insertAt === "top") {
-		if (!lastStyleElementInsertedAtTop) {
-			target.insertBefore(style, target.firstChild);
-		} else if (lastStyleElementInsertedAtTop.nextSibling) {
-			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			target.appendChild(style);
-		}
-		stylesInsertedAtTop.push(style);
-	} else if (options.insertAt === "bottom") {
-		target.appendChild(style);
-	} else if (typeof options.insertAt === "object" && options.insertAt.before) {
-		var nextSibling = getElement(options.insertInto + " " + options.insertAt.before);
-		target.insertBefore(style, nextSibling);
-	} else {
-		throw new Error("[Style Loader]\n\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\n Must be 'top', 'bottom', or Object.\n (https://github.com/webpack-contrib/style-loader#insertat)\n");
-	}
-}
-
-function removeStyleElement (style) {
-	if (style.parentNode === null) return false;
-	style.parentNode.removeChild(style);
-
-	var idx = stylesInsertedAtTop.indexOf(style);
-	if(idx >= 0) {
-		stylesInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement (options) {
-	var style = document.createElement("style");
-
-	if(options.attrs.type === undefined) {
-		options.attrs.type = "text/css";
-	}
-
-	addAttrs(style, options.attrs);
-	insertStyleElement(options, style);
-
-	return style;
-}
-
-function createLinkElement (options) {
-	var link = document.createElement("link");
-
-	if(options.attrs.type === undefined) {
-		options.attrs.type = "text/css";
-	}
-	options.attrs.rel = "stylesheet";
-
-	addAttrs(link, options.attrs);
-	insertStyleElement(options, link);
-
-	return link;
-}
-
-function addAttrs (el, attrs) {
-	Object.keys(attrs).forEach(function (key) {
-		el.setAttribute(key, attrs[key]);
-	});
-}
-
-function addStyle (obj, options) {
-	var style, update, remove, result;
-
-	// If a transform function was defined, run it on the css
-	if (options.transform && obj.css) {
-	    result = options.transform(obj.css);
-
-	    if (result) {
-	    	// If transform returns a value, use that instead of the original css.
-	    	// This allows running runtime transformations on the css.
-	    	obj.css = result;
-	    } else {
-	    	// If the transform function returns a falsy value, don't add this css.
-	    	// This allows conditional loading of css
-	    	return function() {
-	    		// noop
-	    	};
-	    }
-	}
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-
-		style = singleton || (singleton = createStyleElement(options));
-
-		update = applyToSingletonTag.bind(null, style, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
-
-	} else if (
-		obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function"
-	) {
-		style = createLinkElement(options);
-		update = updateLink.bind(null, style, options);
-		remove = function () {
-			removeStyleElement(style);
-
-			if(style.href) URL.revokeObjectURL(style.href);
-		};
-	} else {
-		style = createStyleElement(options);
-		update = applyToTag.bind(null, style);
-		remove = function () {
-			removeStyleElement(style);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle (newObj) {
-		if (newObj) {
-			if (
-				newObj.css === obj.css &&
-				newObj.media === obj.media &&
-				newObj.sourceMap === obj.sourceMap
-			) {
-				return;
-			}
-
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag (style, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (style.styleSheet) {
-		style.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = style.childNodes;
-
-		if (childNodes[index]) style.removeChild(childNodes[index]);
-
-		if (childNodes.length) {
-			style.insertBefore(cssNode, childNodes[index]);
-		} else {
-			style.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag (style, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		style.setAttribute("media", media)
-	}
-
-	if(style.styleSheet) {
-		style.styleSheet.cssText = css;
-	} else {
-		while(style.firstChild) {
-			style.removeChild(style.firstChild);
-		}
-
-		style.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink (link, options, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	/*
-		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
-		and there is no publicPath defined then lets turn convertToAbsoluteUrls
-		on by default.  Otherwise default to the convertToAbsoluteUrls option
-		directly
-	*/
-	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
-
-	if (options.convertToAbsoluteUrls || autoFixUrls) {
-		css = fixUrls(css);
-	}
-
-	if (sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = link.href;
-
-	link.href = URL.createObjectURL(blob);
-
-	if(oldSrc) URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/style-loader/lib/urls.js":
-/*!***********************************************!*\
-  !*** ./node_modules/style-loader/lib/urls.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-/**
- * When source maps are enabled, `style-loader` uses a link element with a data-uri to
- * embed the css on the page. This breaks all relative urls because now they are relative to a
- * bundle instead of the current page.
- *
- * One solution is to only use full urls, but that may be impossible.
- *
- * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
- *
- * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
- *
- */
-
-module.exports = function (css) {
-  // get current location
-  var location = typeof window !== "undefined" && window.location;
-
-  if (!location) {
-    throw new Error("fixUrls requires window.location");
-  }
-
-	// blank or null?
-	if (!css || typeof css !== "string") {
-	  return css;
-  }
-
-  var baseUrl = location.protocol + "//" + location.host;
-  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
-
-	// convert each url(...)
-	/*
-	This regular expression is just a way to recursively match brackets within
-	a string.
-
-	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
-	   (  = Start a capturing group
-	     (?:  = Start a non-capturing group
-	         [^)(]  = Match anything that isn't a parentheses
-	         |  = OR
-	         \(  = Match a start parentheses
-	             (?:  = Start another non-capturing groups
-	                 [^)(]+  = Match anything that isn't a parentheses
-	                 |  = OR
-	                 \(  = Match a start parentheses
-	                     [^)(]*  = Match anything that isn't a parentheses
-	                 \)  = Match a end parentheses
-	             )  = End Group
-              *\) = Match anything and then a close parens
-          )  = Close non-capturing group
-          *  = Match anything
-       )  = Close capturing group
-	 \)  = Match a close parens
-
-	 /gi  = Get all matches, not the first.  Be case insensitive.
-	 */
-	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
-		// strip quotes (if they exist)
-		var unquotedOrigUrl = origUrl
-			.trim()
-			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
-			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
-
-		// already a full url? no change
-		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/|\s*$)/i.test(unquotedOrigUrl)) {
-		  return fullMatch;
-		}
-
-		// convert the url to a full url
-		var newUrl;
-
-		if (unquotedOrigUrl.indexOf("//") === 0) {
-		  	//TODO: should we add protocol?
-			newUrl = unquotedOrigUrl;
-		} else if (unquotedOrigUrl.indexOf("/") === 0) {
-			// path should be relative to the base url
-			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
-		} else {
-			// path should be relative to current directory
-			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
-		}
-
-		// send back the fixed url(...)
-		return "url(" + JSON.stringify(newUrl) + ")";
-	});
-
-	// send back the fixed css
-	return fixedCss;
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/timers-browserify/main.js":
 /*!************************************************!*\
   !*** ./node_modules/timers-browserify/main.js ***!
@@ -79724,6 +78279,62 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (this && this.clearImmediate);
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js!./src/workers/submission.worker.ts":
+/*!*******************************************************************!*\
+  !*** ./node_modules/ts-loader!./src/workers/submission.worker.ts ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util_bench__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/bench */ "./src/util/bench.ts");
+/* harmony import */ var _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/fakeLocalStorage */ "./src/util/fakeLocalStorage.ts");
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../forms */ "./src/forms.ts");
+const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
+
+
+
+self.localStorage = _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"];
+self.window = { localStorage: _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"], location: '' };
+// End Hack
+const ctx = self;
+ctx.onmessage = (e) => {
+    const data = e.data;
+    switch (data.cmd) {
+        case 'start':
+            initLocalStorage(data.blockstackData);
+            console.debug('SubmissionWorker: Blockstack signin: ', blockstack.isUserSignedIn());
+            startPolling();
+    }
+};
+function initLocalStorage(blockstackData) {
+    _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"].setItem('blockstack', blockstackData.blockstack);
+    _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"].setItem('blockstack-gaia-hub-config', blockstackData.gaia);
+    _util_fakeLocalStorage__WEBPACK_IMPORTED_MODULE_1__["localStorage"].setItem('blockstack-transit-private-key', blockstackData.key);
+}
+function startPolling() {
+    doPoll();
+    // TODO: Potential race condition when cleaning bench - could be new submissions
+    async function doPoll() {
+        // console.debug('Polling for new submissions ...')
+        const privateKey = blockstack.loadUserData().appPrivateKey;
+        const publicKey = blockstack.getPublicKeyFromPrivate(privateKey);
+        const bench = new _util_bench__WEBPACK_IMPORTED_MODULE_0__["default"](privateKey, publicKey);
+        const files = await bench.getBenchFiles();
+        await Object(_forms__WEBPACK_IMPORTED_MODULE_2__["updateSubmissionsFromBench"])(files);
+        if (files.length) {
+            await bench.cleanBench();
+            ctx.postMessage('new submissions ready');
+        }
+        setTimeout(doPoll, 5000);
+    }
+}
+/* harmony default export */ __webpack_exports__["default"] = (null);
+
 
 /***/ }),
 
@@ -86082,19 +84693,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/worker-loader/dist/cjs.js!./src/workers/submission.worker.ts":
-/*!***********************************************************************************!*\
-  !*** ./node_modules/worker-loader/dist/cjs.js!./src/workers/submission.worker.ts ***!
-  \***********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = function() {
-  return new Worker(__webpack_require__.p + "9529778f255fb8596d82.worker.js");
-};
-
-/***/ }),
-
 /***/ "./node_modules/zone-file/lib/index.js":
 /*!*********************************************!*\
   !*** ./node_modules/zone-file/lib/index.js ***!
@@ -86718,811 +85316,130 @@ function getZoneFileTemplate() {
 
 /***/ }),
 
-/***/ "./src/components/builder/builder.ts":
-/*!*******************************************!*\
-  !*** ./src/components/builder/builder.ts ***!
-  \*******************************************/
-/*! exports provided: update */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_3__);
-
-
-
-
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-const questions = [];
-function update() {
-    const el = document.querySelector(`build-form`);
-    const questionsListTpl = questions.map(renderLeaf);
-    const save = async (evt) => {
-        evt.target.disabled = true;
-        const newForm = collectForm();
-        await uploadShare(newForm);
-        await addToList(newForm);
-        _store__WEBPACK_IMPORTED_MODULE_1__["default"].setFormsAction([..._store__WEBPACK_IMPORTED_MODULE_1__["default"].store.forms, newForm]);
-        _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormsList);
-    };
-    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
-<h3>Build</h3>
-
-<form class="grid-x grid-margin-y grid-margin-x">
-  <div class="cell small-6">
-    <label>
-        Human-readable name
-        <input type="text" name="form-name">
-    </label>
-  </div>
-  <div class="cell small-6">
-    <label>
-        Intro text
-        <input type="text" name="intro-text">
-    </label>
-  </div>
-
-  <div class="cell small-12">
-    ${questionsListTpl}
-  </div>
-
-  <div class="cell small-12">
-    <div class="grid-x">
-      <div class="cell auto">
-          <button on-click="${() => { addField(questions); update(); }}" class="hollow button" type="button">Add text</button>
-      </div>
-      <div class="cell shrink">
-          <button on-click="${(evt) => save(evt)}" class="hollow button primary" type="button">Save</button>
-      </div>
-    </div>
-  </div>
-</form>
-`;
-    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
-}
-function collectForm() {
-    // basics
-    const newFrom = {
-        uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_3__["v4"])(),
-        created: new Date(),
-        modified: new Date(),
-        questions: [],
-        name: document.querySelector('[name=form-name]').value,
-        introText: document.querySelector('[name=intro-text]').value,
-    };
-    // questions
-    newFrom.questions = Array.from(document.querySelectorAll('.question-item'))
-        .map((el) => {
-        const [label] = Array.from(el.querySelectorAll('input')).map(el => el.value);
-        const [type] = Array.from(el.querySelectorAll('select')).map(el => el.value);
-        return {
-            uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_3__["v4"])(),
-            label,
-            name: label,
-            type,
-            created: new Date(),
-            modified: new Date(),
-        };
-    });
-    // question-item
-    return newFrom;
-}
-function addField(questions) {
-    const q = {
-        uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_3__["v4"])()
-    };
-    questions.push(q);
-}
-function renderLeaf(q) {
-    return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
-<div class="grid-x grid-margin-x grid-margin-y question-item">
-  <div class="cell small-8">
-    <label>Question label
-      <input type='text' name="${q.name}" placeholder="Question label">
-    </label>
-  </div>
-  <div class="cell small-4">
-    <label>Type
-      <select name="${q.name}-q-type">
-          <option>text</option>
-          <option>email</option>
-          <option>number</option>
-          <option>datetime-local</option>
-          <option>tel</option>
-          <option>url</option>
-      </select>
-    </label>
-  </div>
-</div>
-  `;
-}
-async function uploadShare(newForm) {
-    // console.assert(blockstack.isUserSignedIn(), "User is not logged id")
-    // const authorPubkey = blockstack.getPublicKeyFromPrivate( blockstack.loadUserData().appPrivateKey )
-    // const recipientPubKey = '0304eb59f9d33acdc46825c160405b1154ccabfff226fb777e4ce5df4c8f8cacd4'
-    // const quickForm = {
-    //   id: 43,
-    //   name: "The real questions.",
-    //   questions: [
-    //     {label: "Do you like privacy?"},
-    //   ],
-    //   submissions: <Object[]>[],
-    // }
-    // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
-    // await putFile(`forms/${quickForm.id}.json`, quickForm)
-    await blockstack.putFile(`forms/${newForm.uuid}.json`, JSON.stringify(newForm), { encrypt: false });
-    // Object.values(blockstack.loadUserData().profile.apps)[0]
-    // lookupProfile
-    // target to find: https://gaia.blockstack.org/hub/14ktrFjBTrQhmvZYdEgVZPEvceo6uKiyLZ/forms/43.json
-    // where the hash is the app public address
-    console.debug(`did put stuff`);
-}
-const formsListRemoteFile = 'forms.json';
-async function addToList(newForm) {
-    let list = [];
-    try {
-        const json = await blockstack.getFile(formsListRemoteFile);
-        if (json) {
-            list = JSON.parse(json);
-        }
-    }
-    catch (e) {
-        console.info('Problem getting list:');
-        console.info(e);
-    }
-    list.push({
-        uuid: newForm.uuid,
-        name: newForm.name,
-        created: newForm.created,
-    });
-    await blockstack.putFile(formsListRemoteFile, JSON.stringify(list));
-    console.debug(`did update list`);
-}
-
-
-/***/ }),
-
-/***/ "./src/components/list-forms/list-forms.ts":
-/*!*************************************************!*\
-  !*** ./src/components/list-forms/list-forms.ts ***!
-  \*************************************************/
-/*! exports provided: create, init, update */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "init", function() { return init; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
-
-
-
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-async function create() {
-    const authorPubkey = blockstack.getPublicKeyFromPrivate(blockstack.loadUserData().appPrivateKey);
-    const body = { key: authorPubkey };
-    const res1 = await fetch('https://bench.takectrl.io/create', {
-        method: 'POST',
-        body: JSON.stringify(body),
-        mode: 'cors',
-        headers: {
-            'Content-Type': "application/json",
-        }
-    });
-    if (res1.status === 409) {
-        console.log("OK already created");
-    }
-}
-const formsListRemoteFile = 'forms.json';
-async function getList() {
-    let list = [];
-    try {
-        const json = await blockstack.getFile(formsListRemoteFile);
-        if (json) {
-            list = JSON.parse(json);
-        }
-    }
-    catch (e) {
-        console.info('Problem getting list:');
-        console.info(e);
-    }
-    return list;
-}
-async function init() {
-    update(); // initial render
-    const list = await getList();
-    const forms = list
-        .filter(form => form.created && form.uuid && form.name)
-        .map(form => {
-        form.created = new Date(form.created);
-        form.modified = new Date(form.modified);
-        form.questions = (form.questions instanceof Array) ? form.questions : [];
-        return form;
-    }); // now they're sanitized
-    console.debug("In:", list);
-    console.debug("Valid:", forms);
-    _store__WEBPACK_IMPORTED_MODULE_1__["default"].setFormsAction(forms);
-}
-function update() {
-    const { forms } = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store;
-    const formsList = forms; // convert to view model
-    const formsListTpl = formsList
-        .sort((a, b) => a.created.getTime() - b.created.getTime())
-        .map(form => _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
-<div class="grid-x">
-  <div class="cell auto">
-      ${form.name}
-  </div>
-  <div class="cell auto">
-      ${form.created.toUTCString()}
-  </div>
-  <div class="cell shrink">
-      <button class="clear button link" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormView, { formId: form.uuid })}">View</button>
-  </div>
-</div>
-`);
-    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
-<h3>Your forms (${forms.length})</h3>
-
-${formsListTpl}
-`;
-    const el = document.querySelector('forms-list');
-    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
-}
-
-
-/***/ }),
-
-/***/ "./src/components/login/login.ts":
-/*!***************************************!*\
-  !*** ./src/components/login/login.ts ***!
-  \***************************************/
-/*! exports provided: update, blockstackSignout */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blockstackSignout", function() { return blockstackSignout; });
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
-
-
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-
-function update() {
-    const el = document.querySelector('login');
-    const login = (evt) => {
-        evt.target.disabled = true;
-        blockstackLogin();
-    };
-    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_2__["html"] `<h1>Login</h1>
-    <button on-click="${(evt) => login(evt)}" type="button" class="login-button button large">Blockstack</button>
-`;
-    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_2__["render"])(tpl, el);
-}
-function blockstackSignout() {
-    blockstack.signUserOut(location.origin);
-}
-function blockstackLogin() {
-    if (blockstack.isUserSignedIn()) {
-        // const userData = blockstack.loadUserData()
-        // const user = new blockstack.Person(this.userData.profile)
-        // const user.username = this.userData.username
-        _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].FormsList);
-    }
-    else if (blockstack.isSignInPending()) {
-        console.log('pending');
-        blockstack.handlePendingSignIn()
-            .then(() => {
-            _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].FormsList);
-        })
-            .catch(console.warn);
-    }
-    else {
-        blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
-            'store_write',
-            'publish_data',
-        ]);
-    }
-}
-
-
-/***/ }),
-
-/***/ "./src/components/nav/nav.ts":
-/*!***********************************!*\
-  !*** ./src/components/nav/nav.ts ***!
-  \***********************************/
-/*! exports provided: update */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _login_login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../login/login */ "./src/components/login/login.ts");
-/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
-
-
-
-
-function update() {
-    const nav = document.querySelector(`nav`);
-    const route = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.route;
-    const anon = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_3__["html"] `
-<div class="cell auto"></div>
-<div class="cell shrink">
-    <h5>Made with dapp form</h5>
-</div>
-`;
-    const normal = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_3__["html"] `
-        <div class="cell auto nav-item-list">
-            <button class="clear button" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].FormsList)}">List forms</button>
-            <button class="clear button" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_0__["Route"].Build)}">Build form</button>
-        </div>
-        <div class="cell shrink">
-            <button class="hollow button secondary button-signout" on-click="${() => Object(_login_login__WEBPACK_IMPORTED_MODULE_2__["blockstackSignout"])()}">Sign out</button>
-        </div>
-`;
-    const tpl = (route === _router__WEBPACK_IMPORTED_MODULE_0__["Route"].Fill) ? anon : normal;
-    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_3__["render"])(tpl, nav);
-}
-
-
-/***/ }),
-
-/***/ "./src/components/router.ts":
-/*!**********************************!*\
-  !*** ./src/components/router.ts ***!
-  \**********************************/
-/*! exports provided: Route, update, persist */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Route", function() { return Route; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "persist", function() { return persist; });
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store */ "./src/store.ts");
-/* harmony import */ var _login_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./login/login */ "./src/components/login/login.ts");
-/* harmony import */ var _list_forms_list_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./list-forms/list-forms */ "./src/components/list-forms/list-forms.ts");
-/* harmony import */ var _view_form_view_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view-form/view-form */ "./src/components/view-form/view-form.ts");
-/* harmony import */ var _view_form_fill_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view-form/fill-form */ "./src/components/view-form/fill-form.ts");
-/* harmony import */ var _builder_builder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./builder/builder */ "./src/components/builder/builder.ts");
-
-
-
-
-
-
-var Route;
-(function (Route) {
-    Route[Route["Login"] = 1] = "Login";
-    Route[Route["FormView"] = 2] = "FormView";
-    Route[Route["FormsList"] = 3] = "FormsList";
-    Route[Route["Fill"] = 4] = "Fill";
-    Route[Route["Build"] = 5] = "Build";
-})(Route || (Route = {}));
-const map = new Map([
-    [Route.Login, `<login></login>`],
-    [Route.FormView, `<forms-view></forms-view>`],
-    [Route.FormsList, `<forms-list></forms-list>`],
-    [Route.Fill, `<fill-form></fill-form>`],
-    [Route.Build, `<build-form></build-form>`],
-]);
-const viewInitMap = new Map([
-    [Route.Login, _login_login__WEBPACK_IMPORTED_MODULE_1__["update"]],
-    [Route.FormsList, _list_forms_list_forms__WEBPACK_IMPORTED_MODULE_2__["init"]],
-    [Route.FormView, _view_form_view_form__WEBPACK_IMPORTED_MODULE_3__["update"]],
-    [Route.Fill, _view_form_fill_form__WEBPACK_IMPORTED_MODULE_4__["update"]],
-    [Route.Build, _builder_builder__WEBPACK_IMPORTED_MODULE_5__["update"]],
-]);
-let lastRoute = -1;
-function update() {
-    const el = document.querySelector('router');
-    console.assert(!!el);
-    let currentRoute = _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route;
-    let redirect;
-    // fill form has to be detected from URL query params
-    if (location.toString().includes('form-id')) {
-        redirect = Route.Fill;
-    }
-    if (lastRoute !== currentRoute) {
-        const tpl = map.get(currentRoute) || `View ${Route[currentRoute]} doesn't exist`;
-        el.innerHTML = tpl;
-        localStorage.debug && console.debug(lastRoute, '=>', currentRoute);
-        const initFunc = viewInitMap.get(currentRoute);
-        initFunc();
-        lastRoute = currentRoute;
-        if (redirect) {
-            console.debug('redirect', Route[redirect]);
-            _store__WEBPACK_IMPORTED_MODULE_0__["default"].setRouteAction(redirect);
-        }
-    }
-}
-function persist() {
-    if (Route[_store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route] && _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route !== Route.Fill) {
-        sessionStorage.route = _store__WEBPACK_IMPORTED_MODULE_0__["default"].store.route;
-    }
-}
-
-
-/***/ }),
-
-/***/ "./src/components/view-form/fill-form.ts":
-/*!***********************************************!*\
-  !*** ./src/components/view-form/fill-form.ts ***!
-  \***********************************************/
-/*! exports provided: update */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _list_forms_list_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../list-forms/list-forms */ "./src/components/list-forms/list-forms.ts");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _util_crypto__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../util/crypto */ "./src/util/crypto.ts");
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-
-
-
-
-
-async function update() {
-    const el = document.querySelector('fill-form');
-    const url = new URL(location.toString());
-    const author = url.searchParams.get('author');
-    const formId = url.searchParams.get('form-id');
-    const app = location.origin;
-    const submission = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.submission;
-    let form;
-    if (author && formId) {
-        const pathToPublicForm = await blockstack.getUserAppFileUrl(`forms/${formId}.json`, author, app);
-        const res = await fetch(pathToPublicForm, {
-            mode: 'cors'
-        });
-        const json = await res.json();
-        // make view model
-        form = json;
-    }
-    else if (submission) {
-        form = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.forms.find((f) => f.uuid === submission.formUuid);
-    }
-    const questions = ((!form) ? [] : form.questions).map(q => {
-        return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
-<div class="cell medium-12">
-    <label>${q.label}</label>
-    <input type=${q.type} class="form-answer" data-question-uuid="${q.uuid}" data-name="${q.name}" value="">
-</div>`;
-    });
-    const submit = async (evt) => {
-        evt.target.disabled = true;
-        const submission = collectAnswers();
-        submission.formUuid = form.uuid;
-        console.debug("to submit", submission);
-        const authorPubkey = blockstack.getPublicKeyFromPrivate(blockstack.loadUserData().appPrivateKey); // be visible to me self!! YArrrrg
-        await uploadEncrypt(authorPubkey, submission);
-    };
-    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
-<h2>${form.name}</h2>
-<h6>${form.introText}</h6>
-<form class="grid-x grid-margin-y">
-    ${questions}
-
-    <div class="cell small-12">
-        <button type="button" class="button submit-button" on-click="${(evt) => submit(evt)}">Submit</button>
-    </div>
-</form>
-
-<p>Submissions:</p>
-<pre>${JSON.stringify(submission, null, 2)}</pre>
-`;
-    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
-    if (submission) {
-        // fill out
-    }
-}
-function collectAnswers() {
-    const answers = Array.from(document.querySelectorAll('.form-answer')).map((el) => {
-        return {
-            value: el.value,
-            name: el.getAttribute('data-name'),
-            questionUuid: el.getAttribute('data-question-uuid'),
-        };
-    });
-    const submission = {
-        uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_3__["v4"])(),
-        created: new Date(),
-        answers,
-    };
-    return submission;
-}
-async function uploadEncrypt(recipientPubKey, quickForm) {
-    try {
-        await Object(_list_forms_list_forms__WEBPACK_IMPORTED_MODULE_2__["create"])();
-    }
-    catch (e) {
-        console.error('err creating', e);
-    }
-    // const signedPath = signMessage('/forms', blockstack.loadUserData().appPrivateKey)
-    const cipherObj = Object(_util_crypto__WEBPACK_IMPORTED_MODULE_4__["encryptFile"])(recipientPubKey, quickForm);
-    const body = {
-        data: cipherObj,
-        key: recipientPubKey,
-    };
-    const res1 = await fetch('https://bench.takectrl.io/', {
-        method: 'POST',
-        body: JSON.stringify(body),
-        mode: 'cors',
-        headers: {
-            'Content-Type': "application/json",
-        }
-    });
-    if (res1.status !== 200) {
-        throw new Error('failed upload');
-    }
-}
-
-
-/***/ }),
-
-/***/ "./src/components/view-form/view-form.ts":
-/*!***********************************************!*\
-  !*** ./src/components/view-form/view-form.ts ***!
-  \***********************************************/
-/*! exports provided: update */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
-/* harmony import */ var _util_crypto__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../util/crypto */ "./src/util/crypto.ts");
-
-
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-
-
-async function fetchSubmissions() {
-    const authorPubkey = blockstack.getPublicKeyFromPrivate(blockstack.loadUserData().appPrivateKey);
-    const signature = Object(_util_crypto__WEBPACK_IMPORTED_MODULE_3__["signString"])('/get', blockstack.loadUserData().appPrivateKey);
-    const derSign = signature.toDER();
-    const sigHeader = JSON.stringify(derSign);
-    const res = await fetch('https://bench.takectrl.io/get', {
-        mode: 'cors',
-        headers: {
-            'x-ctrl-key': authorPubkey,
-            'x-ctrl-signature': sigHeader,
-        }
-    });
-    if (res.status === 200) {
-        const json = await res.json();
-        console.debug(json);
-        const decrypted = json
-            .map((entry) => entry.data)
-            .filter((cipherObj) => typeof cipherObj === "object")
-            .filter((cipherObj) => !!cipherObj.cipherText)
-            .filter((cipherObj) => Object.keys(cipherObj).length > 0)
-            .map((cipherObj) => Object(_util_crypto__WEBPACK_IMPORTED_MODULE_3__["decryptFile"])(cipherObj));
-        const failed = decrypted.filter((form) => !form);
-        if (failed.length > 0) {
-            console.info("Failed to decrypt:");
-            console.info(failed);
-        }
-        const successfullyDecrypted = decrypted
-            .filter((form) => !!form)
-            .map((form) => JSON.parse(form));
-        return successfullyDecrypted;
-    }
-    throw new Error("Failed getting forms");
-}
-const submissions = [];
-function update(fetch = true) {
-    const el = document.querySelector('forms-view');
-    const id = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.formId;
-    const username = blockstack.loadUserData().username;
-    const shareURL = new URL(location.origin);
-    shareURL.searchParams.append(`author`, username);
-    shareURL.searchParams.append(`form-id`, id);
-    if (fetch) {
-        fetchSubmissions().then(ss => {
-            console.log(ss);
-            ss.forEach(s => submissions.push(s));
-            console.debug(submissions);
-            update(false);
-        });
-    }
-    const seeSubmissions = (formId, submissionId) => {
-        _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Fill, { submission: submissions.find(s => s.uuid === submissionId) });
-    };
-    const submissionsListTpl = submissions
-        .map(submission => {
-        return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<div class="grid-x">
-        <div class="cell auto">Submitted on ${submission.created}</div>
-        <div class="cell shrink">
-          <button class="clear button link" on-click="${() => seeSubmissions(submission.formUuid, submission.uuid)}">View submission</button>
-        </div>
-    </div>`;
-    });
-    console.debug(submissionsListTpl, submissions);
-    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
-    <h3>Form dashboard</h3>
-    <p><small>(id: ${id})</small>
-
-<div class="grid-x grid-margin-x">
-  <div class="cell medium-6">
-  <h4>Distribution</h4>
-  <p>Share URL<br>
-      <code>${shareURL.toString()}</code></p>
-  </div>
-
-  <div class="cell medium-6">
-    <h4>Analytics</h4>
-    <h5>Submissions (${submissionsListTpl.length})</h5>
-    ${submissionsListTpl}
-  </div>
-
-</div>
-`;
-    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
-}
-
-
-/***/ }),
-
-/***/ "./src/css/style.css":
-/*!***************************!*\
-  !*** ./src/css/style.css ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../node_modules/css-loader!./style.css */ "./node_modules/css-loader/index.js!./src/css/style.css");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
-/***/ "./src/main.ts":
-/*!*********************!*\
-  !*** ./src/main.ts ***!
-  \*********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! worker-loader!./workers/submission.worker */ "./node_modules/worker-loader/dist/cjs.js!./src/workers/submission.worker.ts");
-/* harmony import */ var worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store */ "./src/store.ts");
-/* harmony import */ var _components_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/router */ "./src/components/router.ts");
-const css = __webpack_require__(/*! ./css/style.css */ "./src/css/style.css");
-
-
-
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-window.ctrl = window.ctrl || {};
-window.ctrl.blockstack = blockstack;
-function fetchSubmissions() {
-    const submissionWorker = new worker_loader_workers_submission_worker__WEBPACK_IMPORTED_MODULE_0___default.a();
-    submissionWorker.onmessage = function (e) {
-        console.log('message from worker: ', e.data);
-    };
-    const blockstackData = {
-        blockstack: localStorage.getItem('blockstack'),
-        gaia: localStorage.getItem('blockstack-gaia-hub-config'),
-        key: localStorage.getItem('blockstack-transit-private-key')
-    };
-    submissionWorker.postMessage({
-        cmd: 'start',
-        blockstackData
-    });
-}
-function main() {
-    _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(parseInt(sessionStorage.route, 10) || _components_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Login);
-    if (blockstack.isUserSignedIn())
-        fetchSubmissions();
-}
-// side effects
-main();
-
-
-/***/ }),
-
-/***/ "./src/store.ts":
+/***/ "./src/forms.ts":
 /*!**********************!*\
-  !*** ./src/store.ts ***!
+  !*** ./src/forms.ts ***!
   \**********************/
+/*! exports provided: updateSubmissionsFromBench, createDummySubmission */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateSubmissionsFromBench", function() { return updateSubmissionsFromBench; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createDummySubmission", function() { return createDummySubmission; });
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uuid__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util_write__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/write */ "./src/util/write.ts");
+
+
+function sortSubmissions(submissions) {
+    return submissions.reduce((acc, cur) => {
+        acc[cur.formUuid] = acc[cur.formUuid] || {};
+        acc[cur.formUuid][cur.uuid] = cur;
+        return acc;
+    }, {});
+}
+// TODO: make the request concurrent for performance if needed
+async function updateFormSubmissions(forms) {
+    for (const formUuid in forms) {
+        const newSubmissions = forms[formUuid];
+        const submissionsPath = `submissions/${formUuid}.json`;
+        const oldSubmissions = await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(submissionsPath);
+        console.debug(`form: ${formUuid} new submissions:`, newSubmissions);
+        console.debug(`form: ${formUuid} old submissions:`, oldSubmissions);
+        console.debug(`form: ${formUuid} old + new: `, Object.assign({}, oldSubmissions, newSubmissions));
+        await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["putFile"])(submissionsPath, Object.assign({}, oldSubmissions, newSubmissions));
+    }
+}
+async function updateSubmissionsFromBench(submissions) {
+    return updateFormSubmissions(sortSubmissions(submissions));
+}
+function createDummySubmission(formUuid) {
+    return {
+        uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])(),
+        formUuid,
+        created: new Date(),
+        answers: [{ questionUuid: '12345', name: 'privacy', value: 'IS GREAT' }]
+    };
+}
+
+
+/***/ }),
+
+/***/ "./src/util/bench.ts":
+/*!***************************!*\
+  !*** ./src/util/bench.ts ***!
+  \***************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Store; });
-/* harmony import */ var _components_list_forms_list_forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/list-forms/list-forms */ "./src/components/list-forms/list-forms.ts");
-/* harmony import */ var _components_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/router */ "./src/components/router.ts");
-/* harmony import */ var _components_nav_nav__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/nav/nav */ "./src/components/nav/nav.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Bench; });
+/* harmony import */ var _crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./crypto */ "./src/util/crypto.ts");
 
-
-
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
-// interface ReadOnlyState extends DefaultState {
-//   forms: ReadonlyList<Form[]>
-// }
-// a class for holding
-class Store {
-    static get store() {
-        return this._store;
-    }
-    static callReducers(action) {
-        const reducers = Store.reducers.get(action);
-        reducers.forEach(reducer => reducer(this.store));
-    }
-    // Actions
-    static setFormsAction(value) {
-        this._store.forms.length = 0;
-        for (let f of value) {
-            this._store.forms.push(f);
+function generateHeaders(privateKey, publicKey) {
+    return {
+        getSig: {
+            'x-ctrl-key': publicKey,
+            'x-ctrl-signature': JSON.stringify(Object(_crypto__WEBPACK_IMPORTED_MODULE_0__["signString"])('/get', privateKey).toDER())
+        },
+        cleanSig: {
+            'x-ctrl-key': publicKey,
+            'x-ctrl-signature': JSON.stringify(Object(_crypto__WEBPACK_IMPORTED_MODULE_0__["signString"])('/clean', privateKey).toDER())
         }
-        Store.callReducers(Store.setFormsAction);
-    }
-    static setRouteAction(value, routeParams = {}) {
-        if (!blockstack.isUserSignedIn()) { // simple redirect if user not logged in
-            value = _components_router__WEBPACK_IMPORTED_MODULE_1__["Route"].Login;
+    };
+}
+class Bench {
+    constructor(privateKey, publicKey) {
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
+        if (privateKey) {
+            this.headers = generateHeaders(privateKey, publicKey);
         }
-        this._store.route = value;
-        this._store.routeParams = routeParams;
-        Store.callReducers(Store.setRouteAction);
+    }
+    decryptBenchFiles(files) {
+        return files.map(s => Object(_crypto__WEBPACK_IMPORTED_MODULE_0__["decryptFileWithKey"])(this.privateKey, s.data));
+    }
+    async getBenchFiles() {
+        const res = await fetch('https://bench.takectrl.io/get', {
+            mode: 'cors',
+            headers: this.headers.getSig
+        });
+        if (res.status === 200) {
+            const benchFiles = await res.json();
+            console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`);
+            return this.decryptBenchFiles(benchFiles);
+        }
+    }
+    async cleanBench() {
+        console.debug(`bench: ${this.publicKey} - cleaning`);
+        const res = await fetch('https://bench.takectrl.io/clean', {
+            method: 'POST',
+            mode: 'cors',
+            headers: this.headers.cleanSig
+        });
+        if (res.status === 200)
+            return console.debug(`bench: ${this.publicKey} - cleaned`);
+        console.error(`bench: ${this.publicKey} - cleaning failed: ${res}`);
+    }
+    async postFile(file) {
+        const res = await fetch('https://bench.takectrl.io/', {
+            method: 'POST',
+            body: JSON.stringify({
+                key: this.publicKey,
+                data: Object(_crypto__WEBPACK_IMPORTED_MODULE_0__["encryptFile"])(this.publicKey, file)
+            }),
+            mode: 'cors',
+            headers: {
+                'Content-Type': "application/json",
+            }
+        });
+        if (res.status === 200)
+            return console.debug(`bench: ${this.publicKey} - file posted`);
+        console.error(`bench: ${this.publicKey} - file post failed: ${res}`);
     }
 }
-Store.reducers = new Map();
-Store._store = {
-    forms: [],
-    route: _components_router__WEBPACK_IMPORTED_MODULE_1__["Route"].Login,
-    routeParams: {},
-};
-// glue together actions and reducers
-Store.reducers.set(Store.setFormsAction, new Set([
-    (store) => (store.route === _components_router__WEBPACK_IMPORTED_MODULE_1__["Route"].FormsList) && Object(_components_list_forms_list_forms__WEBPACK_IMPORTED_MODULE_0__["update"])(),
-]));
-Store.reducers.set(Store.setRouteAction, new Set([
-    _components_router__WEBPACK_IMPORTED_MODULE_1__["update"],
-    _components_nav_nav__WEBPACK_IMPORTED_MODULE_2__["update"],
-    _components_router__WEBPACK_IMPORTED_MODULE_1__["persist"],
-]));
 
 
 /***/ }),
@@ -87558,6 +85475,82 @@ function decryptFileWithKey(privateKey, cipherObj) {
 function decryptFile(cipherObj) {
     const appPrivateKey = blockstack.loadUserData().appPrivateKey;
     return decryptFileWithKey(appPrivateKey, cipherObj);
+}
+
+
+/***/ }),
+
+/***/ "./src/util/fakeLocalStorage.ts":
+/*!**************************************!*\
+  !*** ./src/util/fakeLocalStorage.ts ***!
+  \**************************************/
+/*! exports provided: localStorage, getBlockstackData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "localStorage", function() { return localStorage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlockstackData", function() { return getBlockstackData; });
+const cache = {};
+function getItem(key) {
+    return cache[key];
+}
+;
+function setItem(key, item) {
+    cache[key] = item;
+}
+;
+function removeItem(key) {
+    cache[key] = null;
+}
+;
+const localStorage = {
+    getItem: getItem,
+    setItem: setItem,
+    removeItem: removeItem
+};
+function getBlockstackData(ls) {
+    return {
+        blockstack: ls.getItem('blockstack'),
+        gaia: ls.getItem('blockstack-gaia-hub-config'),
+        key: ls.getItem('blockstack-transit-private-key')
+    };
+}
+
+
+/***/ }),
+
+/***/ "./src/util/write.ts":
+/*!***************************!*\
+  !*** ./src/util/write.ts ***!
+  \***************************/
+/*! exports provided: putFile, getFile */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "putFile", function() { return putFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFile", function() { return getFile; });
+const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
+async function putFile(path, contents) {
+    try {
+        const result = await blockstack.putFile(path, JSON.stringify(contents));
+        return result;
+    }
+    catch (e) {
+        console.error(e);
+        return false;
+    }
+}
+async function getFile(path) {
+    try {
+        const contents = await blockstack.getFile(path);
+        return JSON.parse(contents);
+    }
+    catch (e) {
+        console.error(e);
+        return false;
+    }
 }
 
 
@@ -87619,4 +85612,4 @@ function decryptFile(cipherObj) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=5f1b84f60fa67c215eb3.bundle.js.map
+//# sourceMappingURL=1095ccca87fc16133794.worker.js.map
