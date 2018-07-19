@@ -37,6 +37,7 @@ export async function update () {
 
       <p>
           <a href="${shareURL}" target="_blank" class="button large">Open</a>
+          <a href="https://ipfs.io/ipfs/QmccqhJg5wm5kNjAP4k4HrYxoqaXUGNuotDUqfvYBx8jrR/qr#${shareURL.toString()}" target="_blank" class="button secondary large">QR code</a>
           <button on-click="${(evt: Event) => deleteForm(uuid)}" class="alert button large">Delete</button>
       </p>
   </div>
