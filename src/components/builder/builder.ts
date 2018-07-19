@@ -53,7 +53,7 @@ export function update() {
   <div class="cell small-12">
     <div class="grid-x">
       <div class="cell auto">
-          <button on-click="${() => {addField(questions); update()}}" class="hollow button" type="button">Add text</button>
+          <button on-click="${() => {addField(questions); update()}}" class="hollow button" type="button">Add question</button>
       </div>
       <div class="cell shrink">
           <button on-click="${(evt:MouseEvent) => save(evt)}" class="hollow button primary" type="button">Save</button>
