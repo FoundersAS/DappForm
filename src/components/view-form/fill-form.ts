@@ -84,17 +84,13 @@ export async function update () {
 <form class="grid-x grid-margin-y">
     ${questions}
 
-    <div class="cell small-12">
+    ${submission ? null :html`<div class="cell small-12">
         <button type="button" class="button submit-button" on-click="${(evt:any)=>submit(evt)}">Submit</button>
-    </div>
+    </div>`}
 </form>
 `
 
   render(tpl, el)
-
-  if (submission) {
-    // fill out
-  }
 }
 
 function collectAnswers () {
