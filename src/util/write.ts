@@ -20,6 +20,10 @@ export async function getFile(path: string): Promise<Object | Boolean> {
     console.error(e)
     return false
   }
+  if (!json) {
+    console.info("Empty file. Form was probably deleted. " + path)
+    return false
+  }
   try {
     parsed = JSON.parse(json)
   }
