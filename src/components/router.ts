@@ -49,7 +49,7 @@ export function update () {
 
 export function persist () {
   const route = Store.store.route
-  if (route === Route.FormsList) { // TODO we must
+  if (route === Route.FormsList || route === Route.Build) {
     sessionStorage.route = Store.store.route
   }
 }
