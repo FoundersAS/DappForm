@@ -16,3 +16,7 @@ input:invalid {
 input[required]:valid {
     box-shadow: 0 0 3px lime;
 }
+
+.hide {
+    display: none;
+}

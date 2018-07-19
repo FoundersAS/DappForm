@@ -77,11 +77,21 @@ export async function update () {
     const authorPubkey = form.authorPubKey
     const bench = new Bench('', authorPubkey)
     await bench.postFile(submission)
+
+    el.querySelector('.confirmation-text').classList.remove('hide')
+    el.querySelector('.into-text').classList.add('hide')
   }
 
   const tpl = html`
-<h2>${form.name}</h2>
-<h6>${form.introText}</h6>
+  <h2>${form.name}</h2>
+  
+  <div class="callout success confirmation-text hide">
+      <h5 class="">${form.confirmationText || "Thanks!"}</h5>
+  </div>
+  <div class="callout primary into-text">
+      <h5 class="">${form.introText}</h5>
+  </div>
+
 <form class="grid-x grid-margin-y" on-submit="${(evt:any)=> submit(evt)}">
     ${questions}
 
