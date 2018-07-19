@@ -6,7 +6,8 @@ const ExternalDepsPlugin = new CopyWebpackPlugin([
   { from: 'CNAME', to: 'CNAME', toType: 'file'},
   { from: 'src/assets/icon.png', to: 'assets/icon.png' },
   { from: 'node_modules/foundation-sites/dist/css/foundation.min.css', to: 'assets/foundation.min.css' },
-  { from: 'node_modules/foundation-sites/dist/css/foundation.min.css.map', to: 'assets/foundation.min.css.map' }
+  { from: 'node_modules/foundation-sites/dist/css/foundation.min.css.map', to: 'assets/foundation.min.css.map' },
+  { from: 'src/css/style.css', to: 'assets/style.css' },
 ]);
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -29,7 +30,6 @@ module.exports = {
     rules: [
       { test: /\.worker\.js$/, use: { loader: 'worker-loader' } },
       { test: /\.tsx?$/, loader: 'ts-loader' },
-      { test: /\.css$/, loader: 'style-loader!css-loader' }
     ]
   },
   plugins: [HtmlWebpackPluginConfig, ExternalDepsPlugin]
