@@ -57,8 +57,8 @@ export async function updateSubmissionsFromBench(submissions: Submission[]) {
   return updateFormSubmissions(sortSubmissions(submissions))
 }
 
-export async function getFormSubmissions(formUuid:string):Promise<Submission[]> {
-  return await getFile(getSubmissionsPath(formUuid)) as Submission[] || [] as Submission[]
+export async function getFormSubmissions(formUuid: string): Promise<SubmissionMap> {
+  return await getFile(getSubmissionsPath(formUuid)) as SubmissionMap || {} as SubmissionMap
 }
 
 export async function getForm(formUuid: string): Promise<Form | undefined> {

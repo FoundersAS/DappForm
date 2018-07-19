@@ -4,6 +4,7 @@ import { init as listInit } from './list-forms/list-forms'
 import { update as viewFormInit } from './view-form/view-form'
 import { update as fillInit } from './view-form/fill-form'
 import { update as buildInit } from './builder/builder'
+import { update as viewSubmissionInit } from './view-submissions/view-submissions'
 
 export enum Route {
   Login = 1,
@@ -11,6 +12,7 @@ export enum Route {
   FormsList,
   Fill,
   Build,
+  SubmissionsView,
 }
 
 const map = new Map<Route, string>([ // tuples of Route + HTML template
@@ -19,6 +21,7 @@ const map = new Map<Route, string>([ // tuples of Route + HTML template
   [Route.FormsList, `<forms-list></forms-list>`],
   [Route.Fill, `<fill-form></fill-form>`],
   [Route.Build, `<build-form></build-form>`],
+  [Route.SubmissionsView, `<submissions-view></submissions-view>`],
 ])
 
 const viewInitMap = new Map<Route, Function>([
@@ -27,6 +30,7 @@ const viewInitMap = new Map<Route, Function>([
   [Route.FormView, viewFormInit],
   [Route.Fill, fillInit],
   [Route.Build, buildInit],
+  [Route.SubmissionsView, viewSubmissionInit],
 ])
 
 let lastRoute:number = -1
@@ -49,6 +53,7 @@ export function update () {
 
 export function persist () {
   const route = Store.store.route
+
   if (route === Route.FormsList || route === Route.Build) {
     sessionStorage.route = Store.store.route
   }

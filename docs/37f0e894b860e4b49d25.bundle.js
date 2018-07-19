@@ -3739,7 +3739,7 @@ var objectKeys = Object.keys || function (obj) {
 // Merged Buffer refactorings from base58-native by Stephen Pair
 // Copyright (c) 2013 BitPay Inc
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/base-x/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 module.exports = function base (ALPHABET) {
   var ALPHABET_MAP = {}
@@ -3822,79 +3822,6 @@ module.exports = function base (ALPHABET) {
     decodeUnsafe: decodeUnsafe,
     decode: decode
   }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/base-x/node_modules/safe-buffer/index.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/base-x/node_modules/safe-buffer/index.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
 }
 
 
@@ -5977,7 +5904,7 @@ module.exports = {"name":"bigi","version":"1.4.2","description":"Big integers.",
 // Format: 0x30 [total-length] 0x02 [R-length] [R] 0x02 [S-length] [S]
 // NOTE: SIGHASH byte ignored AND restricted, truncate before use
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bip66/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 function check (buffer) {
   if (buffer.length < 8) return false
@@ -6090,79 +6017,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/bip66/node_modules/safe-buffer/index.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/bip66/node_modules/safe-buffer/index.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/bitcoin-ops/index.json":
 /*!*********************************************!*\
   !*** ./node_modules/bitcoin-ops/index.json ***!
@@ -6194,79 +6048,6 @@ module.exports = map
 
 /***/ }),
 
-/***/ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/bitcoinjs-lib/src/address.js":
 /*!***************************************************!*\
   !*** ./node_modules/bitcoinjs-lib/src/address.js ***!
@@ -6274,7 +6055,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var bech32 = __webpack_require__(/*! bech32 */ "./node_modules/bech32/index.js")
 var bs58check = __webpack_require__(/*! bs58check */ "./node_modules/bs58check/index.js")
 var bscript = __webpack_require__(/*! ./script */ "./node_modules/bitcoinjs-lib/src/script.js")
@@ -6382,7 +6163,7 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var bcrypto = __webpack_require__(/*! ./crypto */ "./node_modules/bitcoinjs-lib/src/crypto.js")
 var fastMerkleRoot = __webpack_require__(/*! merkle-lib/fastRoot */ "./node_modules/merkle-lib/fastRoot.js")
 var typeforce = __webpack_require__(/*! typeforce */ "./node_modules/typeforce/index.js")
@@ -6677,7 +6458,7 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var createHmac = __webpack_require__(/*! create-hmac */ "./node_modules/create-hmac/browser.js")
 var typeforce = __webpack_require__(/*! typeforce */ "./node_modules/typeforce/index.js")
 var types = __webpack_require__(/*! ./types */ "./node_modules/bitcoinjs-lib/src/types.js")
@@ -7100,7 +6881,7 @@ module.exports = ECSignature
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var base58check = __webpack_require__(/*! bs58check */ "./node_modules/bs58check/index.js")
 var bcrypto = __webpack_require__(/*! ./crypto */ "./node_modules/bitcoinjs-lib/src/crypto.js")
 var createHmac = __webpack_require__(/*! create-hmac */ "./node_modules/create-hmac/browser.js")
@@ -7509,7 +7290,7 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var bip66 = __webpack_require__(/*! bip66 */ "./node_modules/bip66/index.js")
 var pushdata = __webpack_require__(/*! pushdata-bitcoin */ "./node_modules/pushdata-bitcoin/index.js")
 var typeforce = __webpack_require__(/*! typeforce */ "./node_modules/typeforce/index.js")
@@ -7734,7 +7515,7 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 function decode (buffer, maxLength, minimal) {
   maxLength = maxLength || 4
@@ -7915,7 +7696,7 @@ module.exports = {
 
 // OP_0 [signatures ...]
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var bscript = __webpack_require__(/*! ../../script */ "./node_modules/bitcoinjs-lib/src/script.js")
 var p2mso = __webpack_require__(/*! ./output */ "./node_modules/bitcoinjs-lib/src/templates/multisig/output.js")
 var typeforce = __webpack_require__(/*! typeforce */ "./node_modules/typeforce/index.js")
@@ -8374,7 +8155,7 @@ module.exports = {
 
 // <scriptSig> {serialized scriptPubKey script}
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var bscript = __webpack_require__(/*! ../../script */ "./node_modules/bitcoinjs-lib/src/script.js")
 var typeforce = __webpack_require__(/*! typeforce */ "./node_modules/typeforce/index.js")
 
@@ -8529,7 +8310,7 @@ module.exports = {
 
 // OP_RETURN {aa21a9ed} {commitment}
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var bscript = __webpack_require__(/*! ../../script */ "./node_modules/bitcoinjs-lib/src/script.js")
 var types = __webpack_require__(/*! ../../types */ "./node_modules/bitcoinjs-lib/src/types.js")
 var typeforce = __webpack_require__(/*! typeforce */ "./node_modules/typeforce/index.js")
@@ -8830,7 +8611,7 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var bcrypto = __webpack_require__(/*! ./crypto */ "./node_modules/bitcoinjs-lib/src/crypto.js")
 var bscript = __webpack_require__(/*! ./script */ "./node_modules/bitcoinjs-lib/src/script.js")
 var bufferutils = __webpack_require__(/*! ./bufferutils */ "./node_modules/bitcoinjs-lib/src/bufferutils.js")
@@ -9333,7 +9114,7 @@ module.exports = Transaction
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/bitcoinjs-lib/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var baddress = __webpack_require__(/*! ./address */ "./node_modules/bitcoinjs-lib/src/address.js")
 var bcrypto = __webpack_require__(/*! ./crypto */ "./node_modules/bitcoinjs-lib/src/crypto.js")
 var bscript = __webpack_require__(/*! ./script */ "./node_modules/bitcoinjs-lib/src/script.js")
@@ -17490,6 +17271,7 @@ function uploadToGaiaHub(filename, contents, hubConfig) {
     body: contents }).then(function (response) {
     return response.text();
   }).then(function (responseText) {
+
     return JSON.parse(responseText);
   }).then(function (responseJSON) {
     return responseJSON.publicURL;
@@ -17580,6 +17362,7 @@ function getBucketUrl(gaiaHubUrl, appPrivateKey) {
     return bucketUrl;
   });
 }
+
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
 
 /***/ }),
@@ -17687,13 +17470,7 @@ function decryptContent(content, options) {
   if (!opt.privateKey) {
     opt.privateKey = (0, _auth.loadUserData)().appPrivateKey;
   }
-
-  try {
-    var cipherObject = JSON.parse(content);
-  }
-  catch (e) {
-
-  }
+  var cipherObject = JSON.parse(content);
   return (0, _encryption.decryptECIES)(opt.privateKey, cipherObject);
 }
 
@@ -17816,6 +17593,7 @@ exports.connectToGaiaHub = _hub.connectToGaiaHub;
 exports.uploadToGaiaHub = _hub.uploadToGaiaHub;
 exports.BLOCKSTACK_GAIA_HUB_LABEL = _hub.BLOCKSTACK_GAIA_HUB_LABEL;
 exports.GaiaHubConfig = _hub.GaiaHubConfig;
+
 
 /***/ }),
 
@@ -21527,7 +21305,7 @@ if (typeof self === 'object') {
 // which is in turn based on the one from crypto-js
 // https://code.google.com/p/crypto-js/
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 function asUInt32Array (buf) {
   if (!Buffer.isBuffer(buf)) buf = Buffer.from(buf)
@@ -21762,7 +21540,7 @@ module.exports.AES = AES
 /***/ (function(module, exports, __webpack_require__) {
 
 var aes = __webpack_require__(/*! ./aes */ "./node_modules/browserify-aes/aes.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var Transform = __webpack_require__(/*! cipher-base */ "./node_modules/cipher-base/index.js")
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var GHASH = __webpack_require__(/*! ./ghash */ "./node_modules/browserify-aes/ghash.js")
@@ -21914,7 +21692,7 @@ exports.listCiphers = exports.getCiphers = getCiphers
 /***/ (function(module, exports, __webpack_require__) {
 
 var AuthCipher = __webpack_require__(/*! ./authCipher */ "./node_modules/browserify-aes/authCipher.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var MODES = __webpack_require__(/*! ./modes */ "./node_modules/browserify-aes/modes/index.js")
 var StreamCipher = __webpack_require__(/*! ./streamCipher */ "./node_modules/browserify-aes/streamCipher.js")
 var Transform = __webpack_require__(/*! cipher-base */ "./node_modules/cipher-base/index.js")
@@ -22050,7 +21828,7 @@ exports.createDecipheriv = createDecipheriv
 
 var MODES = __webpack_require__(/*! ./modes */ "./node_modules/browserify-aes/modes/index.js")
 var AuthCipher = __webpack_require__(/*! ./authCipher */ "./node_modules/browserify-aes/authCipher.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var StreamCipher = __webpack_require__(/*! ./streamCipher */ "./node_modules/browserify-aes/streamCipher.js")
 var Transform = __webpack_require__(/*! cipher-base */ "./node_modules/cipher-base/index.js")
 var aes = __webpack_require__(/*! ./aes */ "./node_modules/browserify-aes/aes.js")
@@ -22173,7 +21951,7 @@ exports.createCipher = createCipher
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var ZEROES = Buffer.alloc(16, 0)
 
 function toArray (buf) {
@@ -22327,7 +22105,7 @@ exports.decrypt = function (self, block) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var xor = __webpack_require__(/*! buffer-xor */ "./node_modules/buffer-xor/index.js")
 
 function encryptStart (self, data, decrypt) {
@@ -22371,7 +22149,7 @@ exports.encrypt = function (self, data, decrypt) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 function encryptByte (self, byteParam, decrypt) {
   var pad
@@ -22424,7 +22202,7 @@ exports.encrypt = function (self, chunk, decrypt) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 function encryptByte (self, byteParam, decrypt) {
   var pad = self._cipher.encryptBlock(self._prev)
@@ -22461,7 +22239,7 @@ exports.encrypt = function (self, chunk, decrypt) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var xor = __webpack_require__(/*! buffer-xor */ "./node_modules/buffer-xor/index.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var incr32 = __webpack_require__(/*! ../incr32 */ "./node_modules/browserify-aes/incr32.js")
 
 function getBlock (self) {
@@ -22580,79 +22358,6 @@ exports.encrypt = function (self, chunk) {
 
 /***/ }),
 
-/***/ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/browserify-aes/node_modules/safe-buffer/index.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/browserify-aes/streamCipher.js":
 /*!*****************************************************!*\
   !*** ./node_modules/browserify-aes/streamCipher.js ***!
@@ -22661,7 +22366,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var aes = __webpack_require__(/*! ./aes */ "./node_modules/browserify-aes/aes.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-aes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var Transform = __webpack_require__(/*! cipher-base */ "./node_modules/cipher-base/index.js")
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 
@@ -22779,7 +22484,7 @@ exports.listCiphers = exports.getCiphers = getCiphers
 var CipherBase = __webpack_require__(/*! cipher-base */ "./node_modules/cipher-base/index.js")
 var des = __webpack_require__(/*! des.js */ "./node_modules/des.js/lib/des.js")
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/browserify-des/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var modes = {
   'des-ede3-cbc': des.CBC.instantiate(des.EDE),
@@ -22860,79 +22565,6 @@ exports['des-ede-cbc'] = {
 exports['des-ede'] = {
   key: 16,
   iv: 0
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/browserify-des/node_modules/safe-buffer/index.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/browserify-des/node_modules/safe-buffer/index.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
 }
 
 
@@ -27483,7 +27115,7 @@ module.exports = {"name":"cheerio","version":"0.22.0","description":"Tiny, fast,
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/cipher-base/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var Transform = __webpack_require__(/*! stream */ "./node_modules/stream-browserify/index.js").Transform
 var StringDecoder = __webpack_require__(/*! string_decoder */ "./node_modules/string_decoder/lib/string_decoder.js").StringDecoder
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
@@ -27582,79 +27214,6 @@ CipherBase.prototype._toString = function (value, enc, fin) {
 }
 
 module.exports = CipherBase
-
-
-/***/ }),
-
-/***/ "./node_modules/cipher-base/node_modules/safe-buffer/index.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/cipher-base/node_modules/safe-buffer/index.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
 
 
 /***/ }),
@@ -27984,7 +27543,7 @@ module.exports = function (buffer) {
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var Legacy = __webpack_require__(/*! ./legacy */ "./node_modules/create-hmac/legacy.js")
 var Base = __webpack_require__(/*! cipher-base */ "./node_modules/cipher-base/index.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/create-hmac/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var md5 = __webpack_require__(/*! create-hash/md5 */ "./node_modules/create-hash/md5.js")
 var RIPEMD160 = __webpack_require__(/*! ripemd160 */ "./node_modules/ripemd160/index.js")
 
@@ -28056,7 +27615,7 @@ module.exports = function createHmac (alg, key) {
 "use strict";
 
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/create-hmac/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var Base = __webpack_require__(/*! cipher-base */ "./node_modules/cipher-base/index.js")
 
@@ -28100,79 +27659,6 @@ Hmac.prototype._final = function () {
   return this._alg(Buffer.concat([this._opad, h]))
 }
 module.exports = Hmac
-
-
-/***/ }),
-
-/***/ "./node_modules/create-hmac/node_modules/safe-buffer/index.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/create-hmac/node_modules/safe-buffer/index.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
 
 
 /***/ }),
@@ -32218,7 +31704,7 @@ module.exports = getCurveByName
 /***/ (function(module, exports, __webpack_require__) {
 
 var assert = __webpack_require__(/*! assert */ "./node_modules/assert/assert.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/ecurve/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var BigInteger = __webpack_require__(/*! bigi */ "./node_modules/bigi/lib/index.js")
 
 var THREE = BigInteger.valueOf(3)
@@ -32461,79 +31947,6 @@ Point.prototype.toString = function () {
 }
 
 module.exports = Point
-
-
-/***/ }),
-
-/***/ "./node_modules/ecurve/node_modules/safe-buffer/index.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/ecurve/node_modules/safe-buffer/index.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
 
 
 /***/ }),
@@ -37165,7 +36578,7 @@ function isUndefined(arg) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/evp_bytestokey/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var MD5 = __webpack_require__(/*! md5.js */ "./node_modules/md5.js/index.js")
 
 /* eslint-disable camelcase */
@@ -37214,79 +36627,6 @@ module.exports = EVP_BytesToKey
 
 /***/ }),
 
-/***/ "./node_modules/evp_bytestokey/node_modules/safe-buffer/index.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/evp_bytestokey/node_modules/safe-buffer/index.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/form-data/lib/browser.js":
 /*!***********************************************!*\
   !*** ./node_modules/form-data/lib/browser.js ***!
@@ -37309,7 +36649,7 @@ module.exports = typeof self == 'object' ? self.FormData : window.FormData;
 
 "use strict";
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/hash-base/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var Transform = __webpack_require__(/*! stream */ "./node_modules/stream-browserify/index.js").Transform
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 
@@ -37403,79 +36743,6 @@ HashBase.prototype._digest = function () {
 }
 
 module.exports = HashBase
-
-
-/***/ }),
-
-/***/ "./node_modules/hash-base/node_modules/safe-buffer/index.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/hash-base/node_modules/safe-buffer/index.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
 
 
 /***/ }),
@@ -72144,7 +71411,7 @@ exports.pbkdf2Sync = __webpack_require__(/*! ./lib/sync */ "./node_modules/pbkdf
 /* WEBPACK VAR INJECTION */(function(global, process) {var checkParameters = __webpack_require__(/*! ./precondition */ "./node_modules/pbkdf2/lib/precondition.js")
 var defaultEncoding = __webpack_require__(/*! ./default-encoding */ "./node_modules/pbkdf2/lib/default-encoding.js")
 var sync = __webpack_require__(/*! ./sync */ "./node_modules/pbkdf2/lib/sync-browser.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/pbkdf2/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var ZERO_BUF
 var subtle = global.crypto && global.crypto.subtle
@@ -72321,7 +71588,7 @@ var sha = __webpack_require__(/*! sha.js */ "./node_modules/sha.js/index.js")
 
 var checkParameters = __webpack_require__(/*! ./precondition */ "./node_modules/pbkdf2/lib/precondition.js")
 var defaultEncoding = __webpack_require__(/*! ./default-encoding */ "./node_modules/pbkdf2/lib/default-encoding.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/pbkdf2/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var ZEROS = Buffer.alloc(128)
 var sizes = {
   md5: 16,
@@ -72416,79 +71683,6 @@ function pbkdf2 (password, salt, iterations, keylen, digest) {
 }
 
 module.exports = pbkdf2
-
-
-/***/ }),
-
-/***/ "./node_modules/pbkdf2/node_modules/safe-buffer/index.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/pbkdf2/node_modules/safe-buffer/index.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
 
 
 /***/ }),
@@ -73906,7 +73100,7 @@ function oldBrowser () {
   throw new Error('Secure random number generation is not supported by this browser.\nUse Chrome, Firefox or Internet Explorer 11')
 }
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/randombytes/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 var crypto = global.crypto || global.msCrypto
 
 if (crypto && crypto.getRandomValues) {
@@ -73943,79 +73137,6 @@ function randomBytes (size, cb) {
 
 /***/ }),
 
-/***/ "./node_modules/randombytes/node_modules/safe-buffer/index.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/randombytes/node_modules/safe-buffer/index.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/randomfill/browser.js":
 /*!********************************************!*\
   !*** ./node_modules/randomfill/browser.js ***!
@@ -74029,7 +73150,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 function oldBrowser () {
   throw new Error('secure random number generation not supported by this browser\nuse chrome, FireFox or Internet Explorer 11')
 }
-var safeBuffer = __webpack_require__(/*! safe-buffer */ "./node_modules/randomfill/node_modules/safe-buffer/index.js")
+var safeBuffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js")
 var randombytes = __webpack_require__(/*! randombytes */ "./node_modules/randombytes/browser.js")
 var Buffer = safeBuffer.Buffer
 var kBufferMaxLength = safeBuffer.kMaxLength
@@ -74134,79 +73255,6 @@ function randomFillSync (buf, offset, size) {
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
-
-/***/ }),
-
-/***/ "./node_modules/randomfill/node_modules/safe-buffer/index.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/randomfill/node_modules/safe-buffer/index.js ***!
-  \*******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
 
 /***/ }),
 
@@ -74484,7 +73532,7 @@ var Stream = __webpack_require__(/*! ./internal/streams/stream */ "./node_module
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/readable-stream/node_modules/safe-buffer/index.js").Buffer;
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
 var OurUint8Array = global.Uint8Array || function () {};
 function _uint8ArrayToBuffer(chunk) {
   return Buffer.from(chunk);
@@ -75768,7 +74816,7 @@ var Stream = __webpack_require__(/*! ./internal/streams/stream */ "./node_module
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/readable-stream/node_modules/safe-buffer/index.js").Buffer;
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
 var OurUint8Array = global.Uint8Array || function () {};
 function _uint8ArrayToBuffer(chunk) {
   return Buffer.from(chunk);
@@ -76389,7 +75437,7 @@ Writable.prototype._destroy = function (err, cb) {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/readable-stream/node_modules/safe-buffer/index.js").Buffer;
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
 var util = __webpack_require__(/*! util */ 3);
 
 function copyBuffer(src, target, offset) {
@@ -76560,79 +75608,6 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! events */ "./node_modules/events/events.js").EventEmitter;
-
-
-/***/ }),
-
-/***/ "./node_modules/readable-stream/node_modules/safe-buffer/index.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/readable-stream/node_modules/safe-buffer/index.js ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
 
 
 /***/ }),
@@ -78744,7 +77719,7 @@ module.exports = __webpack_require__(/*! ./lib/schema-inspector */ "./node_modul
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/sha.js/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 // prototype class for hash functions
 function Hash (blockSize, finalSize) {
@@ -78855,79 +77830,6 @@ exports.sha512 = __webpack_require__(/*! ./sha512 */ "./node_modules/sha.js/sha5
 
 /***/ }),
 
-/***/ "./node_modules/sha.js/node_modules/safe-buffer/index.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/sha.js/node_modules/safe-buffer/index.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/sha.js/sha.js":
 /*!************************************!*\
   !*** ./node_modules/sha.js/sha.js ***!
@@ -78945,7 +77847,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var Hash = __webpack_require__(/*! ./hash */ "./node_modules/sha.js/hash.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/sha.js/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var K = [
   0x5a827999, 0x6ed9eba1, 0x8f1bbcdc | 0, 0xca62c1d6 | 0
@@ -79051,7 +77953,7 @@ module.exports = Sha
 
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var Hash = __webpack_require__(/*! ./hash */ "./node_modules/sha.js/hash.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/sha.js/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var K = [
   0x5a827999, 0x6ed9eba1, 0x8f1bbcdc | 0, 0xca62c1d6 | 0
@@ -79161,7 +78063,7 @@ module.exports = Sha1
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var Sha256 = __webpack_require__(/*! ./sha256 */ "./node_modules/sha.js/sha256.js")
 var Hash = __webpack_require__(/*! ./hash */ "./node_modules/sha.js/hash.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/sha.js/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var W = new Array(64)
 
@@ -79224,7 +78126,7 @@ module.exports = Sha224
 
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var Hash = __webpack_require__(/*! ./hash */ "./node_modules/sha.js/hash.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/sha.js/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var K = [
   0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5,
@@ -79363,7 +78265,7 @@ module.exports = Sha256
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var SHA512 = __webpack_require__(/*! ./sha512 */ "./node_modules/sha.js/sha512.js")
 var Hash = __webpack_require__(/*! ./hash */ "./node_modules/sha.js/hash.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/sha.js/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var W = new Array(160)
 
@@ -79430,7 +78332,7 @@ module.exports = Sha384
 
 var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js")
 var Hash = __webpack_require__(/*! ./hash */ "./node_modules/sha.js/hash.js")
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/sha.js/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 var K = [
   0x428a2f98, 0xd728ae22, 0x71374491, 0x23ef65cd,
@@ -79881,7 +78783,7 @@ module.exports = function (str) {
 
 /*<replacement>*/
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/string_decoder/node_modules/safe-buffer/index.js").Buffer;
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
 /*</replacement>*/
 
 var isEncoding = Buffer.isEncoding || function (encoding) {
@@ -80152,79 +79054,6 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-
-/***/ }),
-
-/***/ "./node_modules/string_decoder/node_modules/safe-buffer/index.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/string_decoder/node_modules/safe-buffer/index.js ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
-
 
 /***/ }),
 
@@ -85800,7 +84629,7 @@ module.exports = exports['default'];
 
 "use strict";
 
-var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/varuint-bitcoin/node_modules/safe-buffer/index.js").Buffer
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer
 
 // Number.MAX_SAFE_INTEGER
 var MAX_SAFE_INTEGER = 9007199254740991
@@ -85889,79 +84718,6 @@ function encodingLength (number) {
 }
 
 module.exports = { encode: encode, decode: decode, encodingLength: encodingLength }
-
-
-/***/ }),
-
-/***/ "./node_modules/varuint-bitcoin/node_modules/safe-buffer/index.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/varuint-bitcoin/node_modules/safe-buffer/index.js ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* eslint-disable node/no-deprecated-api */
-var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
-var Buffer = buffer.Buffer
-
-// alternative to using Object.keys for old browsers
-function copyProps (src, dst) {
-  for (var key in src) {
-    dst[key] = src[key]
-  }
-}
-if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
-  module.exports = buffer
-} else {
-  // Copy properties from require('buffer')
-  copyProps(buffer, exports)
-  exports.Buffer = SafeBuffer
-}
-
-function SafeBuffer (arg, encodingOrOffset, length) {
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-// Copy static methods from Buffer
-copyProps(Buffer, SafeBuffer)
-
-SafeBuffer.from = function (arg, encodingOrOffset, length) {
-  if (typeof arg === 'number') {
-    throw new TypeError('Argument must not be a number')
-  }
-  return Buffer(arg, encodingOrOffset, length)
-}
-
-SafeBuffer.alloc = function (size, fill, encoding) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  var buf = Buffer(size)
-  if (fill !== undefined) {
-    if (typeof encoding === 'string') {
-      buf.fill(fill, encoding)
-    } else {
-      buf.fill(fill)
-    }
-  } else {
-    buf.fill(0)
-  }
-  return buf
-}
-
-SafeBuffer.allocUnsafe = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return Buffer(size)
-}
-
-SafeBuffer.allocUnsafeSlow = function (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('Argument must be a number')
-  }
-  return buffer.SlowBuffer(size)
-}
 
 
 /***/ }),
@@ -86739,7 +85495,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
-  return new Worker(__webpack_require__.p + "bdaaea0f58ddd4928da5.worker.js");
+  return new Worker(__webpack_require__.p + "7f100eab8ebd5160e514.worker.js");
 };
 
 /***/ }),
@@ -87685,6 +86441,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _view_form_view_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view-form/view-form */ "./src/components/view-form/view-form.ts");
 /* harmony import */ var _view_form_fill_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view-form/fill-form */ "./src/components/view-form/fill-form.ts");
 /* harmony import */ var _builder_builder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./builder/builder */ "./src/components/builder/builder.ts");
+/* harmony import */ var _view_submissions_view_submissions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view-submissions/view-submissions */ "./src/components/view-submissions/view-submissions.ts");
+
 
 
 
@@ -87698,6 +86456,7 @@ var Route;
     Route[Route["FormsList"] = 3] = "FormsList";
     Route[Route["Fill"] = 4] = "Fill";
     Route[Route["Build"] = 5] = "Build";
+    Route[Route["SubmissionsView"] = 6] = "SubmissionsView";
 })(Route || (Route = {}));
 const map = new Map([
     [Route.Login, `<login></login>`],
@@ -87705,6 +86464,7 @@ const map = new Map([
     [Route.FormsList, `<forms-list></forms-list>`],
     [Route.Fill, `<fill-form></fill-form>`],
     [Route.Build, `<build-form></build-form>`],
+    [Route.SubmissionsView, `<submissions-view></submissions-view>`],
 ]);
 const viewInitMap = new Map([
     [Route.Login, _login_login__WEBPACK_IMPORTED_MODULE_1__["update"]],
@@ -87712,6 +86472,7 @@ const viewInitMap = new Map([
     [Route.FormView, _view_form_view_form__WEBPACK_IMPORTED_MODULE_3__["update"]],
     [Route.Fill, _view_form_fill_form__WEBPACK_IMPORTED_MODULE_4__["update"]],
     [Route.Build, _builder_builder__WEBPACK_IMPORTED_MODULE_5__["update"]],
+    [Route.SubmissionsView, _view_submissions_view_submissions__WEBPACK_IMPORTED_MODULE_6__["update"]],
 ]);
 let lastRoute = -1;
 function update() {
@@ -87891,27 +86652,14 @@ __webpack_require__.r(__webpack_exports__);
 
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
 async function update() {
-    const submissions = [];
     const el = document.querySelector('forms-view');
     const uuid = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.formId;
     const username = blockstack.loadUserData().username;
     const shareURL = new URL(location.origin);
     shareURL.searchParams.append(`author`, username);
     shareURL.searchParams.append(`form-id`, uuid);
-    const submissionsToForm = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getFormSubmissions"])(uuid);
-    Object.values(submissionsToForm).forEach(s => submissions.push(s));
-    const seeSubmissions = (formId, submissionId) => {
-        _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].Fill, { submission: submissions.find(s => s.uuid === submissionId) });
-    };
-    const submissionsListTpl = submissions
-        .map(submission => {
-        return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<div class="grid-x">
-        <div class="cell auto">Submitted on ${submission.created}</div>
-        <div class="cell shrink">
-          <button class="clear button link" on-click="${() => seeSubmissions(submission.formUuid, submission.uuid)}">View submission</button>
-        </div>
-    </div>`;
-    });
+    const submissions = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getFormSubmissions"])(uuid);
+    console.log(submissions);
     const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
     <h3>Form dashboard</h3>
     <p><small>(uuid: ${uuid})</small>
@@ -87926,7 +86674,7 @@ async function update() {
       </label>
     </div>
   </form>
-  
+
       <p>
           <a href="${shareURL}" target="_blank" class="button large">Open</a>
           <button on-click="${(evt) => Object(_forms__WEBPACK_IMPORTED_MODULE_3__["deleteForm"])(uuid)}" class="alert button large">Delete</button>
@@ -87935,12 +86683,70 @@ async function update() {
 
   <div class="cell medium-6">
     <h4>Analytics</h4>
-    <h6>Submissions (${submissionsListTpl.length})</h6>
-    ${submissionsListTpl}
+    <h6>Submissions (${Object.keys(submissions).length})</h6>
+    <button class="clear button link" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].SubmissionsView, { formId: uuid })}">View Submissions</button>
   </div>
 
 </div>
 `;
+    Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
+}
+
+
+/***/ }),
+
+/***/ "./src/components/view-submissions/view-submissions.ts":
+/*!*************************************************************!*\
+  !*** ./src/components/view-submissions/view-submissions.ts ***!
+  \*************************************************************/
+/*! exports provided: update */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony import */ var _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router */ "./src/components/router.ts");
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../forms */ "./src/forms.ts");
+
+
+
+
+async function update() {
+    const el = document.querySelector('submissions-view');
+    const uuid = _store__WEBPACK_IMPORTED_MODULE_1__["default"].store.routeParams.formId;
+    const form = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getForm"])(uuid);
+    const submissions = await Object(_forms__WEBPACK_IMPORTED_MODULE_3__["getFormSubmissions"])(uuid);
+    const columns = ['uuid', ...form.questions.map(q => q.label)];
+    console.log(columns);
+    const tableHead = columns.map(c => _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<th>${c}</th>`);
+    const tableRows = Object.keys(submissions)
+        .map(uuid => { return { uuid, answers: submissions[uuid].answers }; })
+        .map(d => {
+        return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<tr><td>${uuid}</td>${d.answers.map(a => _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<td>${a.value}</td>`)}</tr>`;
+    });
+    const table = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
+  <table>
+    <thead>
+      <tr>
+        ${tableHead}
+      </tr>
+    </thead>
+    <tbody>
+      ${tableRows}
+    </tbody>
+  </table>
+  `;
+    const tpl = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
+    <h3>Form Submissions</h3>
+    <p><small><button class="clear button link" on-click="${() => _store__WEBPACK_IMPORTED_MODULE_1__["default"].setRouteAction(_router__WEBPACK_IMPORTED_MODULE_2__["Route"].FormView, { formId: uuid })}">(uuid: ${uuid})</button></small></p>
+    <div class="grid-x grid-margin-x">
+      <div class="cell medium-12">
+      ${table}
+      </div>
+    </div>
+  `;
     Object(_node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["render"])(tpl, el);
 }
 
@@ -88016,7 +86822,7 @@ async function updateSubmissionsFromBench(submissions) {
     return updateFormSubmissions(sortSubmissions(submissions));
 }
 async function getFormSubmissions(formUuid) {
-    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(getSubmissionsPath(formUuid)) || [];
+    return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(getSubmissionsPath(formUuid)) || {};
 }
 async function getForm(formUuid) {
     return await Object(_util_write__WEBPACK_IMPORTED_MODULE_1__["getFile"])(getFormPath(formUuid)) || undefined;
@@ -88453,4 +87259,4 @@ async function getFile(path) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=0eba4bc959a70eceef40.bundle.js.map
+//# sourceMappingURL=37f0e894b860e4b49d25.bundle.js.map
