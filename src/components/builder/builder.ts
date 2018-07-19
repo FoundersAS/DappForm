@@ -106,15 +106,20 @@ function addField (questions:Question[]) {
   questions.push(q)
 }
 
+function removeField (event:Event) {
+  (event.target as HTMLButtonElement).parentElement.parentElement.classList.add('hide');
+  (event.target as HTMLButtonElement).parentElement.parentElement.classList.remove('question-item')
+}
+
 function renderLeaf(q:Question) {
   return html`
 <div class="grid-x grid-margin-x grid-margin-y question-item">
-  <div class="cell small-8">
+  <div class="cell auto">
     <label>Question label
       <input type='text' name="${q.name}" placeholder="Question label">
     </label>
   </div>
-  <div class="cell small-4">
+  <div class="cell small-3">
     <label>Type
       <select name="${q.name}-q-type">
           <option>text</option>
@@ -125,6 +130,9 @@ function renderLeaf(q:Question) {
           <option>url</option>
       </select>
     </label>
+  </div>
+  <div class="cell shrink align-self-bottom">
+    <button data-uuid$="${q.uuid}" on-click="${(evt:Event) => removeField(evt)}" class="hollow button warning expanded" type="button">Remove</button>
   </div>
 </div>
   `
