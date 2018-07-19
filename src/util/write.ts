@@ -15,7 +15,9 @@ export async function putFile(path: string, contents: Object): Promise<Object | 
 
 export async function getFile (path: string): Promise<Object | Boolean> {
   try {
+    console.log('he')
     const contents = await blockstack.getFile(path)
+    console.log("xxx", contents)
     return JSON.parse(contents)
   }
   catch (e) {

@@ -2,6 +2,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Submission } from '../../form-format'
 import { Route } from '../router'
+import { getFile } from '../../util/write';
 
 const blockstack = require('blockstack')
 
@@ -19,19 +20,8 @@ export async function update () {
 
   const submissionsPath = `submissions/${id}.json`
 
-  let submissionsToForm:Object = {}
-  try {
-    const json = await blockstack.getFile(submissionsPath)
-    if (json) {
-      submissionsToForm = JSON.parse(json)
-    }
-  }
-  catch (e) {
-    console.error(e)
-  }
-  finally {
-    Object.values(submissionsToForm).forEach(s => submissions.push(s as any))
-  }
+  let submissionsToForm:Submission[] = await getFile(submissionsPath) as Submission[] || {}
+  Object.values(submissionsToForm).forEach(s => submissions.push(s as any))
 
   const seeSubmissions = (formId: string, submissionId: string) => {
     Store.setRouteAction(Route.Fill, {submission: submissions.find(s => s.uuid === submissionId)})

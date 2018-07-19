@@ -26,7 +26,7 @@ export function createLocalStorage(initData: any) {
   return storage
 }
 
-export function getBlockstackData (ls:Storage) {
+export function getBlockstackData (ls:any) {
   return {
     blockstack: ls.getItem('blockstack'),
     gaia: ls.getItem('blockstack-gaia-hub-config'),
