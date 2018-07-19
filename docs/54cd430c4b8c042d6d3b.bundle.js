@@ -86726,7 +86726,7 @@ async function update() {
         };
     })
         .map(d => {
-        return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<tr><td>${uuid}</td><td>${d.answers.map(a => _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `${a.value}`)}</td></tr>`;
+        return _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<tr><td>${uuid}</td>${d.answers.map(a => _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `<td>${a.value}</td>`)}</tr>`;
     });
     const table = _node_modules_lit_html_lib_lit_extended__WEBPACK_IMPORTED_MODULE_0__["html"] `
   <table>
@@ -87261,4 +87261,4 @@ async function getFile(path) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=983766c79bc1a270c491.bundle.js.map
+//# sourceMappingURL=54cd430c4b8c042d6d3b.bundle.js.map
