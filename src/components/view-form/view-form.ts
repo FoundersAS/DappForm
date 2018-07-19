@@ -2,6 +2,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Submission } from '../../form-format'
 import { Route } from '../router'
+import { deleteForm } from '../../forms';
 
 const blockstack = require('blockstack')
 
@@ -9,15 +10,15 @@ export async function update () {
   const submissions = <Submission[]>[]
 
   const el = document.querySelector('forms-view')
-  const id = Store.store.routeParams.formId
+  const uuid:string = Store.store.routeParams.formId
 
   const username = blockstack.loadUserData().username
 
   const shareURL = new URL(location.origin)
   shareURL.searchParams.append(`author`, username)
-  shareURL.searchParams.append(`form-id`, id)
+  shareURL.searchParams.append(`form-id`, uuid)
 
-  const submissionsPath = `submissions/${id}.json`
+  const submissionsPath = `submissions/${uuid}.json`
 
   let submissionsToForm:Object = {}
   try {
@@ -49,14 +50,15 @@ export async function update () {
 
   const tpl = html`
     <h3>Form dashboard</h3>
-    <p><small>(id: ${id})</small>
+    <p><small>(uuid: ${uuid})</small>
 
 <div class="grid-x grid-margin-x">
   <div class="cell medium-6">
   <h4>Distribution</h4>
   <p>Share URL<br>
       <code>${shareURL.toString()}</code></p>
-      <p><a href="${shareURL}" target="_blank" class="button large">Open</a></p>
+      <p><a href="${shareURL}" target="_blank" class="button large">Open</a>
+      <button on-click="${(evt: Event) => deleteForm(uuid)}" class="alert button large">Delete</button></p>
   </div>
 
   <div class="cell medium-6">

@@ -57,6 +57,7 @@ export default class Bench {
       if (benchFiles.length > 0) console.debug(`bench: ${this.publicKey} - new files: ${benchFiles.length}`)
       return this.decryptBenchFiles(benchFiles)
     }
+    console.debug(`bench: ${this.publicKey} - error fetching files:`, res)
   }
 
   async cleanBench() {
@@ -67,7 +68,7 @@ export default class Bench {
       headers: this.headers.cleanSig
     })
     if (res.status === 200) return console.debug(`bench: ${this.publicKey} - cleaned`)
-    console.error(`bench: ${this.publicKey} - cleaning failed: ${res}`)
+    console.error(`bench: ${this.publicKey} - cleaning failed:`, res)
   }
 
   async postFile(file: Object) {
@@ -83,6 +84,6 @@ export default class Bench {
       }
     })
     if (res.status === 200) return console.debug(`bench: ${this.publicKey} - file posted`)
-    console.error(`bench: ${this.publicKey} - file post failed: ${res}`)
+    console.error(`bench: ${this.publicKey} - file post failed: `, res)
   }
 }

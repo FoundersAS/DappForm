@@ -1,6 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import { encryptFile } from './util/crypto'
-import { Submission, Answer, SubmissionMap, FormSubmissionMap } from './form-format'
+import { Submission, Answer, SubmissionMap, FormSubmissionMap, Form } from './form-format'
 import { putFile, getFile } from './util/write'
 
 function sortSubmissions(submissions: Submission[]): FormSubmissionMap {
@@ -11,11 +10,33 @@ function sortSubmissions(submissions: Submission[]): FormSubmissionMap {
   }, {} as FormSubmissionMap)
 }
 
+const formsListFile = 'forms.json'
+
+function getSubmissionsPath(formUuid:string) {
+  return `submissions/${formUuid}.json`
+}
+
+function getFormPath(formUuid: string) {
+  return `forms/${formUuid}.json`
+}
+
+function getPublishPath(formUuid: string) {
+  return `published/${formUuid}.json`
+}
+
+async function getFormsFile() {
+  return await getFile(formsListFile)
+}
+
+export async function getFormsList(): Promise<Partial<Form>[]> {
+  return await getFormsFile() as Partial<Form>[]
+}
+
 // TODO: make the request concurrent for performance if needed
 async function updateFormSubmissions(forms: FormSubmissionMap) {
   for (const formUuid in forms) {
     const newSubmissions = forms[formUuid]
-    const submissionsPath = `submissions/${formUuid}.json`
+    const submissionsPath = getSubmissionsPath(formUuid)
 
     const oldSubmissions = await getFile(submissionsPath) as SubmissionMap || {} as SubmissionMap
 
@@ -37,4 +58,24 @@ export function createDummySubmission(formUuid:string) {
     created: new Date(),
     answers: [{ questionUuid: '12345', name: 'privacy', value: 'IS GREAT' } as Answer]
   } as Submission
+}
+
+async function deleteFormSubmissions(formUuid:string) {
+  return await putFile(getSubmissionsPath(formUuid), {})
+}
+
+async function removeFormFromList(formUuid:string) {
+  const forms = await getFormsList()
+  putFile(formsListFile, forms.filter(f => f.uuid !== formUuid))
+}
+
+export async function unpublishForm(formUuid:string) {
+  return await putFile(getPublishPath(formUuid), {})
+}
+
+export async function deleteForm(formUuid: string) {
+  await unpublishForm(formUuid)
+  await deleteFormSubmissions(formUuid)
+  await removeFormFromList(formUuid)
+  await putFile(getFormPath(formUuid), {})
 }
