@@ -16,7 +16,19 @@ export async function update () {
   const app = location.origin
 
   const submission:Submission = Store.store.routeParams.submission
-
+  //test
+  // const submission = <Submission>{
+  //   formUuid: `36e6005c-e2c9-445c-8a38-88d82febc93f`,
+  //   uuid: `asd`,
+  //   created: new Date(),
+  //   answers: [
+  //     {
+  //       questionUuid: `bb34726e-4f99-4a4e-a805-987d89bce624`,
+  //       value: 'q1 answer',
+  //       name: `q1`
+  //     }
+  //   ]
+  // }
   let form:Form
 
   if (author && formId) {
@@ -34,10 +46,11 @@ export async function update () {
     form = await getForm(formId) as Form
     console.assert(form, 'Didnt find form '+ `forms/${formId}.json`)
   }
+  console.debug(form)
   const questions = ((!form) ? [] : form.questions)
     .map(q => {
       let value:string = ''
-      let inputTpl = html`<input type=${q.type} class="form-answer" data-question-uuid="${q.uuid}" data-name="${q.name}">`
+      let inputTpl = html`<input type=${q.type} class="form-answer" data-question-uuid$="${q.uuid}" data-name$="${q.name}">`
       if (submission) {
         console.debug(submission.answers)
         const answered = submission.answers.find(a => a.questionUuid === q.uuid)
@@ -75,9 +88,6 @@ export async function update () {
         <button type="button" class="button submit-button" on-click="${(evt:any)=>submit(evt)}">Submit</button>
     </div>
 </form>
-
-<p>Submissions:</p>
-<pre>${JSON.stringify(submission,null,2)}</pre>
 `
 
   render(tpl, el)
