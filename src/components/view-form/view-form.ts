@@ -2,13 +2,13 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Route } from '../router'
 import { deleteForm, getFormSubmissions } from '../../forms';
-import { blockstackUsername } from '../../util/blockstackUtils';
+import BlockstackUtils from '../../util/blockstackUtils';
 
 export async function update () {
   const el = document.querySelector('forms-view')
   const uuid:string = Store.store.routeParams.formId
 
-  const username = blockstackUsername
+  const username = new BlockstackUtils().username
 
   const shareURL = new URL(location.origin)
   shareURL.searchParams.append(`author`, username)

@@ -1,7 +1,14 @@
 const blockstack = require('blockstack')
 
-const userData = blockstack.loadUserData()
+export default class {
+  username:string
+  privateKey:string
+  publicKey:string
 
-export const blockstackUsername = userData.username
-export const blockstackPublicKey = blockstack.getPublicKeyFromPrivate(userData.appPrivateKey)
-export const blockstackPrivateKey = userData.appPrivateKey
+  constructor() {
+    const userData = blockstack.loadUserData()
+    this.username = userData.username
+    this.publicKey = blockstack.getPublicKeyFromPrivate(userData.appPrivateKey)
+    this.privateKey = userData.appPrivateKey
+  }
+}
