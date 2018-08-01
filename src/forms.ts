@@ -71,7 +71,7 @@ export function publishForm(form:Form):Promise<void> {
 
 export async function addFormToList (form:Form) {
   const forms = await getForms()
-  putFile(formsListFile, [...forms, form])
+  await putFile(formsListFile, [...forms, form])
 }
 
 export function createForm(form:Form) {
