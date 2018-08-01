@@ -8,7 +8,7 @@ import { getForm, getPublishPath } from '../../forms'
 const blockstack = require('blockstack')
 
 export async function update () {
-  const el = document.querySelector('fill-form')
+  const el = document.querySelector('fill-form') as HTMLFormElement
 
   const url = new URL(location.toString())
   const author = url.searchParams.get('author')
