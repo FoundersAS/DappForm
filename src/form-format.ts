@@ -7,7 +7,7 @@ export interface Question {
   modified: Date,
 }
 
-export interface Form {
+interface FormBasic {
   uuid: string,
   name: string
   authorPubKey: string
@@ -17,8 +17,15 @@ export interface Form {
 
   introText: string,
   confirmationText: string,
+}
 
+interface FormExpanded {
   questions: Question[],
+}
+
+export interface Form extends FormBasic, FormExpanded {
+  weeklyReportEnabled: boolean,
+  weeklyLastSent: Date,
 }
 
 export interface Submission {
