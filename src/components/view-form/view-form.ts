@@ -1,12 +1,15 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Route } from '../router'
-import { deleteForm, getFormSubmissions } from '../../forms';
-import BlockstackUtils from '../../util/blockstackUtils';
+import { deleteForm, getForm, getFormSubmissions, saveForm } from '../../forms'
+import BlockstackUtils from '../../util/blockstackUtils'
+import { weeklyStats } from '../../report-generation/weekly-stats-report'
+import { Form } from '../../form-format'
 
 export async function update () {
   const el = document.querySelector('forms-view')
   const uuid:string = Store.store.routeParams.formId
+  const form = await getForm(uuid)
 
   const username = new BlockstackUtils().username
 
@@ -15,9 +18,16 @@ export async function update () {
   shareURL.searchParams.append(`form-id`, uuid)
 
   const submissions = await getFormSubmissions(uuid)
+  const {lastWeek, total} = weeklyStats(Object.values(submissions))
+
+  const toggleReporting = async (form:Form) => {
+    form.weeklyReportEnabled = !form.weeklyReportEnabled
+    await saveForm(form)
+    update()
+  }
 
   const tpl = html`
-  <h3>Form dashboard</h3>
+  <h3>Form dashboard <em>${form.name}</em></h3>
   <p><small>(uuid: ${uuid})</small>
 
   <div class="grid-x grid-margin-x">
@@ -39,9 +49,13 @@ export async function update () {
     </div>
 
     <div class="cell medium-6">
-      <h4>Analytics</h4>
-      <h6>Submissions (${Object.keys(submissions).length})</h6>
-      <button class="clear button link" on-click="${() => Store.setRouteAction(Route.SubmissionsView, { formId: uuid }) }">View Submissions</button>
+      <h4>Responses</h4>
+
+      <p><button class="clear button link" on-click="${() => Store.setRouteAction(Route.SubmissionsView, { formId: uuid }) }">View Submissions</button>
+
+      <p>${lastWeek} submissions last week. Total ${total}.</p>
+      
+      <p><button class="hollow button" on-click="${() => toggleReporting(form)}">${(form as Form).weeklyReportEnabled ? 'dis':'en'}able weekly report</button>           
     </div>
 
   </div>

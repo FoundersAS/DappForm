@@ -74,6 +74,10 @@ export async function addFormToList (form:Form) {
   await putFile(formsListFile, [...forms, form])
 }
 
+export async function saveForm(form:Form) {
+  await putFile(getFormPath(form.uuid), form)
+}
+
 export function createForm(form:Form) {
   return Promise.all([
     putFile(getFormPath(form.uuid), form),
