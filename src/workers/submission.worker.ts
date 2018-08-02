@@ -32,7 +32,7 @@ function startPolling() {
 
   // TODO: Potential race condition when cleaning bench - could be new submissions
   async function doPoll() {
-    console.debug('SubmissionWorker: Polling ...')
+    // console.debug('SubmissionWorker: Polling ...')
     const privateKey = blockstack.loadUserData().appPrivateKey
     const publicKey = blockstack.getPublicKeyFromPrivate(privateKey)
     const bench = new Bench(privateKey, publicKey)
@@ -43,7 +43,7 @@ function startPolling() {
       ctx.postMessage('new submissions ready')
     }
 
-    console.debug('SubmissionWorker: Polling Done')
+    // console.debug('SubmissionWorker: Polling Done')
     setTimeout(doPoll, 5000);
   }
 }
