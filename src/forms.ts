@@ -97,7 +97,7 @@ async function deleteFormSubmissions(formUuid:string) {
 
 async function removeFormFromList(formUuid:string) {
   const forms = await getForms()
-  putFile(formsListFile, forms.filter(f => f.uuid !== formUuid))
+  await putFile(formsListFile, forms.filter(f => f.uuid !== formUuid))
 }
 
 export async function unpublishForm(formUuid:string) {
