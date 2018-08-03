@@ -1,6 +1,5 @@
-import { update as listUpdate } from './components/list-forms/list-forms'
-import { persist, Route, update as routeUpdate } from './components/router'
 import { Form } from 'dappform-forms-api'
+import { persist, Route, update as routeUpdate } from './components/router'
 import { update as navUpdate } from './components/nav/nav'
 
 interface Dict {[k: string]: any}
@@ -57,7 +56,7 @@ export default class Store {
 
 // glue together actions and reducers
 Store.reducers.set(Store.setFormsAction, new Set([
-  (store:DefaultState) => (store.route === Route.FormsList) && listUpdate(),
+  (store:DefaultState) => (store.route === Route.FormsList),
 ]))
 
 Store.reducers.set(Store.setRouteAction, new Set([

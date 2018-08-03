@@ -4,8 +4,6 @@ import { Route } from '../router'
 import Store from '../../store'
 
 export async function init () {
-  update()// initial render
-  // console.log(Route.FormsList)
   const forms: Partial<Form>[] = await getForms()
 
   forms.filter(form => form.created && form.uuid && form.name)
@@ -16,6 +14,7 @@ export async function init () {
     }) as Partial<Form>[] // now they're sanitized
 
   Store.setFormsAction(forms)
+  update()
 }
 
 export function update () {
@@ -34,7 +33,7 @@ export function update () {
           ${form.created.toUTCString()}
       </div>
       <div class="cell shrink">
-          <button class="clear button link" on-click="${() => Store.setRouteAction(2, {formId: form.uuid}) }">View</button>
+          <button class="clear button link" on-click="${() => Store.setRouteAction(Route.FormView, {formId: form.uuid}) }">View</button>
       </div>
     </div>
     `)

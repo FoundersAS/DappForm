@@ -40,15 +40,12 @@ export function update () {
   console.assert(!!el)
 
   let currentRoute:Route = Store.store.route
-  setTimeout(()=>{
-    console.log(viewInitMap)
-  }, 10000)
+
   if (lastRoute !== currentRoute) {
     const tpl = map.get(currentRoute) || `View ${Route[currentRoute]} doesn't exist`
     el.innerHTML = tpl
     localStorage.debug && console.debug(lastRoute, '=>', currentRoute)
     const initFunc = viewInitMap.get(currentRoute)
-    console.log(viewInitMap)
     initFunc()
     lastRoute = currentRoute
   }
