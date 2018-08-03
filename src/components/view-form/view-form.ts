@@ -1,10 +1,9 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Route } from '../router'
-import { deleteForm, getForm, getFormSubmissions, saveForm } from '../../forms'
+import { Form, deleteForm, getForm, getFormSubmissions, saveForm } from 'dappform-forms-api'
 import BlockstackUtils from '../../util/blockstackUtils'
 import { weeklyStats } from '../../report-generation/weekly-stats-report'
-import { Form } from '../../form-format'
 
 export async function update () {
   const el = document.querySelector('forms-view')
@@ -60,15 +59,15 @@ export async function update () {
       <p><button class="clear button link" on-click="${() => Store.setRouteAction(Route.SubmissionsView, { formId: uuid }) }">View Submissions</button>
 
       <p>${lastWeek} submissions last week. Total ${total}.</p>
-           
+
       <div class="input-group">
         <span class="input-group-label">Email</span>
         <input class="input-group-field" type="email" value="${form.weeklyReportRecipient || ''}" name="report-email">
         <div class="input-group-button">
           <button class="button" on-click="${() => toggleReporting(form)}">${(form as Form).weeklyReportRecipient ? 'dis':'en'}able weekly report</button>
         </div>
-      </div>     
-                
+      </div>
+
     </div>
 
   </div>

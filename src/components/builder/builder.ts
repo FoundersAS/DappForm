@@ -1,12 +1,11 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
-import { Form, Question } from '../../form-format'
+import { createForm, Form, Question } from 'dappform-forms-api'
 import Store from '../../store'
 import { Route } from '../router'
 
 import { v4 as uuid } from 'uuid'
-import { createForm } from '../../forms';
 
-import BlockstackUtils from '../../util/blockstackUtils';
+import BlockstackUtils from '../../util/blockstackUtils'
 
 const questions = <Question[]>[]
 

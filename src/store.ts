@@ -1,12 +1,12 @@
 import { update as listUpdate } from './components/list-forms/list-forms'
 import { persist, Route, update as routeUpdate } from './components/router'
-import { Form } from './form-format'
+import { Form } from 'dappform-forms-api'
 import { update as navUpdate } from './components/nav/nav'
 
 interface Dict {[k: string]: any}
 
 interface DefaultState extends Dict {
-  forms: Form[]
+  forms: Partial<Form>[]
   route: Route
   routeParams: Dict
 }
@@ -21,11 +21,10 @@ interface ReadonlyList<T> {
 
 // a class for holding
 export default class Store {
-
   static reducers:Map<Function, Set<Function>> = new Map()
 
-  private static _store = <DefaultState>{ // default state
-    forms: <Form[]>[],
+  private static _store = <DefaultState> { // default state
+    forms: <Partial<Form>>[],
     route: Route.Login,
     routeParams: <Dict>{},
   }
@@ -41,7 +40,7 @@ export default class Store {
 
   // Actions
 
-  static setFormsAction(value:Form[]) {
+  static setFormsAction(value: Partial<Form>[]) {
     this._store.forms.length = 0
     for (let f of value) {
       this._store.forms.push(f)

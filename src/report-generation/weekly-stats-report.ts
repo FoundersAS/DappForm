@@ -1,5 +1,4 @@
-import { Form, Submission } from '../form-format'
-import { getForm, getFormSubmissions } from '../forms'
+import { Form, Submission, getForm, getFormSubmissions } from 'dappform-forms-api'
 
 export type WeeklyStatsRaw = {
   total: number,

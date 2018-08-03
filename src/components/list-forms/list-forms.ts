@@ -1,21 +1,19 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
-import Store from '../../store'
+import { Form, getForms } from 'dappform-forms-api'
 import { Route } from '../router'
-import { Form } from '../../form-format'
-import { getForms } from '../../forms';
+import Store from '../../store'
 
 export async function init () {
   update()// initial render
+  // console.log(Route.FormsList)
+  const forms: Partial<Form>[] = await getForms()
 
-  const list = await getForms()
-
-  const forms:Form[] = list
-    .filter(form => form.created && form.uuid && form.name)
+  forms.filter(form => form.created && form.uuid && form.name)
     .map(form => {
       form.created = new Date(form.created)
       form.modified = new Date(form.modified)
       return form
-    }) as Form[] // now they're sanitized
+    }) as Partial<Form>[] // now they're sanitized
 
   Store.setFormsAction(forms)
 }
@@ -23,7 +21,7 @@ export async function init () {
 export function update () {
   const {forms} = Store.store
 
-  const formsList:Form[] = forms
+  const formsList: Partial<Form>[] = forms
 
   const formsListTpl = formsList
     .sort((a, b) => a.created.getTime() - b.created.getTime())
@@ -36,7 +34,7 @@ export function update () {
           ${form.created.toUTCString()}
       </div>
       <div class="cell shrink">
-          <button class="clear button link" on-click="${() => Store.setRouteAction(Route.FormView, {formId: form.uuid}) }">View</button>
+          <button class="clear button link" on-click="${() => Store.setRouteAction(2, {formId: form.uuid}) }">View</button>
       </div>
     </div>
     `)

@@ -1,7 +1,7 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Route } from '../router'
-import { getFormSubmissions, getForm } from '../../forms';
+import { getFormSubmissions, getForm } from 'dappform-forms-api'
 
 export async function update() {
   const el = document.querySelector('submissions-view')

@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "module": "es6",
+    "module": "commonjs",
     "target": "es2017",
+    "sourceMap": false,
     "noImplicitAny": true,
-    "noEmitOnError": false
+    "allowJs": false,
+    "noEmitOnError": false,
+    "preserveConstEnums": true
   },
   "exclude": [
-    "node_modules",
-    "src/workers"
+    "node_modules"
   ]
 }

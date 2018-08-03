@@ -1,7 +1,7 @@
 import Store from '../store'
 import { update as loginInit } from './login/login'
-import { init as listInit } from './list-forms/list-forms'
 import { update as viewFormInit } from './view-form/view-form'
+import { init as listFormsInit } from './list-forms/list-forms'
 import { update as fillInit } from './view-form/fill-form'
 import { update as buildInit } from './builder/builder'
 import { update as viewSubmissionInit } from './view-submissions/view-submissions'
@@ -26,8 +26,8 @@ const map = new Map<Route, string>([ // tuples of Route + HTML template
 
 const viewInitMap = new Map<Route, Function>([
   [Route.Login, loginInit],
-  [Route.FormsList, listInit],
   [Route.FormView, viewFormInit],
+  [Route.FormsList, listFormsInit],
   [Route.Fill, fillInit],
   [Route.Build, buildInit],
   [Route.SubmissionsView, viewSubmissionInit],
@@ -40,12 +40,15 @@ export function update () {
   console.assert(!!el)
 
   let currentRoute:Route = Store.store.route
-
+  setTimeout(()=>{
+    console.log(viewInitMap)
+  }, 10000)
   if (lastRoute !== currentRoute) {
     const tpl = map.get(currentRoute) || `View ${Route[currentRoute]} doesn't exist`
     el.innerHTML = tpl
     localStorage.debug && console.debug(lastRoute, '=>', currentRoute)
     const initFunc = viewInitMap.get(currentRoute)
+    console.log(viewInitMap)
     initFunc()
     lastRoute = currentRoute
   }

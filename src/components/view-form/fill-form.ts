@@ -1,9 +1,8 @@
 import Bench from '../../util/bench'
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
-import { Answer, Form, Submission } from '../../form-format'
+import { Answer, Form, Submission, getForm, getPublishPath } from 'dappform-forms-api'
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
-import { getForm, getPublishPath } from '../../forms'
 
 const blockstack = require('blockstack')
 

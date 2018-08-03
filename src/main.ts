@@ -1,27 +1,9 @@
 const blockstack = require('blockstack')
 
-import {default as SubmissionWorker} from "worker-loader!./workers/submission.worker";
 import Store from './store'
 import { Route } from './components/router'
-import { getBlockstackData } from "./util/fakeLocalStorage";
-
-function initSubmissionFetching() {
-  const submissionWorker = new SubmissionWorker()
-
-  submissionWorker.onmessage = function (e: any) {
-    // TODO: Handle event to reload in view
-    console.log('message from worker: ', e.data)
-  }
-
-  submissionWorker.postMessage({
-    cmd: 'start',
-    blockstackData: getBlockstackData(localStorage)
-  })
-}
 
 function routeLoggedIn () {
-  initSubmissionFetching()
-
   const savedRoute: number = parseInt(sessionStorage.route, 10)
   let savedRouteParams:any = sessionStorage.routeParams
   if (savedRouteParams) savedRouteParams = JSON.parse(savedRouteParams)

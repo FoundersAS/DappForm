@@ -1,12 +1,10 @@
 {
   "name": "DappForm",
-  "start_url": "https://dappform.takectrl.io",
+  "start_url": "http://127.0.0.1",
   "description": "A simple app build on blockstack",
-  "icons": [
-    {
-      "src": "https://dappform.takectrl.io/assets/icon.png",
-      "sizes": "256x256",
-      "type": "image/png"
-    }
-  ]
+  "icons": [{
+    "src": "http://127.0.0.1/assets/icon.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  }]
 }
