@@ -24,8 +24,7 @@ interface FormExpanded {
 }
 
 export interface Form extends FormBasic, FormExpanded {
-  weeklyReportEnabled: boolean,
-  weeklyLastSent: Date,
+  weeklyReportRecipient?: string,
 }
 
 export interface Submission {

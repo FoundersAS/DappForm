@@ -21,7 +21,13 @@ export async function update () {
   const {lastWeek, total} = weeklyStats(Object.values(submissions))
 
   const toggleReporting = async (form:Form) => {
-    form.weeklyReportEnabled = !form.weeklyReportEnabled
+    if (form.weeklyReportRecipient) {
+      delete form.weeklyReportRecipient
+    }
+    else {
+      const email = (el.querySelector('input[name="report-email"]') as HTMLInputElement).value
+      form.weeklyReportRecipient = email
+    }
     await saveForm(form)
     update()
   }
@@ -54,8 +60,15 @@ export async function update () {
       <p><button class="clear button link" on-click="${() => Store.setRouteAction(Route.SubmissionsView, { formId: uuid }) }">View Submissions</button>
 
       <p>${lastWeek} submissions last week. Total ${total}.</p>
-      
-      <p><button class="hollow button" on-click="${() => toggleReporting(form)}">${(form as Form).weeklyReportEnabled ? 'dis':'en'}able weekly report</button>           
+           
+      <div class="input-group">
+        <span class="input-group-label">Email</span>
+        <input class="input-group-field" type="email" value="${form.weeklyReportRecipient || ''}" name="report-email">
+        <div class="input-group-button">
+          <button class="button" on-click="${() => toggleReporting(form)}">${(form as Form).weeklyReportRecipient ? 'dis':'en'}able weekly report</button>
+        </div>
+      </div>     
+                
     </div>
 
   </div>
