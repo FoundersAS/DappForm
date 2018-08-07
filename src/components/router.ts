@@ -5,6 +5,7 @@ import { init as listFormsInit } from './list-forms/list-forms'
 import { update as fillInit } from './view-form/fill-form'
 import { update as buildInit } from './builder/builder'
 import { update as viewSubmissionInit } from './view-submissions/view-submissions'
+import { update as settingsViewInit } from './settings/settings'
 
 export enum Route {
   Login = 1,
@@ -13,6 +14,7 @@ export enum Route {
   Fill,
   Build,
   SubmissionsView,
+  SettingsView
 }
 
 const map = new Map<Route, string>([ // tuples of Route + HTML template
@@ -22,6 +24,7 @@ const map = new Map<Route, string>([ // tuples of Route + HTML template
   [Route.Fill, `<fill-form></fill-form>`],
   [Route.Build, `<build-form></build-form>`],
   [Route.SubmissionsView, `<submissions-view></submissions-view>`],
+  [Route.SettingsView, `<settings-view></settings-view>`]
 ])
 
 const viewInitMap = new Map<Route, Function>([
@@ -31,6 +34,7 @@ const viewInitMap = new Map<Route, Function>([
   [Route.Fill, fillInit],
   [Route.Build, buildInit],
   [Route.SubmissionsView, viewSubmissionInit],
+  [Route.SettingsView, settingsViewInit],
 ])
 
 let lastRoute:number = -1
