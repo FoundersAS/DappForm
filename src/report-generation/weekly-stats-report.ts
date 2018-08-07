@@ -25,11 +25,6 @@ export function weeklyReportTextFormat (form:Form, report:WeeklyStatsRaw):string
    `.trim()
 }
 
-export async function enableWeeklyReporting (uuid: string) {
-
-
-}
-
 export async function makeReport (params:WeeklyStatsParams):Promise<string> {
   const map = await getFormSubmissions(params.formUuid)
   const stats = weeklyStats(Object.values(map))

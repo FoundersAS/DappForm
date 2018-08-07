@@ -60,9 +60,8 @@ export async function update () {
 
       <p>${lastWeek} submissions last week. Total ${total}.</p>
 
-      <div class="input-group">
-        <span class="input-group-label">Email</span>
-        <input class="input-group-field" type="email" value="${form.weeklyReportRecipient || ''}" name="report-email">
+      <div class="input-group">       
+        <input class="input-group-field" placeholder="Email address" type="email" value="${form.weeklyReportRecipient || ''}" name="report-email">
         <div class="input-group-button">
           <button class="button" on-click="${() => toggleReporting(form)}">${(form as Form).weeklyReportRecipient ? 'dis':'en'}able weekly report</button>
         </div>

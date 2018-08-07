@@ -29,7 +29,7 @@ export function update() {
   <div class="cell small-6">
     <label>
         Human-readable name
-        <input type="text" name="form-name">
+        <input type="text" name="form-name" required>
     </label>
   </div>
   <div class="cell small-6">
@@ -42,6 +42,12 @@ export function update() {
     <label>
         Confirmation text
         <input type="text" name="confirmation-text">
+    </label>
+  </div>
+  <div class="cell small-6">
+    <label>
+        Weekly report to
+        <input type="email" name="weekly-report">
     </label>
   </div>
 
@@ -77,6 +83,7 @@ function collectForm ():Form {
     name: (document.querySelector('[name=form-name]') as HTMLInputElement).value,
     introText: (document.querySelector('[name=intro-text]') as HTMLInputElement).value,
     confirmationText: (document.querySelector('[name=confirmation-text]') as HTMLInputElement).value,
+    weeklyReportRecipient: (document.querySelector('[name=weekly-report]') as HTMLInputElement).value,
   }
 
   // questions
