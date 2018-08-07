@@ -18,6 +18,7 @@ export function update() {
   <div class="cell auto nav-item-list">
     <button class="hollow button" on-click="${() => Store.setRouteAction(Route.FormsList)}">List forms</button>
     <button class="hollow button" on-click="${() => Store.setRouteAction(Route.Build)}">Build form</button>
+    <button class="hollow button" on-click="${() => Store.setRouteAction(Route.SettingsView)}">Settings</button>
   </div>
   <div class="cell shrink">
     <button class="hollow button secondary button-signout" on-click="${() => blockstackSignout()}">Sign out</button>
