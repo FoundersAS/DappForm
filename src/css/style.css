@@ -7,6 +7,9 @@ router {
 button.link {
     margin: 0;
     padding: 0;
+    font-size: inherit;
+    display: inline;
+    vertical-align: baseline;
 }
 
 /*override*/
