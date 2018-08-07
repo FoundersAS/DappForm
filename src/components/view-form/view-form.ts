@@ -87,14 +87,14 @@ export async function update () {
       <form>     
         <div>        
           <label>Recipient email
-          <input placeholder="Email address" type="email" value="${form.weeklyReportRecipient || 'postmark2018@ragelse.dk'}" name="report-email">
+          <input placeholder="Email address" type="email" value="${form.weeklyReportRecipient}" name="report-email">
           </label>
         </div>
       
         <div>
           <label>
               Postmark API key
-              <input placeholder="Postmark API key" type="text" name="postmark-key" value="812c2d21-ae85-4923-ba95-8f433e4def73">
+              <input placeholder="Postmark API key" type="text" name="postmark-key">
           </label>
         </div>
         
