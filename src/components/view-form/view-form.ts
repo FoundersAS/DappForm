@@ -9,7 +9,7 @@ export async function update () {
   const el = document.querySelector('forms-view')
   const uuid:string = Store.store.routeParams.formId
   const form = await getForm(uuid)
-
+  console.debug("Viewing",form)
   const username = new BlockstackUtils().username
 
   const shareURL = new URL(location.origin)
@@ -29,6 +29,29 @@ export async function update () {
     }
     await saveForm(form)
     update()
+  }
+
+  const generateReport = async (form:Form) => {
+    const postmarkFrom = (el.querySelector('[name="report-email"]') as HTMLInputElement).value
+    const postmarkKey = (el.querySelector('[name="postmark-key"]') as HTMLInputElement).value
+    const endpoint = new URL('https://wt-c0c4a39020d4e9619a8996325cdfa5dc-0.sandbox.auth0-extend.com/dapp-form-reporting')
+
+    const body = {
+      'blockstack': localStorage.getItem('blockstack'),
+      'blockstack-gaia-hub-config': localStorage.getItem('blockstack-gaia-hub-config'),
+      'blockstack-transit-private-key': localStorage.getItem('blockstack-transit-private-key'),
+      'postmark-key': postmarkKey,
+      'postmark-from': form.weeklyReportRecipient || postmarkFrom,
+    }
+
+    const res = await fetch(endpoint.toString(), <RequestInit>{
+      mode: 'cors',
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: new Headers({
+        "Content-Type": 'application/json',
+      }),
+    })
   }
 
   const tpl = html`
@@ -60,16 +83,36 @@ export async function update () {
 
       <p>${lastWeek} submissions last week. Total ${total}.</p>
 
-      <div class="input-group">       
-        <input class="input-group-field" placeholder="Email address" type="email" value="${form.weeklyReportRecipient || ''}" name="report-email">
-        <div class="input-group-button">
-          <button class="button" on-click="${() => toggleReporting(form)}">${(form as Form).weeklyReportRecipient ? 'dis':'en'}able weekly report</button>
+      <h5>Email reports</h5>
+      <form>     
+        <div>        
+          <label>Recipient email
+          <input placeholder="Email address" type="email" value="${form.weeklyReportRecipient || 'postmark2018@ragelse.dk'}" name="report-email">
+          </label>
         </div>
-      </div>
+      
+        <div>
+          <label>
+              Postmark API key
+              <input placeholder="Postmark API key" type="text" name="postmark-key" value="812c2d21-ae85-4923-ba95-8f433e4def73">
+          </label>
+        </div>
+        
+        <div>
+          <button class="button hide" on-click="${(evt:Event) => handleAsyncButton(evt, toggleReporting(form))}" type="button">${(form as Form).weeklyReportRecipient ? 'Dis':'En'}able weekly report</button>
+          <button class="button" on-click="${(evt:Event) => handleAsyncButton(evt, generateReport(form)) }" type="button">Build report now</button>
+        </div>
+      </form>
 
     </div>
 
   </div>
   `
   render(tpl, el)
+}
+
+function handleAsyncButton(evt:Event, promise:Promise<any>) {
+  const el = (evt.target) as HTMLButtonElement
+  el.disabled = true
+  promise.then(() => el.disabled = false)
 }
