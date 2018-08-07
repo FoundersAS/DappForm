@@ -3,7 +3,7 @@ import Store from '../../store'
 import { Route } from '../router'
 import { Form, deleteForm, getForm, getFormSubmissions, saveForm } from 'dappform-forms-api'
 import BlockstackUtils from '../../util/blockstackUtils'
-import { weeklyStats } from '../../report-generation/weekly-stats-report'
+import { weeklyStats } from './weekly-stats'
 
 export async function update () {
   const el = document.querySelector('forms-view')
