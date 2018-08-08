@@ -3,7 +3,7 @@ import Store from '../../store'
 import { Route } from '../router'
 import { Form, deleteForm, getForm, getFormSubmissions, saveForm } from 'dappform-forms-api'
 import BlockstackUtils from '../../util/blockstackUtils'
-import { weeklyStats } from './weekly-stats'
+import { generateReport, weeklyStats } from './weekly-stats'
 
 export async function update () {
   const el = document.querySelector('forms-view')
@@ -31,27 +31,10 @@ export async function update () {
     update()
   }
 
-  const generateReport = async (form:Form) => {
+  const generateReportHandler = (form:Form):Promise<void> => {
     const postmarkFrom = (el.querySelector('[name="report-email"]') as HTMLInputElement).value
     const postmarkKey = (el.querySelector('[name="postmark-key"]') as HTMLInputElement).value
-    const endpoint = new URL('https://wt-c0c4a39020d4e9619a8996325cdfa5dc-0.sandbox.auth0-extend.com/dapp-form-reporting')
-
-    const body = {
-      'blockstack': localStorage.getItem('blockstack'),
-      'blockstack-gaia-hub-config': localStorage.getItem('blockstack-gaia-hub-config'),
-      'blockstack-transit-private-key': localStorage.getItem('blockstack-transit-private-key'),
-      'postmark-key': postmarkKey,
-      'postmark-from': form.weeklyReportRecipient || postmarkFrom,
-    }
-
-    const res = await fetch(endpoint.toString(), <RequestInit>{
-      mode: 'cors',
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: new Headers({
-        "Content-Type": 'application/json',
-      }),
-    })
+    return generateReport(form, postmarkFrom, postmarkKey)
   }
 
   const tpl = html`
@@ -100,7 +83,7 @@ export async function update () {
         
         <div>
           <button class="button hide" on-click="${(evt:Event) => handleAsyncButton(evt, toggleReporting(form))}" type="button">${(form as Form).weeklyReportRecipient ? 'Dis':'En'}able weekly report</button>
-          <button class="button" on-click="${(evt:Event) => handleAsyncButton(evt, generateReport(form)) }" type="button">Build report now</button>
+          <button class="button" on-click="${(evt:Event) => handleAsyncButton(evt, generateReportHandler(form)) }" type="button">Build report now</button>
         </div>
       </form>
 
