@@ -41,6 +41,14 @@ async function deployTasks() {
     }
   )).webtask_url)
 
+  settings.setStatsTaskUrl  ((await createWebTaskTask(
+    'dapp-form-serve',
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js", // 'https://raw.githubusercontent.com/FoundersAS/dappform-stats/master/main.js',
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json',
+    {
+    }
+  )).webtask_url)
+
   saveSettings()
 }
 
