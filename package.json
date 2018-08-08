@@ -1,6 +1,6 @@
 {
   "name": "dapp-form",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "static content",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
