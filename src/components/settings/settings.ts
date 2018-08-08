@@ -10,8 +10,8 @@ settings.events.on('load', () => {
 async function deployTasks() {
   settings.setHostingTaskUrl((await createWebTaskTask(
     'dappform-host-task',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/index.js',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/package.json',
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
     {
       BLOCKSTACK_USERNAME: new BlockstackUtils().username
     }
@@ -19,8 +19,8 @@ async function deployTasks() {
 
   settings.setSubmissionTaskUrl((await createWebTaskTask(
     'dappform-submission-task',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/index.js',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/package.json',
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
     {
       BLOCKSTACK: localStorage.getItem('blockstack'),
       BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
@@ -65,8 +65,6 @@ function saveUserDefinedSettings() {
   }).forEach(([key, readonly]) => {
     settings.setValue(key, (document.querySelector(`[name=${key}]`) as HTMLInputElement).value)
   })
-
-  //settings.setValue(key, (document.querySelector('[name=webtask-token]') as HTMLInputElement).value))
 
   saveSettings()
 }
