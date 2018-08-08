@@ -4,6 +4,7 @@ import { Route } from '../router'
 import { deleteForm, getForm, getFormSubmissions } from 'dappform-forms-api'
 import BlockstackUtils from '../../util/blockstackUtils'
 import { weeklyStats } from './weekly-stats'
+import { getHostingTaskUrl } from '../../settings'
 
 export async function update () {
   const el = document.querySelector('forms-view')
@@ -12,7 +13,7 @@ export async function update () {
   console.debug("Viewing",form)
   const username = new BlockstackUtils().username
 
-  const shareURL = new URL(location.origin)
+  const shareURL = new URL(getHostingTaskUrl())
   shareURL.searchParams.append(`author`, username)
   shareURL.searchParams.append(`form-id`, uuid)
 
