@@ -42,14 +42,17 @@ export function setValue(key: string, value: string): void {
 }
 
 export async function loadSettings() {
-  getFile('settings.json').then((s: Settings) => {
-    settings = s
-    console.log('Settings Loaded: ', settings)
+  getFile('settings.json').then(async (s: Settings) => {
+    console.log('Settings from storage: ', s)
+    if (typeof s === "object") {
+      settings = {...settings, ...s}
+    }
     events.emit('load')
   })
 }
 
 export async function saveSettings() {
+  console.assert(typeof settings === "object", 'settings must be an object')
   await putFile('settings.json', settings)
   console.log('Settings Saved: ', settings)
   events.emit('save')
