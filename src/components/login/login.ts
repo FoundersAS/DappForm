@@ -17,7 +17,7 @@ export function update() {
 }
 
 export function blockStackSignin() {
-  blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
+  blockstack.redirectToSignIn(location.href, location.origin + "/manifest.json", [
     'store_write',
     'publish_data',
   ])
