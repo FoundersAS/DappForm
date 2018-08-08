@@ -58,8 +58,6 @@ function saveUserDefinedSettings() {
     settings.setValue(key, (document.querySelector(`[name=${key}]`) as HTMLInputElement).value)
   })
 
-  //settings.setValue(key, (document.querySelector('[name=webtask-token]') as HTMLInputElement).value))
-
   saveSettings()
 }
 
