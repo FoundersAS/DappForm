@@ -1,14 +1,13 @@
 {
   "name": "dapp-form",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "static content",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
     "build": "rm -rf docs/ && webpack --config webpack.prod.js",
     "push": "yarn build && git add docs; git commit -m 'new build'; git push; open https://dappform.takectrl.io"
   },
-  "author": "",
+  "author": "npm2016@ragelse.dk",
   "license": "ISC",
   "dependencies": {
     "blockstack": "^17.0.2",
@@ -39,5 +38,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FoundersAS/DappForm.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/FoundersAS/DappForm/issues"
+  },
+  "homepage": "https://github.com/FoundersAS/DappForm#readme"
 }
