@@ -1,14 +1,23 @@
 import { putFile, getFile } from "./util/write";
 import { EventEmitter } from "events";
-interface Settings {
-  webtaskId: string,
-  webtaskToken: string,
-  submissionTaskUrl: string,
-  hostingTaskUrl: string,
-  statsTaskUrl: string
+
+interface SettingSchema {
+  [k: string]: boolean
 }
 
-let settings = {} as Settings
+// set wether readonly is true or false
+export const settingsSchema: SettingSchema = {
+  webtaskId: false,
+  webtaskToken: false,
+  submissionTaskUrl: true,
+  hostingTaskUrl: true,
+  statsTaskUrl: true,
+}
+interface Settings {
+  [k: string]: string
+}
+
+let settings: Settings = <Settings>{}
 loadSettings()
 
 export const events = new EventEmitter()
@@ -25,6 +34,14 @@ export function setSubmissionTaskUrl(value: string): void { settings.submissionT
 export function setHostingTaskUrl(value: string): void { settings.hostingTaskUrl = value }
 export function setStatsTaskUrl(value: string): void { settings.statsTaskUrl = value }
 
+export function getValue(key: string): string {
+  return settings[key]
+}
+
+export function setValue(key: string, value: string): void {
+  settings[key] = value
+}
+
 async function loadSettings() {
   getFile('settings.json').then((s: Settings) => {
     settings = s
@@ -36,4 +53,5 @@ async function loadSettings() {
 export async function saveSettings() {
   await putFile('settings.json', settings)
   console.log('Settings Saved: ', settings)
+  events.emit('save')
 }
