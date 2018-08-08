@@ -101182,7 +101182,7 @@ function update() {
 }
 exports.update = update;
 function blockStackSignin() {
-    blockstack.redirectToSignIn(location.origin, location.origin + "/manifest.json", [
+    blockstack.redirectToSignIn(location.href, location.origin + "/manifest.json", [
         'store_write',
         'publish_data',
     ]);
@@ -101210,6 +101210,7 @@ const router_1 = __webpack_require__(/*! ../router */ "./src/components/router.t
 const store_1 = __webpack_require__(/*! ../../store */ "./src/store.ts");
 const login_1 = __webpack_require__(/*! ../login/login */ "./src/components/login/login.ts");
 const lit_extended_1 = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
+const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
 function update() {
     const nav = document.querySelector(`nav`);
     const route = store_1.default.store.route;
@@ -101229,7 +101230,7 @@ function update() {
     <button class="hollow button secondary button-signout" on-click="${() => login_1.blockstackSignout()}">Sign out</button>
   </div>
   `;
-    const tpl = (location.toString().includes('form-id')) ? anon : normal;
+    const tpl = (location.toString().includes('form-id') || !blockstack.isUserSignedIn()) ? anon : normal;
     lit_extended_1.render(tpl, nav);
 }
 exports.update = update;
@@ -101343,55 +101344,45 @@ async function deployTasks() {
     saveSettings();
 }
 function renderSettings() {
-    const idField = document.querySelector('[name=webtask-id]');
-    idField.value = settings.getWebtaskId();
-    const tokenField = document.querySelector('[name=webtask-token]');
-    tokenField.value = settings.getWebtaskToken();
-    const hostField = document.querySelector('[name=webtask-host-task]');
-    hostField.value = settings.getHostingTaskUrl();
-    const submissionField = document.querySelector('[name=webtask-submission-task]');
-    submissionField.value = settings.getSubmissionTaskUrl();
-    const statsField = document.querySelector('[name=webtask-stats-task]');
-    statsField.value = settings.getStatsTaskUrl();
+    Object.keys(settings.settingsSchema).forEach((k) => {
+        const field = document.querySelector(`[name=${k}]`);
+        field.value = settings.getValue(k) || '';
+    });
 }
 function saveUserDefinedSettings() {
-    settings.setWebtaskToken(document.querySelector('[name=webtask-token]').value);
-    settings.setWebtaskId(document.querySelector('[name=webtask-id]').value);
+    Object.entries(settings.settingsSchema).filter(([key, readonly]) => {
+        return !readonly;
+    }).forEach(([key, readonly]) => {
+        settings.setValue(key, document.querySelector(`[name=${key}]`).value);
+    });
+    //settings.setValue(key, (document.querySelector('[name=webtask-token]') as HTMLInputElement).value))
     saveSettings();
 }
 function saveSettings() {
     settings.saveSettings();
     renderSettings();
 }
+function renderSettingFields() {
+    return Object.entries(settings.settingsSchema).map(([key, readonly]) => {
+        return lit_extended_1.html `
+      <label>
+        ${key}
+        <input type="text" name="${key}" readonly?=${readonly}>
+      </label>
+    `;
+    });
+}
 async function update() {
     const el = document.querySelector('settings-view');
+    const settingsFields = renderSettingFields();
     const tpl = lit_extended_1.html `
     <h3>Settings</h3>
 
     <div class="grid-x grid-margin-x">
       <div class="cell small-6">
-        <label>
-            WebTask ID
-            <input type="text" name="webtask-id" required>
-        </label>
-        <label>
-            WebTask Token
-            <input type="text" name="webtask-token" required>
-        </label>
         <button class="button" on-click="${saveUserDefinedSettings}">Save</button>
         <button class="button success" on-click="${deployTasks}">Deploy Tasks</button>
-        <label>
-            Host Task
-            <input type="text" name="webtask-host-task" readonly>
-        </label>
-        <label>
-            Submission Task
-            <input type="text" name="webtask-submission-task" readonly>
-        </label>
-        <label>
-            Stats Task
-            <input type="text" name="webtask-stats-task" readonly>
-        </label>
+        ${settingsFields}
       </div>
     </div>
   `;
@@ -101553,25 +101544,10 @@ async function update() {
         await dappform_forms_api_1.saveForm(form);
         update();
     };
-    const generateReport = async (form) => {
+    const generateReportHandler = (form) => {
         const postmarkFrom = el.querySelector('[name="report-email"]').value;
         const postmarkKey = el.querySelector('[name="postmark-key"]').value;
-        const endpoint = new URL('https://wt-c0c4a39020d4e9619a8996325cdfa5dc-0.sandbox.auth0-extend.com/dapp-form-reporting');
-        const body = {
-            'blockstack': localStorage.getItem('blockstack'),
-            'blockstack-gaia-hub-config': localStorage.getItem('blockstack-gaia-hub-config'),
-            'blockstack-transit-private-key': localStorage.getItem('blockstack-transit-private-key'),
-            'postmark-key': postmarkKey,
-            'postmark-from': form.weeklyReportRecipient || postmarkFrom,
-        };
-        const res = await fetch(endpoint.toString(), {
-            mode: 'cors',
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: new Headers({
-                "Content-Type": 'application/json',
-            }),
-        });
+        return weekly_stats_1.generateReport(form, postmarkFrom, postmarkKey);
     };
     const tpl = lit_extended_1.html `
   <h3>Form dashboard <em>${form.name}</em></h3>
@@ -101619,7 +101595,7 @@ async function update() {
         
         <div>
           <button class="button hide" on-click="${(evt) => handleAsyncButton(evt, toggleReporting(form))}" type="button">${form.weeklyReportRecipient ? 'Dis' : 'En'}able weekly report</button>
-          <button class="button" on-click="${(evt) => handleAsyncButton(evt, generateReport(form))}" type="button">Build report now</button>
+          <button class="button" on-click="${(evt) => handleAsyncButton(evt, generateReportHandler(form))}" type="button">Build report now</button>
         </div>
       </form>
 
@@ -101656,6 +101632,25 @@ function weeklyStats(submissions) {
     return { total, lastWeek };
 }
 exports.weeklyStats = weeklyStats;
+async function generateReport(form, postmarkFrom, postmarkKey) {
+    const endpoint = new URL('https://wt-c0c4a39020d4e9619a8996325cdfa5dc-0.sandbox.auth0-extend.com/dapp-form-reporting');
+    const body = {
+        'blockstack': localStorage.getItem('blockstack'),
+        'blockstack-gaia-hub-config': localStorage.getItem('blockstack-gaia-hub-config'),
+        'blockstack-transit-private-key': localStorage.getItem('blockstack-transit-private-key'),
+        'postmark-key': postmarkKey,
+        'postmark-from': form.weeklyReportRecipient || postmarkFrom,
+    };
+    const res = await fetch(endpoint.toString(), {
+        mode: 'cors',
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+    });
+}
+exports.generateReport = generateReport;
 
 
 /***/ }),
@@ -101724,6 +101719,7 @@ exports.update = update;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const settings_1 = __webpack_require__(/*! ./settings */ "./src/settings.ts");
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
 const store_1 = __webpack_require__(/*! ./store */ "./src/store.ts");
 const router_1 = __webpack_require__(/*! ./components/router */ "./src/components/router.ts");
@@ -101734,6 +101730,7 @@ function routeLoggedIn() {
         savedRouteParams = JSON.parse(savedRouteParams);
     const route = (router_1.Route[savedRoute]) ? savedRoute : router_1.Route.FormsList;
     store_1.default.setRouteAction(route, savedRouteParams || {});
+    settings_1.loadSettings();
 }
 function main() {
     // hax
@@ -101751,6 +101748,9 @@ function main() {
     else {
         store_1.default.setRouteAction(router_1.Route.Login);
     }
+}
+if (sessionStorage.debug) {
+    window.blockstack = blockstack;
 }
 // side effects
 main();
@@ -101770,8 +101770,15 @@ main();
 Object.defineProperty(exports, "__esModule", { value: true });
 const write_1 = __webpack_require__(/*! ./util/write */ "./src/util/write.ts");
 const events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+// set wether readonly is true or false
+exports.settingsSchema = {
+    webtaskId: false,
+    webtaskToken: false,
+    submissionTaskUrl: true,
+    hostingTaskUrl: true,
+    statsTaskUrl: true,
+};
 let settings = {};
-loadSettings();
 exports.events = new events_1.EventEmitter();
 function getWebtaskId() { return settings.webtaskId; }
 exports.getWebtaskId = getWebtaskId;
@@ -101793,6 +101800,14 @@ function setHostingTaskUrl(value) { settings.hostingTaskUrl = value; }
 exports.setHostingTaskUrl = setHostingTaskUrl;
 function setStatsTaskUrl(value) { settings.statsTaskUrl = value; }
 exports.setStatsTaskUrl = setStatsTaskUrl;
+function getValue(key) {
+    return settings[key];
+}
+exports.getValue = getValue;
+function setValue(key, value) {
+    settings[key] = value;
+}
+exports.setValue = setValue;
 async function loadSettings() {
     write_1.getFile('settings.json').then((s) => {
         settings = s;
@@ -101800,9 +101815,11 @@ async function loadSettings() {
         exports.events.emit('load');
     });
 }
+exports.loadSettings = loadSettings;
 async function saveSettings() {
     await write_1.putFile('settings.json', settings);
     console.log('Settings Saved: ', settings);
+    exports.events.emit('save');
 }
 exports.saveSettings = saveSettings;
 
@@ -102149,4 +102166,4 @@ exports.getFile = getFile;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=5cac01234350853cb25c.bundle.js.map
+//# sourceMappingURL=54d5267e38acecdc579e.bundle.js.map
