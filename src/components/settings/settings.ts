@@ -44,27 +44,21 @@ async function deployTasks() {
   saveSettings()
 }
 
-
 function renderSettings() {
-  const idField = (document.querySelector('[name=webtask-id]') as HTMLInputElement)
-  idField.value = settings.getWebtaskId()
-
-  const tokenField = (document.querySelector('[name=webtask-token]') as HTMLInputElement)
-  tokenField.value = settings.getWebtaskToken()
-
-  const hostField = (document.querySelector('[name=webtask-host-task]') as HTMLInputElement)
-  hostField.value = settings.getHostingTaskUrl()
-
-  const submissionField = (document.querySelector('[name=webtask-submission-task]') as HTMLInputElement)
-  submissionField.value = settings.getSubmissionTaskUrl()
-
-  const statsField = (document.querySelector('[name=webtask-stats-task]') as HTMLInputElement)
-  statsField.value = settings.getStatsTaskUrl()
+  Object.keys(settings.settingsSchema).forEach((k) => {
+    const field = (document.querySelector(`[name=${k}]`) as HTMLInputElement)
+    field.value = settings.getValue(k) || ''
+  })
 }
 
 function saveUserDefinedSettings() {
-  settings.setWebtaskToken((document.querySelector('[name=webtask-token]') as HTMLInputElement).value)
-  settings.setWebtaskId((document.querySelector('[name=webtask-id]') as HTMLInputElement).value)
+  Object.entries(settings.settingsSchema).filter(([key, readonly]) => {
+    return !readonly
+  }).forEach(([key, readonly]) => {
+    settings.setValue(key, (document.querySelector(`[name=${key}]`) as HTMLInputElement).value)
+  })
+
+  //settings.setValue(key, (document.querySelector('[name=webtask-token]') as HTMLInputElement).value))
 
   saveSettings()
 }
@@ -74,36 +68,30 @@ function saveSettings() {
   renderSettings()
 }
 
+function renderSettingFields() {
+  return Object.entries(settings.settingsSchema).map(([key, readonly]) => {
+    return html`
+      <label>
+        ${key}
+        <input type="text" name="${key}" readonly?=${readonly}>
+      </label>
+    `
+  })
+}
+
 export async function update() {
   const el = document.querySelector('settings-view')
+
+  const settingsFields = renderSettingFields()
 
   const tpl = html`
     <h3>Settings</h3>
 
     <div class="grid-x grid-margin-x">
       <div class="cell small-6">
-        <label>
-            WebTask ID
-            <input type="text" name="webtask-id" required>
-        </label>
-        <label>
-            WebTask Token
-            <input type="text" name="webtask-token" required>
-        </label>
         <button class="button" on-click="${saveUserDefinedSettings}">Save</button>
         <button class="button success" on-click="${deployTasks}">Deploy Tasks</button>
-        <label>
-            Host Task
-            <input type="text" name="webtask-host-task" readonly>
-        </label>
-        <label>
-            Submission Task
-            <input type="text" name="webtask-submission-task" readonly>
-        </label>
-        <label>
-            Stats Task
-            <input type="text" name="webtask-stats-task" readonly>
-        </label>
+        ${settingsFields}
       </div>
     </div>
   `
