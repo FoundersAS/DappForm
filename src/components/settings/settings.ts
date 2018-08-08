@@ -3,6 +3,8 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import  * as settings from '../../settings'
 import { createWebTaskTask } from '../../util/webtask';
 
+const blockstackUtils = new BlockstackUtils()
+
 settings.events.on('load', () => {
   renderSettings()
 })
@@ -13,7 +15,7 @@ async function deployTasks() {
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js",
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
     {
-      BLOCKSTACK_USERNAME: new BlockstackUtils().username
+      BLOCKSTACK_USERNAME: blockstackUtils.username
     }
   )).webtask_url)
 
@@ -21,24 +23,14 @@ async function deployTasks() {
     'dappform-submission-task',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
-    {
-      BLOCKSTACK: localStorage.getItem('blockstack'),
-      BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
-      BLOCKSTACK_TRANSIT_PRIVATE_KEY: localStorage.getItem('blockstack-transit-private-key'),
-      BLOCKSTACK_APP_PRIVATE_KEY: localStorage.getItem('blockstack-app-private-key')
-    }
+    blockstackUtils.getBlockstackLocalStorage()
   )).webtask_url)
 
   settings.setStatsTaskUrl((await createWebTaskTask(
     'dappform-stats-task',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-stats/master/main.js',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-stats/master/package.json',
-    {
-      BLOCKSTACK: localStorage.getItem('blockstack'),
-      BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
-      BLOCKSTACK_TRANSIT_PRIVATE_KEY: localStorage.getItem('blockstack-transit-private-key'),
-      BLOCKSTACK_APP_PRIVATE_KEY: localStorage.getItem('blockstack-app-private-key')
-    }
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/main.js',
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
+    blockstackUtils.getBlockstackLocalStorage()
   )).webtask_url)
 
   saveSettings()
