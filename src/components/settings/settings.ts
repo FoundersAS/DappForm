@@ -30,7 +30,11 @@ async function deployTasks() {
     'dappform-stats-task',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/main.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
-    blockstackUtils.getBlockstackLocalStorage()
+    { ... blockstackUtils.getBlockstackLocalStorage(),
+      POSTMARK_TOKEN: settings.getValue('postmarkToken'),
+      POSTMARK_FROM: settings.getValue('postmarkFrom'),
+      POSTMARK_TO: settings.getValue('email')
+    }
   )).webtask_url)
 
   saveSettings()

@@ -7,8 +7,11 @@ interface SettingSchema {
 
 // set wether readonly is true or false
 export const settingsSchema: SettingSchema = {
+  email: false,
   webtaskId: false,
   webtaskToken: false,
+  postmarkToken: false,
+  postmarkFrom: false,
   submissionTaskUrl: true,
   hostingTaskUrl: true,
   statsTaskUrl: true,
