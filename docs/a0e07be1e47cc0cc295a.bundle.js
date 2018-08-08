@@ -101322,25 +101322,19 @@ const blockstackUtils_1 = __webpack_require__(/*! ../../util/blockstackUtils */ 
 const lit_extended_1 = __webpack_require__(/*! ../../../node_modules/lit-html/lib/lit-extended */ "./node_modules/lit-html/lib/lit-extended.js");
 const settings = __webpack_require__(/*! ../../settings */ "./src/settings.ts");
 const webtask_1 = __webpack_require__(/*! ../../util/webtask */ "./src/util/webtask.ts");
+const blockstackUtils = new blockstackUtils_1.default();
 settings.events.on('load', () => {
     renderSettings();
 });
+function sendReports() {
+    fetch(settings.getStatsTaskUrl()).then(console.log);
+}
 async function deployTasks() {
-    settings.setHostingTaskUrl((await webtask_1.createWebTaskTask('dappform-host-task', 'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/package.json', {
-        BLOCKSTACK_USERNAME: new blockstackUtils_1.default().username
+    settings.setHostingTaskUrl((await webtask_1.createWebTaskTask('dappform-tasks-host', "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js", "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json", {
+        BLOCKSTACK_USERNAME: blockstackUtils.username
     })).webtask_url);
-    settings.setSubmissionTaskUrl((await webtask_1.createWebTaskTask('dappform-submission-task', 'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-submission-receiver/master/package.json', {
-        BLOCKSTACK: localStorage.getItem('blockstack'),
-        BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
-        BLOCKSTACK_TRANSIT_PRIVATE_KEY: localStorage.getItem('blockstack-transit-private-key'),
-        BLOCKSTACK_APP_PRIVATE_KEY: localStorage.getItem('blockstack-app-private-key')
-    })).webtask_url);
-    settings.setStatsTaskUrl((await webtask_1.createWebTaskTask('dappform-stats-task', 'https://raw.githubusercontent.com/FoundersAS/dappform-stats/master/main.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-stats/master/package.json', {
-        BLOCKSTACK: localStorage.getItem('blockstack'),
-        BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
-        BLOCKSTACK_TRANSIT_PRIVATE_KEY: localStorage.getItem('blockstack-transit-private-key'),
-        BLOCKSTACK_APP_PRIVATE_KEY: localStorage.getItem('blockstack-app-private-key')
-    })).webtask_url);
+    settings.setSubmissionTaskUrl((await webtask_1.createWebTaskTask('dappform-tasks-submission', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json', blockstackUtils.getBlockstackLocalStorage())).webtask_url);
+    settings.setStatsTaskUrl((await webtask_1.createWebTaskTask('dappform-tasks-stats', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json', Object.assign({}, blockstackUtils.getBlockstackLocalStorage(), { POSTMARK_TOKEN: settings.getValue('postmarkToken'), POSTMARK_FROM: settings.getValue('postmarkFrom'), POSTMARK_TO: settings.getValue('email') }))).webtask_url);
     saveSettings();
 }
 function renderSettings() {
@@ -101355,7 +101349,6 @@ function saveUserDefinedSettings() {
     }).forEach(([key, readonly]) => {
         settings.setValue(key, document.querySelector(`[name=${key}]`).value);
     });
-    //settings.setValue(key, (document.querySelector('[name=webtask-token]') as HTMLInputElement).value))
     saveSettings();
 }
 function saveSettings() {
@@ -101382,6 +101375,7 @@ async function update() {
       <div class="cell small-6">
         <button class="button" on-click="${saveUserDefinedSettings}">Save</button>
         <button class="button success" on-click="${deployTasks}">Deploy Tasks</button>
+        <button class="button success" on-click="${sendReports}">Send Reports</button>
         ${settingsFields}
       </div>
     </div>
@@ -101522,33 +101516,18 @@ const router_1 = __webpack_require__(/*! ../router */ "./src/components/router.t
 const dappform_forms_api_1 = __webpack_require__(/*! dappform-forms-api */ "./node_modules/dappform-forms-api/dist/index.js");
 const blockstackUtils_1 = __webpack_require__(/*! ../../util/blockstackUtils */ "./src/util/blockstackUtils.ts");
 const weekly_stats_1 = __webpack_require__(/*! ./weekly-stats */ "./src/components/view-form/weekly-stats.ts");
+const settings_1 = __webpack_require__(/*! ../../settings */ "./src/settings.ts");
 async function update() {
     const el = document.querySelector('forms-view');
     const uuid = store_1.default.store.routeParams.formId;
     const form = await dappform_forms_api_1.getForm(uuid);
     console.debug("Viewing", form);
     const username = new blockstackUtils_1.default().username;
-    const shareURL = new URL(location.origin);
+    const shareURL = new URL(settings_1.getHostingTaskUrl());
     shareURL.searchParams.append(`author`, username);
     shareURL.searchParams.append(`form-id`, uuid);
     const submissions = await dappform_forms_api_1.getFormSubmissions(uuid);
     const { lastWeek, total } = weekly_stats_1.weeklyStats(Object.values(submissions));
-    const toggleReporting = async (form) => {
-        if (form.weeklyReportRecipient) {
-            delete form.weeklyReportRecipient;
-        }
-        else {
-            const email = el.querySelector('input[name="report-email"]').value;
-            form.weeklyReportRecipient = email;
-        }
-        await dappform_forms_api_1.saveForm(form);
-        update();
-    };
-    const generateReportHandler = (form) => {
-        const postmarkFrom = el.querySelector('[name="report-email"]').value;
-        const postmarkKey = el.querySelector('[name="postmark-key"]').value;
-        return weekly_stats_1.generateReport(form, postmarkFrom, postmarkKey);
-    };
     const tpl = lit_extended_1.html `
   <h3>Form dashboard <em>${form.name}</em></h3>
   <p><small>(uuid: ${uuid})</small>
@@ -101577,28 +101556,6 @@ async function update() {
       <p><button class="clear button link" on-click="${() => store_1.default.setRouteAction(router_1.Route.SubmissionsView, { formId: uuid })}">View Submissions</button>
 
       <p>${lastWeek} submissions last week. Total ${total}.</p>
-
-      <h5>Email reports</h5>
-      <form>     
-        <div>        
-          <label>Recipient email
-          <input placeholder="Email address" type="email" value="${form.weeklyReportRecipient}" name="report-email">
-          </label>
-        </div>
-      
-        <div>
-          <label>
-              Postmark API key
-              <input placeholder="Postmark API key" type="text" name="postmark-key">
-          </label>
-        </div>
-        
-        <div>
-          <button class="button hide" on-click="${(evt) => handleAsyncButton(evt, toggleReporting(form))}" type="button">${form.weeklyReportRecipient ? 'Dis' : 'En'}able weekly report</button>
-          <button class="button" on-click="${(evt) => handleAsyncButton(evt, generateReportHandler(form))}" type="button">Build report now</button>
-        </div>
-      </form>
-
     </div>
 
   </div>
@@ -101772,8 +101729,11 @@ const write_1 = __webpack_require__(/*! ./util/write */ "./src/util/write.ts");
 const events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 // set wether readonly is true or false
 exports.settingsSchema = {
+    email: false,
     webtaskId: false,
     webtaskToken: false,
+    postmarkToken: false,
+    postmarkFrom: false,
     submissionTaskUrl: true,
     hostingTaskUrl: true,
     statsTaskUrl: true,
@@ -101809,14 +101769,17 @@ function setValue(key, value) {
 }
 exports.setValue = setValue;
 async function loadSettings() {
-    write_1.getFile('settings.json').then((s) => {
-        settings = s;
-        console.log('Settings Loaded: ', settings);
+    write_1.getFile('settings.json').then(async (s) => {
+        console.log('Settings from storage: ', s);
+        if (typeof s === "object") {
+            settings = Object.assign({}, settings, s);
+        }
         exports.events.emit('load');
     });
 }
 exports.loadSettings = loadSettings;
 async function saveSettings() {
+    console.assert(typeof settings === "object", 'settings must be an object');
     await write_1.putFile('settings.json', settings);
     console.log('Settings Saved: ', settings);
     exports.events.emit('save');
@@ -101979,10 +101942,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/blockstack/lib/index.js");
 class default_1 {
     constructor() {
-        const userData = blockstack.loadUserData();
-        this.username = userData.username;
-        this.publicKey = blockstack.getPublicKeyFromPrivate(userData.appPrivateKey);
-        this.privateKey = userData.appPrivateKey;
+        if (blockstack.isUserSignedIn()) {
+            const userData = blockstack.loadUserData();
+            this.username = userData.username;
+            this.publicKey = blockstack.getPublicKeyFromPrivate(userData.appPrivateKey);
+            this.privateKey = userData.appPrivateKey;
+        }
+    }
+    getBlockstackLocalStorage() {
+        return {
+            BLOCKSTACK: localStorage.getItem('blockstack'),
+            BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
+            BLOCKSTACK_TRANSIT_PRIVATE_KEY: localStorage.getItem('blockstack-transit-private-key'),
+            BLOCKSTACK_APP_PRIVATE_KEY: localStorage.getItem('blockstack-app-private-key')
+        };
     }
 }
 exports.default = default_1;
@@ -102166,4 +102139,4 @@ exports.getFile = getFile;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=54d5267e38acecdc579e.bundle.js.map
+//# sourceMappingURL=a0e07be1e47cc0cc295a.bundle.js.map
