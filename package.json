@@ -5,7 +5,8 @@
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
     "build": "rm -rf docs/ && webpack --config webpack.prod.js",
-    "push": "yarn build && git add docs; git commit -m 'new build'; git push; open https://dappform.takectrl.io"
+    "push": "yarn build && git add docs; git commit -m 'new build'; git push; open https://dappform.takectrl.io",
+    "preversion": "npm run build"
   },
   "author": "npm2016@ragelse.dk",
   "license": "ISC",
