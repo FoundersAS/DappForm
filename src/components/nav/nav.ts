@@ -2,6 +2,7 @@ import { Route } from '../router'
 import Store from '../../store'
 import { blockstackSignout } from '../login/login'
 import { render, html } from '../../../node_modules/lit-html/lib/lit-extended'
+const blockstack = require('blockstack')
 
 export function update() {
   const nav = document.querySelector(`nav`)
@@ -25,6 +26,6 @@ export function update() {
   </div>
   `
 
-  const tpl = (location.toString().includes('form-id')) ? anon : normal
+  const tpl = (location.toString().includes('form-id') || !blockstack.isUserSignedIn() ) ? anon : normal
   render(tpl, nav)
 }
