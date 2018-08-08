@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>dapp form</title>
+    <script>
+      if (location.toString().includes("dapp-form-serve")) {
+        document.write(`<base href="/dapp-form-serve/">`)
+      }
+    </script>
     <link href="assets/foundation.min.css" rel="stylesheet">
     <link href="assets/style.css" rel="stylesheet">
 </head>

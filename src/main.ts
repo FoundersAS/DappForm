@@ -30,5 +30,9 @@ function main () {
   }
 }
 
+if (sessionStorage.debug) {
+  (window as any).blockstack = blockstack
+}
+
 // side effects
 main()
