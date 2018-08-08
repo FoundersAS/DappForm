@@ -9,9 +9,13 @@ settings.events.on('load', () => {
   renderSettings()
 })
 
+function sendReports() {
+  fetch(settings.getStatsTaskUrl()).then(console.log)
+}
+
 async function deployTasks() {
   settings.setHostingTaskUrl((await createWebTaskTask(
-    'dappform-host-task',
+    'dappform-tasks-host',
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js",
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
     {
@@ -20,15 +24,15 @@ async function deployTasks() {
   )).webtask_url)
 
   settings.setSubmissionTaskUrl((await createWebTaskTask(
-    'dappform-submission-task',
+    'dappform-tasks-submission',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
     blockstackUtils.getBlockstackLocalStorage()
   )).webtask_url)
 
   settings.setStatsTaskUrl((await createWebTaskTask(
-    'dappform-stats-task',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/main.js',
+    'dappform-tasks-stats',
+    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
     { ... blockstackUtils.getBlockstackLocalStorage(),
       POSTMARK_TOKEN: settings.getValue('postmarkToken'),
@@ -85,6 +89,7 @@ export async function update() {
       <div class="cell small-6">
         <button class="button" on-click="${saveUserDefinedSettings}">Save</button>
         <button class="button success" on-click="${deployTasks}">Deploy Tasks</button>
+        <button class="button success" on-click="${sendReports}">Send Reports</button>
         ${settingsFields}
       </div>
     </div>
