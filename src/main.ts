@@ -1,3 +1,5 @@
+import { loadSettings } from './settings'
+
 const blockstack = require('blockstack')
 
 import Store from './store'
@@ -26,6 +28,7 @@ function main () {
       .catch(console.warn)
   }
   else {
+    loadSettings()
     Store.setRouteAction(Route.Login)
   }
 }

@@ -18,7 +18,6 @@ interface Settings {
 }
 
 let settings: Settings = <Settings>{}
-loadSettings()
 
 export const events = new EventEmitter()
 
@@ -42,7 +41,7 @@ export function setValue(key: string, value: string): void {
   settings[key] = value
 }
 
-async function loadSettings() {
+export async function loadSettings() {
   getFile('settings.json').then((s: Settings) => {
     settings = s
     console.log('Settings Loaded: ', settings)
