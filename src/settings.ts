@@ -12,7 +12,6 @@ export const settingsSchema: SettingSchema = {
   submissionTaskUrl: true,
   hostingTaskUrl: true,
   statsTaskUrl: true,
-  formServe: true,
 }
 interface Settings {
   [k: string]: string

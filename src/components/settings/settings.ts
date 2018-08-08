@@ -10,8 +10,8 @@ settings.events.on('load', () => {
 async function deployTasks() {
   settings.setHostingTaskUrl((await createWebTaskTask(
     'dappform-host-task',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js",
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
     {
       BLOCKSTACK_USERNAME: new BlockstackUtils().username
     }
@@ -38,14 +38,6 @@ async function deployTasks() {
       BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
       BLOCKSTACK_TRANSIT_PRIVATE_KEY: localStorage.getItem('blockstack-transit-private-key'),
       BLOCKSTACK_APP_PRIVATE_KEY: localStorage.getItem('blockstack-app-private-key')
-    }
-  )).webtask_url)
-
-  settings.setStatsTaskUrl  ((await createWebTaskTask(
-    'dapp-form-serve',
-    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js", // 'https://raw.githubusercontent.com/FoundersAS/dappform-stats/master/main.js',
-    'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json',
-    {
     }
   )).webtask_url)
 
