@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "blockstack": "^17.0.2",
-    "dappform-forms-api": "^1.0.3",
+    "dappform-forms-api": ">=1.0.0",
     "elliptic": "^6.4.0",
     "foundation-sites": "^6.5.0-rc.2",
     "lit-html": "^0.10.2",
