@@ -61,3 +61,4 @@ jspm_packages/
 .idea
 
 /src/**/*.js
+dappform.code-workspace

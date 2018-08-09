@@ -1,7 +1,7 @@
 import BlockstackUtils from '../../util/blockstackUtils'
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import  * as settings from '../../settings'
-import { createWebTaskTask } from '../../util/webtask';
+import { createWebTaskTask, createCronSchedule } from '../../util/webtask';
 
 const blockstackUtils = new BlockstackUtils()
 
@@ -10,11 +10,13 @@ settings.events.on('load', () => {
 })
 
 function sendReports() {
-  fetch(settings.getStatsTaskUrl()).then(console.log)
+  fetch(settings.getValue('statsTaskUrl')).then(console.log)
 }
 
 async function deployTasks() {
-  settings.setHostingTaskUrl((await createWebTaskTask(
+  saveUserDefinedSettings()
+
+  settings.setValue('hostingTaskUrl', (await createWebTaskTask(
     'dappform-tasks-host',
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js",
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
@@ -23,14 +25,14 @@ async function deployTasks() {
     }
   )).webtask_url)
 
-  settings.setSubmissionTaskUrl((await createWebTaskTask(
+  settings.setValue('submissionTaskUrl', (await createWebTaskTask(
     'dappform-tasks-submission',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
     blockstackUtils.getBlockstackLocalStorage()
   )).webtask_url)
 
-  settings.setStatsTaskUrl((await createWebTaskTask(
+  settings.setValue('statsTaskUrl', (await createWebTaskTask(
     'dappform-tasks-stats',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
@@ -40,6 +42,8 @@ async function deployTasks() {
       POSTMARK_TO: settings.getValue('email')
     }
   )).webtask_url)
+
+  await createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'))
 
   saveSettings()
 }
