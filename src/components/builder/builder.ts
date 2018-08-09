@@ -6,6 +6,7 @@ import { Route } from '../router'
 import { v4 as uuid } from 'uuid'
 
 import BlockstackUtils from '../../util/blockstackUtils'
+import * as settings from '../../settings'
 
 const questions = <Question[]>[]
 
@@ -84,6 +85,7 @@ function collectForm ():Form {
     introText: (document.querySelector('[name=intro-text]') as HTMLInputElement).value,
     confirmationText: (document.querySelector('[name=confirmation-text]') as HTMLInputElement).value,
     weeklyReportRecipient: (document.querySelector('[name=weekly-report]') as HTMLInputElement).value,
+    submissionsUrl: settings.getValue('submissionTaskUrl'),
   }
 
   // questions
