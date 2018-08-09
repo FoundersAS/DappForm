@@ -2,7 +2,6 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission, getForm, getPublishPath } from 'dappform-forms-api'
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
-import * as  settings from '../../settings'
 
 const blockstack = require('blockstack')
 
@@ -64,7 +63,7 @@ export async function update () {
       formUuid: form.uuid,
     }
 
-    const url = settings.getValue('submissionTaskUrl')
+    const url = form.submissionsUrl
     const body = {
       data: submission,
       key: form.authorPubKey
