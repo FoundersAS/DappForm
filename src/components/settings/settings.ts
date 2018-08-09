@@ -1,7 +1,9 @@
 import BlockstackUtils from '../../util/blockstackUtils'
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import  * as settings from '../../settings'
+
 import { createWebTaskTask, createCronSchedule } from '../../util/webtask';
+import { Settings } from '../../settings'
 
 const blockstackUtils = new BlockstackUtils()
 
@@ -49,7 +51,7 @@ async function deployTasks() {
 }
 
 function renderSettings() {
-  Object.keys(settings.settingsSchema).forEach((k) => {
+  Object.keys(settings.settingsSchema).forEach((k:keyof Settings) => {
     const field = (document.querySelector(`[name=${k}]`) as HTMLInputElement)
     field.value = settings.getValue(k) || ''
   })
@@ -59,7 +61,7 @@ function saveUserDefinedSettings() {
   Object.entries(settings.settingsSchema).filter(([key, readonly]) => {
     return !readonly
   }).forEach(([key, readonly]) => {
-    settings.setValue(key, (document.querySelector(`[name=${key}]`) as HTMLInputElement).value)
+    settings.setValue(key as keyof Settings, (document.querySelector(`[name=${key}]`) as HTMLInputElement).value)
   })
 
   saveSettings()

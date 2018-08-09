@@ -6,10 +6,12 @@ export default class {
   publicKey:string
 
   constructor() {
-    const userData = blockstack.loadUserData()
-    this.username = userData.username
-    this.publicKey = blockstack.getPublicKeyFromPrivate(userData.appPrivateKey)
-    this.privateKey = userData.appPrivateKey
+    if (blockstack.isUserSignedIn()) {
+      const userData = blockstack.loadUserData()
+      this.username = userData.username
+      this.publicKey = blockstack.getPublicKeyFromPrivate(userData.appPrivateKey)
+      this.privateKey = userData.appPrivateKey
+    }
   }
 
   public getBlockstackLocalStorage(): any {
