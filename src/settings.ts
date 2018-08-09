@@ -1,23 +1,33 @@
 import { putFile, getFile } from "./util/write";
 import { EventEmitter } from "events";
 
-interface SettingSchema {
-  [k: string]: boolean
+type Booleanify<T> = {
+  [P in keyof T]: boolean
+}
+
+export interface Settings {
+  email: string
+  webtaskId: string
+  webtaskToken: string
+  postmarkToken: string
+  webhookUrl: string
+  postmarkFrom: string
+  submissionTaskUrl: string
+  hostingTaskUrl: string
+  statsTaskUrl: string
 }
 
 // set wether readonly is true or false
-export const settingsSchema: SettingSchema = {
+export const settingsSchema: Booleanify<Settings> = {
   email: false,
   webtaskId: false,
   webtaskToken: false,
   postmarkToken: false,
+  webhookUrl: false,
   postmarkFrom: false,
   submissionTaskUrl: true,
   hostingTaskUrl: true,
   statsTaskUrl: true,
-}
-interface Settings {
-  [k: string]: string
 }
 
 let settings: Settings = <Settings>{}
@@ -29,6 +39,7 @@ export function getWebtaskToken(): string { return settings.webtaskToken }
 export function getSubmissionTaskUrl(): string { return settings.submissionTaskUrl }
 export function getHostingTaskUrl(): string { return settings.hostingTaskUrl }
 export function getStatsTaskUrl(): string { return settings.statsTaskUrl }
+export function getWebhookUrl(): string { return settings.webhookUrl }
 
 export function setWebtaskId(value: string): void { settings.webtaskId = value }
 export function setWebtaskToken(value: string): void { settings.webtaskToken = value }
@@ -36,11 +47,11 @@ export function setSubmissionTaskUrl(value: string): void { settings.submissionT
 export function setHostingTaskUrl(value: string): void { settings.hostingTaskUrl = value }
 export function setStatsTaskUrl(value: string): void { settings.statsTaskUrl = value }
 
-export function getValue(key: string): string {
+export function getValue(key: keyof Settings): string {
   return settings[key]
 }
 
-export function setValue(key: string, value: string): void {
+export function setValue(key: keyof Settings, value: string): void {
   settings[key] = value
 }
 
