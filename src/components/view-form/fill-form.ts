@@ -11,7 +11,7 @@ export async function update () {
   const url = new URL(location.toString())
   const author = url.searchParams.get('author')
   let formUuid:string = url.searchParams.get('form-id')
-  const app = location.origin
+  const app = location.origin === 'http://127.0.0.1' ? 'http://127.0.0.1:8080' : 'https:/dappform.takectrl.io'
 
   const submission:Submission = Store.store.routeParams.submission
 
