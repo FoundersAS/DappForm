@@ -101327,14 +101327,16 @@ settings.events.on('load', () => {
     renderSettings();
 });
 function sendReports() {
-    fetch(settings.getStatsTaskUrl()).then(console.log);
+    fetch(settings.getValue('statsTaskUrl')).then(console.log);
 }
 async function deployTasks() {
-    settings.setHostingTaskUrl((await webtask_1.createWebTaskTask('dappform-tasks-host', "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js", "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json", {
+    saveUserDefinedSettings();
+    settings.setValue('hostingTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-host', "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js", "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json", {
         BLOCKSTACK_USERNAME: blockstackUtils.username
     })).webtask_url);
-    settings.setSubmissionTaskUrl((await webtask_1.createWebTaskTask('dappform-tasks-submission', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json', blockstackUtils.getBlockstackLocalStorage())).webtask_url);
-    settings.setStatsTaskUrl((await webtask_1.createWebTaskTask('dappform-tasks-stats', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json', Object.assign({}, blockstackUtils.getBlockstackLocalStorage(), { POSTMARK_TOKEN: settings.getValue('postmarkToken'), POSTMARK_FROM: settings.getValue('postmarkFrom'), POSTMARK_TO: settings.getValue('email') }))).webtask_url);
+    settings.setValue('submissionTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-submission', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json', blockstackUtils.getBlockstackLocalStorage())).webtask_url);
+    settings.setValue('statsTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-stats', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json', Object.assign({}, blockstackUtils.getBlockstackLocalStorage(), { POSTMARK_TOKEN: settings.getValue('postmarkToken'), POSTMARK_FROM: settings.getValue('postmarkFrom'), POSTMARK_TO: settings.getValue('email') }))).webtask_url);
+    await webtask_1.createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'));
     saveSettings();
 }
 function renderSettings() {
@@ -101523,7 +101525,7 @@ async function update() {
     const form = await dappform_forms_api_1.getForm(uuid);
     console.debug("Viewing", form);
     const username = new blockstackUtils_1.default().username;
-    const shareURL = new URL(settings_1.getHostingTaskUrl());
+    const shareURL = new URL(settings_1.getValue('hostingTaskUrl'));
     shareURL.searchParams.append(`author`, username);
     shareURL.searchParams.append(`form-id`, uuid);
     const submissions = await dappform_forms_api_1.getFormSubmissions(uuid);
@@ -101730,6 +101732,7 @@ const events_1 = __webpack_require__(/*! events */ "./node_modules/events/events
 // set wether readonly is true or false
 exports.settingsSchema = {
     email: false,
+    cronSchedule: false,
     webtaskId: false,
     webtaskToken: false,
     postmarkToken: false,
@@ -101737,29 +101740,10 @@ exports.settingsSchema = {
     submissionTaskUrl: true,
     hostingTaskUrl: true,
     statsTaskUrl: true,
+    webhookUrl: false,
 };
 let settings = {};
 exports.events = new events_1.EventEmitter();
-function getWebtaskId() { return settings.webtaskId; }
-exports.getWebtaskId = getWebtaskId;
-function getWebtaskToken() { return settings.webtaskToken; }
-exports.getWebtaskToken = getWebtaskToken;
-function getSubmissionTaskUrl() { return settings.submissionTaskUrl; }
-exports.getSubmissionTaskUrl = getSubmissionTaskUrl;
-function getHostingTaskUrl() { return settings.hostingTaskUrl; }
-exports.getHostingTaskUrl = getHostingTaskUrl;
-function getStatsTaskUrl() { return settings.statsTaskUrl; }
-exports.getStatsTaskUrl = getStatsTaskUrl;
-function setWebtaskId(value) { settings.webtaskId = value; }
-exports.setWebtaskId = setWebtaskId;
-function setWebtaskToken(value) { settings.webtaskToken = value; }
-exports.setWebtaskToken = setWebtaskToken;
-function setSubmissionTaskUrl(value) { settings.submissionTaskUrl = value; }
-exports.setSubmissionTaskUrl = setSubmissionTaskUrl;
-function setHostingTaskUrl(value) { settings.hostingTaskUrl = value; }
-exports.setHostingTaskUrl = setHostingTaskUrl;
-function setStatsTaskUrl(value) { settings.statsTaskUrl = value; }
-exports.setStatsTaskUrl = setStatsTaskUrl;
 function getValue(key) {
     return settings[key];
 }
@@ -102011,13 +101995,15 @@ exports.decryptFile = decryptFile;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const settings = __webpack_require__(/*! ../settings */ "./src/settings.ts");
-function getWebTaskCreateUrl(taskName) {
-    return `https://sandbox.auth0-extend.com/api/webtask/${settings.getWebtaskId()}/${taskName}?key=${settings.getWebtaskToken()}`;
+function getTaskUrl(taskName) {
+    return `https://sandbox.auth0-extend.com/api/webtask/${settings.getValue('webtaskId')}/${taskName}?key=${settings.getValue('webtaskToken')}`;
+}
+function getCronUrl(taskName) {
+    return `https://sandbox.auth0-extend.com/api/cron/${settings.getValue('webtaskId')}/${taskName}?key=${settings.getValue('webtaskToken')}`;
 }
 async function createWebTaskTask(taskName, taskCodeUrl, taskPackageUrl, taskSecrets = {}) {
-    const url = getWebTaskCreateUrl(taskName);
     const p = await fetch(taskPackageUrl).then((res) => { return res.json(); });
-    return (await fetch(url, {
+    return (await fetch(getTaskUrl(taskName), {
         method: 'PUT',
         body: JSON.stringify({
             url: taskCodeUrl,
@@ -102029,6 +102015,15 @@ async function createWebTaskTask(taskName, taskCodeUrl, taskPackageUrl, taskSecr
     }).then((res) => res.json()));
 }
 exports.createWebTaskTask = createWebTaskTask;
+async function createCronSchedule(taskName, schedule) {
+    return (await fetch(getCronUrl(taskName), {
+        method: 'PUT',
+        body: JSON.stringify({
+            schedule
+        })
+    }).then((res) => res.json()));
+}
+exports.createCronSchedule = createCronSchedule;
 
 
 /***/ }),
@@ -102139,4 +102134,4 @@ exports.getFile = getFile;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=a0e07be1e47cc0cc295a.bundle.js.map
+//# sourceMappingURL=827a4c9c8ac65425ebb3.bundle.js.map
