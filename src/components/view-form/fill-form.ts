@@ -53,7 +53,7 @@ export async function update () {
     </div>`
   })
 
-  const submit = async (evt:Event) => {
+  const submit = async (evt:Event, form:Form) => {
     evt.preventDefault();
     (el.querySelector('[type="submit"]') as HTMLButtonElement).disabled = true
 
@@ -72,16 +72,16 @@ export async function update () {
   <h2>${form.name}</h2>
 
   <div class="callout success confirmation-text hide">
-      <h5 class="">${form.confirmationText || "Thanks!"}</h5>
+      <h5 class="">${form.confirmationText || "Thanks, we've recieved your answers!"}</h5>
   </div>
   <div class="callout primary into-text">
       <h5 class="">${form.introText}</h5>
   </div>
 
-  <form class="grid-x grid-margin-y" on-submit="${(evt:any)=> submit(evt)}">
+  <form class="grid-x grid-margin-y" on-submit="${(evt:Event) => submit(evt, form)}">
       ${questions}
 
-      ${submission ? null :html`<div class="cell small-12">
+      ${submission ? null : html`<div class="cell small-12">
           <button type="submit" class="button submit-button">Submit</button>
       </div>`}
   </form>
