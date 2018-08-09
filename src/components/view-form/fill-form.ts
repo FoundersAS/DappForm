@@ -1,8 +1,8 @@
-import Bench from '../../util/bench'
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission, getForm, getPublishPath } from 'dappform-forms-api'
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
+import * as  settings from '../../settings'
 
 const blockstack = require('blockstack')
 
@@ -57,12 +57,26 @@ export async function update () {
     evt.preventDefault();
     (el.querySelector('[type="submit"]') as HTMLButtonElement).disabled = true
 
-    const submission = collectAnswers()
-    submission.formUuid = form.uuid
+    const submission = <Submission>{
+      answers: collectAnswers(),
+      uuid: uuid(),
+      created: new Date(),
+      formUuid: form.uuid,
+    }
 
-    const authorPubkey = form.authorPubKey
-    const bench = new Bench('', authorPubkey)
-    await bench.postFile(submission)
+    const url = settings.getValue('submissionTaskUrl')
+    const body = {
+      data: submission,
+      key: form.authorPubKey
+    }
+    const res = await fetch(url, <RequestInit>{
+      mode: 'cors',
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+    })
 
     el.querySelector('.confirmation-text').classList.remove('hide')
     el.querySelector('.into-text').classList.add('hide')
@@ -95,7 +109,7 @@ export async function update () {
   )
 }
 
-function collectAnswers () {
+function collectAnswers ():Answer[] {
   const answers:Answer[] = Array.from(document.querySelectorAll('.form-answer'))
     .map((el:HTMLInputElement) => {
     return <Answer>{
@@ -105,11 +119,5 @@ function collectAnswers () {
     }
   })
 
-  const submission = <Submission>{
-    uuid: uuid(),
-    created: new Date(),
-    answers,
-  }
-
-  return submission
+  return answers
 }
