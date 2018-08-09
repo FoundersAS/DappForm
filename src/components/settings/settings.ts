@@ -53,7 +53,10 @@ async function deployTasks() {
 function renderSettings() {
   Object.keys(settings.settingsSchema).forEach((k:keyof Settings) => {
     const field = (document.querySelector(`[name=${k}]`) as HTMLInputElement)
-    field.value = settings.getValue(k) || ''
+    if (field) {
+      field.value = settings.getValue(k) || ''
+    }
+    localStorage.debug && console.debug(`Didn't have a HTML input for '${k}'`)
   })
 }
 
