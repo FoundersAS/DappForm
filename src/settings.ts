@@ -25,11 +25,11 @@ export const settingsSchema: Booleanify<Settings> = {
   webtaskId: false,
   webtaskToken: false,
   postmarkToken: false,
-  webhookUrl: false,
   postmarkFrom: false,
   submissionTaskUrl: true,
   hostingTaskUrl: true,
   statsTaskUrl: true,
+  webhookUrl: false,
 }
 
 let settings: Settings = <Settings>{}
