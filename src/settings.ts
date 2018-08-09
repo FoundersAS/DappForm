@@ -23,11 +23,11 @@ export const settingsSchema: Booleanify<Settings> = {
   webtaskId: false,
   webtaskToken: false,
   postmarkToken: false,
-  webhookUrl: false,
   postmarkFrom: false,
   submissionTaskUrl: true,
   hostingTaskUrl: true,
   statsTaskUrl: true,
+  webhookUrl: false,
 }
 
 let settings: Settings = <Settings>{}
@@ -46,6 +46,7 @@ export function setWebtaskToken(value: string): void { settings.webtaskToken = v
 export function setSubmissionTaskUrl(value: string): void { settings.submissionTaskUrl = value }
 export function setHostingTaskUrl(value: string): void { settings.hostingTaskUrl = value }
 export function setStatsTaskUrl(value: string): void { settings.statsTaskUrl = value }
+export function setWebhookUrl(value: string): void { settings.webhookUrl = value }
 
 export function getValue(key: keyof Settings): string {
   return settings[key]
