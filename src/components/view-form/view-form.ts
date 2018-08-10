@@ -16,6 +16,7 @@ export async function update () {
   const shareURL = new URL(getSettingsValue('hostingTaskUrl'))
   shareURL.searchParams.append(`author`, username)
   shareURL.searchParams.append(`form-id`, uuid)
+  shareURL.searchParams.append(`origin`, encodeURIComponent(location.origin))
 
   const submissions = await getFormSubmissions(uuid)
   const {lastWeek, total} = weeklyStats(Object.values(submissions))

@@ -11,14 +11,15 @@ export async function update () {
   const url = new URL(location.toString())
   const author = url.searchParams.get('author')
   let formUuid:string = url.searchParams.get('form-id')
-  const app = location.origin
+  const appOrigin = decodeURIComponent(url.searchParams.get('origin'))
+  console.debug("origin", appOrigin)
 
   const submission:Submission = Store.store.routeParams.submission
 
   let form:Form
 
-  if (author && formUuid) {
-    const pathToPublicForm = await blockstack.getUserAppFileUrl(getPublishPath(formUuid), author, app)
+  if (author && formUuid && appOrigin) {
+    const pathToPublicForm = await blockstack.getUserAppFileUrl(getPublishPath(formUuid), author, appOrigin)
     const res = await fetch(pathToPublicForm, {
       mode: 'cors'
     })
