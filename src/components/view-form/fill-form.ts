@@ -67,13 +67,13 @@ export async function update () {
     }
 
     const url = form.submissionsUrl
-    const encryptedFile = encryptFile(form.authorPubKey, JSON.stringify(submission))
+    const encryptedObject:Object = encryptFile(form.authorPubKey, submission)
 
     const res = await fetch(url, <RequestInit>{
       mode: 'cors',
       method: 'POST',
       body: JSON.stringify({
-        data: encryptedFile
+        data: JSON.stringify(encryptedObject)
       }),
       headers: new Headers({
         'Content-Type': 'application/json',
