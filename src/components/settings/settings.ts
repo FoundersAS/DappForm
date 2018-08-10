@@ -23,7 +23,6 @@ async function deployTasks() {
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js",
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
     {
-      BLOCKSTACK_USERNAME: blockstackUtils.username
     }
   )).webtask_url)
 
