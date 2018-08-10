@@ -5,8 +5,6 @@ import  * as settings from '../../settings'
 import { createWebTaskTask, createCronSchedule } from '../../util/webtask';
 import { Settings } from '../../settings'
 
-const blockstackUtils = new BlockstackUtils()
-
 settings.events.on('load', () => {
   renderSettings()
 })
@@ -30,14 +28,14 @@ async function deployTasks() {
     'dappform-tasks-submission',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
-    blockstackUtils.getBlockstackLocalStorage()
+    {...BlockstackUtils.getBlockstackLocalStorage()},
   )).webtask_url)
 
   settings.setValue('statsTaskUrl', (await createWebTaskTask(
     'dappform-tasks-stats',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
-    { ... blockstackUtils.getBlockstackLocalStorage(),
+    { ... BlockstackUtils.getBlockstackLocalStorage(),
       POSTMARK_TOKEN: settings.getValue('postmarkToken'),
       POSTMARK_FROM: settings.getValue('postmarkFrom'),
       POSTMARK_TO: settings.getValue('email')
@@ -55,7 +53,7 @@ function renderSettings() {
     if (field) {
       field.value = settings.getValue(k) || ''
     }
-    localStorage.debug && console.debug(`Didn't have a HTML input for '${k}'`)
+    // sessionStorage.debug && console.debug(`Didn't have a HTML input for '${k}'`)
   })
 }
 
