@@ -2,6 +2,7 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import { Answer, Form, Submission, getForm, getPublishPath } from 'dappform-forms-api'
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
+import { encryptFile } from '../../util/crypto'
 
 const blockstack = require('blockstack')
 
@@ -53,6 +54,7 @@ export async function update () {
     </div>`
   })
 
+
   const submit = async (evt:Event, form:Form) => {
     evt.preventDefault();
     (el.querySelector('[type="submit"]') as HTMLButtonElement).disabled = true
@@ -65,14 +67,14 @@ export async function update () {
     }
 
     const url = form.submissionsUrl
-    const body = {
-      data: submission,
-      key: form.authorPubKey
-    }
+    const encryptedFile = encryptFile(form.authorPubKey, JSON.stringify(submission))
+
     const res = await fetch(url, <RequestInit>{
       mode: 'cors',
       method: 'POST',
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        data: encryptedFile
+      }),
       headers: new Headers({
         'Content-Type': 'application/json',
       }),
