@@ -8,6 +8,7 @@ const ExternalDepsPlugin = new CopyWebpackPlugin([
   { from: 'node_modules/foundation-sites/dist/css/foundation.min.css', to: 'assets/foundation.min.css' },
   { from: 'node_modules/foundation-sites/dist/css/foundation.min.css.map', to: 'assets/foundation.min.css.map' },
   { from: 'src/css/style.css', to: 'assets/style.css' },
+  { from: 'package.json', to: 'package.json' },
 ]);
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
