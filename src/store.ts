@@ -71,7 +71,6 @@ export default class Store {
 
 // glue together actions and reducers
 Store.reducers.set(Store.setFormsAction, new Set([
-  (store:DefaultState) => (store.route === Route.FormsList),
 ]))
 
 Store.reducers.set(Store.setRouteAction, new Set([
