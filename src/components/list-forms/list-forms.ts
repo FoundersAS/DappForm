@@ -7,11 +7,10 @@ export async function init () {
   const forms: Partial<Form>[] = await getForms()
 
   forms.filter(form => form.created && form.uuid && form.name)
-    .map(form => {
+    .forEach(form => {
       form.created = new Date(form.created)
       form.modified = new Date(form.modified)
-      return form
-    }) as Partial<Form>[] // now they're sanitized
+    })
 
   Store.setFormsAction(forms)
   update()
