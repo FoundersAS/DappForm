@@ -19,6 +19,7 @@ export function update() {
     const newForm = collectForm()
 
     await createForm(newForm)
+    await wait(0.5) // hax: give blockstack a little time to refresh forms.json file (seems to be needed even though we await updating forms.json)
 
     Store.setRouteAction(Route.FormsList)
   }
@@ -137,4 +138,8 @@ function renderLeaf(q:Question) {
   </div>
 </div>
   `
+}
+
+function wait (sec:number) {
+  return new Promise(resolve => setTimeout(() => resolve(), sec * 1000))
 }
