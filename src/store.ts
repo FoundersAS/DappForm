@@ -1,13 +1,16 @@
 import { Form } from 'dappform-forms-api'
 import { persist, Route, update as routeUpdate } from './components/router'
 import { update as navUpdate } from './components/nav/nav'
+import { Settings } from './settings'
 
 interface Dict {[k: string]: any}
 
-interface DefaultState extends Dict {
+interface DefaultState {
   forms: Partial<Form>[]
   route: Route
   routeParams: Dict
+  settings: Settings
+  settingsLoaded:boolean
 }
 
 interface ReadonlyList<T> {
@@ -26,6 +29,8 @@ export default class Store {
     forms: <Partial<Form>>[],
     route: Route.Login,
     routeParams: <Dict>{},
+    settings: <Settings>{},
+    settingsLoaded: false
   }
 
   static get store():Readonly<DefaultState> {
@@ -52,6 +57,16 @@ export default class Store {
     this._store.routeParams = routeParams
     Store.callReducers(Store.setRouteAction)
   }
+
+  static setSettingsAction(settings:Settings) {
+    this._store.settings = settings
+    Store.callReducers(Store.setSettingsAction)
+  }
+
+  static setSettingsLoadedAction(isLoaded:boolean) {
+    this._store.settingsLoaded = isLoaded
+    Store.callReducers(Store.setSettingsLoadedAction)
+  }
 }
 
 // glue together actions and reducers
@@ -63,4 +78,10 @@ Store.reducers.set(Store.setRouteAction, new Set([
   routeUpdate,
   navUpdate,
   persist,
+]))
+
+Store.reducers.set(Store.setSettingsAction, new Set([
+]))
+
+Store.reducers.set(Store.setSettingsLoadedAction, new Set([
 ]))

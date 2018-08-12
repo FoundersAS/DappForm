@@ -1,5 +1,5 @@
 import { putFile, getFile } from "./util/write";
-import { EventEmitter } from "events";
+import Store from './store'
 
 type Booleanify<T> = {
   [P in keyof T]: boolean
@@ -32,31 +32,26 @@ export const settingsSchema: Booleanify<Settings> = {
   webhookUrl: false,
 }
 
-let settings: Settings = <Settings>{}
-
-export const events = new EventEmitter()
-
 export function getValue(key: keyof Settings): string {
-  return settings[key]
+  return Store.store.settings[key]
 }
 
 export function setValue(key: keyof Settings, value: string): void {
-  settings[key] = value
+  Store.store.settings[key] = value
 }
 
 export async function loadSettings() {
-  getFile('settings.json').then(async (s: Settings) => {
+  const s = await getFile('settings.json')
+  if (typeof s === "object") {
     console.log('Settings from storage: ', s)
-    if (typeof s === "object") {
-      settings = {...settings, ...s}
-    }
-    events.emit('load')
-  })
+    Store.setSettingsAction({...s as Settings, ...Store.store.settings})
+    Store.setSettingsLoadedAction(true)
+  }
+  else {
+    console.warn("Failed loading settings from storage")
+  }
 }
 
 export async function saveSettings() {
-  console.assert(typeof settings === "object", 'settings must be an object')
-  await putFile('settings.json', settings)
-  console.log('Settings Saved: ', settings)
-  events.emit('save')
+  await putFile('settings.json', Store.store.settings)
 }

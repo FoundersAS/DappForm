@@ -5,14 +5,14 @@ const blockstack = require('blockstack')
 import Store from './store'
 import { Route } from './components/router'
 
-function routeLoggedIn () {
+async function routeLoggedIn () {
   const savedRoute: number = parseInt(sessionStorage.route, 10)
   let savedRouteParams:any = sessionStorage.routeParams
   if (savedRouteParams) savedRouteParams = JSON.parse(savedRouteParams)
   const route: Route = (Route[savedRoute]) ? savedRoute : Route.FormsList
-  Store.setRouteAction(route, savedRouteParams || {})
 
-  loadSettings()
+  await loadSettings()
+  Store.setRouteAction(route, savedRouteParams || {})
 }
 
 function main () {

@@ -3,11 +3,8 @@ import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import  * as settings from '../../settings'
 
 import { createWebTaskTask, createCronSchedule } from '../../util/webtask';
-import { Settings } from '../../settings'
-
-settings.events.on('load', () => {
-  renderSettings()
-})
+import { loadSettings, Settings } from '../../settings'
+import Store from '../../store'
 
 function sendReports() {
   fetch(settings.getValue('statsTaskUrl')).then(console.log)
@@ -85,6 +82,10 @@ function renderSettingFields() {
 
 export async function update() {
   const el = document.querySelector('settings-view')
+
+  if (!Store.store.settingsLoaded) {
+    await loadSettings()
+  }
 
   const settingsFields = renderSettingFields()
 
