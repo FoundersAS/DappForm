@@ -45,13 +45,7 @@ export function update() {
         <input type="text" name="confirmation-text">
     </label>
   </div>
-  <div class="cell small-6">
-    <label>
-        Weekly report to
-        <input type="email" name="weekly-report">
-    </label>
-  </div>
-
+ 
   <div class="cell small-12">
     ${questionsListTpl}
   </div>
@@ -84,7 +78,6 @@ function collectForm ():Form {
     name: (document.querySelector('[name=form-name]') as HTMLInputElement).value,
     introText: (document.querySelector('[name=intro-text]') as HTMLInputElement).value,
     confirmationText: (document.querySelector('[name=confirmation-text]') as HTMLInputElement).value,
-    weeklyReportRecipient: (document.querySelector('[name=weekly-report]') as HTMLInputElement).value,
     submissionsUrl: settings.getValue('submissionTaskUrl'),
   }
 
