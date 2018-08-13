@@ -2,7 +2,7 @@ import { Answer, Form, getForm, getPublishPath, Submission } from 'dappform-form
 import Store from '../../store'
 import { v4 as uuid } from 'uuid'
 import { encryptFile } from '../../util/crypto'
-import {renderForm} from '../../../node_modules/dappform-filler/index'
+import {renderForm} from 'dappform-filler'
 
 const blockstack = require('blockstack')
 
