@@ -1,12 +1,13 @@
 {
   "name": "dapp-form",
-  "version": "10.0.6",
+  "version": "10.0.7",
   "description": "static content",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
     "build": "rm -rf docs/ && webpack --config webpack.prod.js",
     "push": "yarn build && git add docs; git commit -m 'new build'; git push; open https://dappform.takectrl.io",
-    "preversion": "npm run build"
+    "preversion": "npm run build",
+    "ts-compile": "node node_modules/typescript/bin/tsc -p tsconfig.json"
   },
   "author": "npm2016@ragelse.dk",
   "license": "ISC",
