@@ -25,7 +25,8 @@ async function deployTasks() {
     'dappform-tasks-submission',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
-    {...BlockstackUtils.getBlockstackLocalStorage()},
+    {...BlockstackUtils.getBlockstackLocalStorage(),
+      BLOCKSTACK_APP_PRIVATE_KEY: new BlockstackUtils().privateKey},
   )).webtask_url)
 
   settings.setValue('statsTaskUrl', (await createWebTaskTask(
