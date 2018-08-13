@@ -17,10 +17,7 @@ async function routeLoggedIn () {
 
 function main () {
   // hax
-  if (location.toString().includes('form-id')) {
-    Store.setRouteAction( Route.Fill )
-  }
-  else if (blockstack.isUserSignedIn()) {
+  if (blockstack.isUserSignedIn()) {
     routeLoggedIn()
   }
   else if (blockstack.isSignInPending()) {
