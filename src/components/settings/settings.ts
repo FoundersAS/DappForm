@@ -21,7 +21,7 @@ interface SettingViewModel {
 type tuple = [keyof Settings, boolean]
 
 function sendReports() {
-  fetch(settings.getValue('statsTaskUrl')).then(console.log)
+  fetch(settings.getValue('statsTaskUrl')).then(console.log,console.warn).catch(console.warn)
 }
 
 export const codeBases = <{readonly[k: string]: string}>{
@@ -75,7 +75,6 @@ async function saveUserDefinedSettings() {
 }
 
 export async function update() {
-  console.log("update()")
   const el = document.querySelector('settings-view')
   let helpText:string
   if (!Store.store.settingsLoaded) {
