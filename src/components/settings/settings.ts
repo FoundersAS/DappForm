@@ -6,13 +6,24 @@ import { createWebTaskTask, createCronSchedule } from '../../util/webtask';
 import { loadSettings, Settings } from '../../settings'
 import Store from '../../store'
 
+interface SettingViewModel {
+  key: string
+  value: string
+  readonly: boolean
+  label: string
+  helpText: string
+  type: "text" | "number" | "email"
+  versionPromise: Promise<string>
+  required: boolean
+}
+
+type tuple = [keyof Settings, boolean]
+
 function sendReports() {
   fetch(settings.getValue('statsTaskUrl')).then(console.log)
 }
 
 async function deployTasks() {
-  saveUserDefinedSettings()
-
   settings.setValue('hostingTaskUrl', (await createWebTaskTask(
     'dappform-tasks-host',
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js",
@@ -41,67 +52,78 @@ async function deployTasks() {
   )).webtask_url)
 
   await createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'))
-
-  saveSettings()
+  await saveUserDefinedSettings()
+  update()
 }
 
-function renderSettings() {
-  Object.keys(settings.settingsSchema).forEach((k:keyof Settings) => {
-    const field = (document.querySelector(`[name=${k}]`) as HTMLInputElement)
-    if (field) {
-      field.value = settings.getValue(k) || ''
-    }
-    // sessionStorage.debug && console.debug(`Didn't have a HTML input for '${k}'`)
-  })
-}
-
-function saveUserDefinedSettings() {
-  Object.entries(settings.settingsSchema).filter(([key, readonly]) => {
-    return !readonly
-  }).forEach(([key, readonly]) => {
-    settings.setValue(key as keyof Settings, (document.querySelector(`[name=${key}]`) as HTMLInputElement).value)
+async function saveUserDefinedSettings() {
+  Object.entries(settings.settingsSchema)
+    .filter(([key, readonly]:tuple) => !readonly)
+    .forEach(([key]:tuple) => {
+      settings.setValue(key, (document.querySelector(`[name=${key}]`) as HTMLInputElement).value)
   })
 
-  saveSettings()
-}
-
-function saveSettings() {
-  settings.saveSettings()
-  renderSettings()
-}
-
-function renderSettingFields() {
-  return Object.entries(settings.settingsSchema).map(([key, readonly]) => {
-    return html`
-      <label>
-        ${key}
-        <input type="text" name="${key}" readonly?=${readonly}>
-      </label>
-    `
-  })
+  await settings.saveSettings()
+  update()
 }
 
 export async function update() {
+  console.log("update()")
   const el = document.querySelector('settings-view')
 
   if (!Store.store.settingsLoaded) {
     await loadSettings()
   }
+  const rows:SettingViewModel[] = Object.entries(settings.settingsSchema).map(([key, readonly]:tuple) => {
+    let versionPromise:Promise<string|void>
+    const lookupVersionForKey = readonly // it just so happens that the read-only keys are all web tasks
+    if (lookupVersionForKey) {
+      const url = new URL(settings.getValue(key))
+      url.pathname = `${url.pathname}/package.json`
+      versionPromise = fetch(url.toString())
+        .then(res => res.json())
+        .then(packageJson => (typeof packageJson === "object") ? `version ${packageJson.version}` : "package.json not found")
+        .catch(reason => console.warn("Getting version failed", reason))
+    }
 
-  const settingsFields = renderSettingFields()
+    const helpText = ''
+    const value = settings.getValue(key)
+    const type = key.includes("email") ? "email" : "text"
+    const required = false
+
+    return <SettingViewModel>{
+      type,
+      readonly,
+      key,
+      value,
+      helpText,
+      versionPromise,
+      required,
+    }
+  })
 
   const tpl = html`
     <h3>Settings</h3>
 
-    <div class="grid-x grid-margin-x">
-      <div class="cell small-6">
+    <div class="grid-x grid-margin-y">
+      <div class="cell medium-12">
         <button class="button" on-click="${saveUserDefinedSettings}">Save</button>
         <button class="button success" on-click="${deployTasks}">Deploy Tasks</button>
         <button class="button success" on-click="${sendReports}">Send Reports</button>
-        ${settingsFields}
       </div>
+      
+      <form class="grid-x grid-margin-x grid-margin-y">
+        ${rows.map((vm) => html`            
+          <div class="cell medium-6">
+            <label>
+              ${vm.key}
+              <input type="${vm.type}" name="${vm.key}" readonly?=${vm.readonly} required?=${vm.readonly}>
+            </label>
+            <p class="help-text">${vm.helpText} ${vm.versionPromise}</p>
+          </div>
+        `)}
+      </form>
     </div>
   `
   render(tpl, el)
-  renderSettings()
 }
