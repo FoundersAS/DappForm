@@ -13,7 +13,8 @@ interface SettingViewModel {
   label: string
   helpText: string
   type: "text" | "number" | "email"
-  versionPromise: Promise<string>
+  deployedVersionPromise: Promise<string>
+  githubVersionPromise: Promise<string>
   required: boolean
 }
 
@@ -21,6 +22,12 @@ type tuple = [keyof Settings, boolean]
 
 function sendReports() {
   fetch(settings.getValue('statsTaskUrl')).then(console.log)
+}
+
+export const codeBases = <{readonly[k: string]: string}>{
+  hostingTaskUrl:   'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json',
+  submissionTaskUrl:'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
+  statsTaskUrl:     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
 }
 
 async function deployTasks() {
@@ -70,23 +77,29 @@ async function saveUserDefinedSettings() {
 export async function update() {
   console.log("update()")
   const el = document.querySelector('settings-view')
-
+  let helpText:string
   if (!Store.store.settingsLoaded) {
     await loadSettings()
   }
   const rows:SettingViewModel[] = Object.entries(settings.settingsSchema).map(([key, readonly]:tuple) => {
-    let versionPromise:Promise<string|void>
+    let deployedVersionPromise:Promise<string|void>
+    let githubVersionPromise:Promise<string|void>
+
     const lookupVersionForKey = readonly // it just so happens that the read-only keys are all web tasks
-    if (lookupVersionForKey) {
+    if (settings.getValue(key) && lookupVersionForKey) {
       const url = new URL(settings.getValue(key))
       url.pathname = `${url.pathname}/package.json`
-      versionPromise = fetch(url.toString())
-        .then(res => res.json())
-        .then(packageJson => (typeof packageJson === "object") ? `version ${packageJson.version}` : "package.json not found")
-        .catch(reason => console.warn("Getting version failed", reason))
+      deployedVersionPromise = fetch(url.toString())
+        .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200 for "+ res.url))
+        .then(packageJson => (typeof packageJson === "object") ? `Version ${packageJson.version}` : "package.json not valid")
+        .catch(reason => console.warn("Getting deployed version failed. ", reason))
+
+      githubVersionPromise = fetch(codeBases[key])
+        .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200"))
+        .then(packageJson => (typeof packageJson === "object") ? `Latest ${packageJson.version}` : "package.json not valid")
+        .catch(reason => console.warn("Getting latest version failed. ", reason))
     }
 
-    const helpText = ''
     const value = settings.getValue(key)
     const type = key.includes("email") ? "email" : "text"
     const required = false
@@ -97,7 +110,8 @@ export async function update() {
       key,
       value,
       helpText,
-      versionPromise,
+      deployedVersionPromise,
+      githubVersionPromise,
       required,
     }
   })
@@ -119,7 +133,7 @@ export async function update() {
               ${vm.key}
               <input type="${vm.type}" name="${vm.key}" readonly?=${vm.readonly} required?=${vm.readonly}>
             </label>
-            <p class="help-text">${vm.helpText} ${vm.versionPromise}</p>
+            <p class="help-text">${vm.helpText} ${vm.deployedVersionPromise} ${vm.githubVersionPromise}</p>
           </div>
         `)}
       </form>
