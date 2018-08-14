@@ -59,7 +59,7 @@ async function deployTasks() {
   )).webtask_url)
 
   await createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'))
-  await saveUserDefinedSettings()
+  await settings.saveSettings()
   update()
 }
 
@@ -131,7 +131,7 @@ export async function update() {
           <div class="cell medium-6">
             <label>
               ${vm.key}
-              <input type="${vm.type}" name="${vm.key}" readonly?=${vm.readonly} required?=${vm.readonly}>
+              <input type="${vm.type}" name="${vm.key}" value="${vm.value}" readonly?=${vm.readonly} required?=${vm.readonly}>
             </label>
             <p class="help-text">${vm.helpText} ${vm.deployedVersionPromise} ${vm.githubVersionPromise}</p>
           </div>
