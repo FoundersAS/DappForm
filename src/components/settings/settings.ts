@@ -88,11 +88,11 @@ export async function update() {
     const lookupVersionForKey = readonly // it just so happens that the read-only keys are all web tasks
     if (settings.getValue(key) && lookupVersionForKey) {
       const url = new URL(settings.getValue(key))
-      url.pathname = `${url.pathname}/package.json`
+      url.pathname = `${url.pathname}/version`
       deployedVersionPromise = fetch(url.toString())
-        .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200 for "+ res.url))
-        .then(packageJson => (typeof packageJson === "object") ? `Version ${packageJson.version}` : "package.json not valid")
-        .catch(reason => console.warn("Getting deployed version failed. ", reason))
+        .then(res => (res.status < 300) ? res.text() : Promise.reject("Status not 200 for "+ res.url))
+        .then(versionString => `Deployed ${versionString}`)
+        .catch(reason => console.warn(`Getting deployed version failed ${url.toString()}. `, reason))
 
       githubVersionPromise = fetch(codeBases[key])
         .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200"))

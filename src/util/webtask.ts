@@ -11,6 +11,7 @@ function getCronUrl(taskName: string) {
 export async function createWebTaskTask(taskName: string, taskCodeUrl: string, taskPackageUrl: string, taskSecrets: any = {}) {
   const p = await fetch(taskPackageUrl).then((res) => { return res.json() })
   taskSecrets.version = p.version
+  console.debug(`Deploying ${taskName} v${p.version}`)
   return (await fetch(getTaskUrl(taskName), {
     method: 'PUT',
     body: JSON.stringify({
