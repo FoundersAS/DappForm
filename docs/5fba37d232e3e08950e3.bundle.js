@@ -86654,65 +86654,89 @@ const store_1 = __webpack_require__(/*! ../../store */ "./src/store.ts");
 function sendReports() {
     fetch(settings.getValue('statsTaskUrl')).then(console.log);
 }
+exports.codeBases = {
+    hostingTaskUrl: 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json',
+    submissionTaskUrl: 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
+    statsTaskUrl: 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
+};
 async function deployTasks() {
-    saveUserDefinedSettings();
     settings.setValue('hostingTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-host', "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js", "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json", {})).webtask_url);
     settings.setValue('submissionTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-submission', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json', Object.assign({}, blockstackUtils_1.default.getBlockstackLocalStorage(), { BLOCKSTACK_APP_PRIVATE_KEY: new blockstackUtils_1.default().privateKey }))).webtask_url);
     settings.setValue('statsTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-stats', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json', Object.assign({}, blockstackUtils_1.default.getBlockstackLocalStorage(), { POSTMARK_TOKEN: settings.getValue('postmarkToken'), POSTMARK_FROM: settings.getValue('postmarkFrom'), POSTMARK_TO: settings.getValue('email') }))).webtask_url);
     await webtask_1.createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'));
-    saveSettings();
+    await settings.saveSettings();
+    update();
 }
-function renderSettings() {
-    Object.keys(settings.settingsSchema).forEach((k) => {
-        const field = document.querySelector(`[name=${k}]`);
-        if (field) {
-            field.value = settings.getValue(k) || '';
-        }
-        // sessionStorage.debug && console.debug(`Didn't have a HTML input for '${k}'`)
-    });
-}
-function saveUserDefinedSettings() {
-    Object.entries(settings.settingsSchema).filter(([key, readonly]) => {
-        return !readonly;
-    }).forEach(([key, readonly]) => {
+async function saveUserDefinedSettings() {
+    Object.entries(settings.settingsSchema)
+        .filter(([key, readonly]) => !readonly)
+        .forEach(([key]) => {
         settings.setValue(key, document.querySelector(`[name=${key}]`).value);
     });
-    saveSettings();
-}
-function saveSettings() {
-    settings.saveSettings();
-    renderSettings();
-}
-function renderSettingFields() {
-    return Object.entries(settings.settingsSchema).map(([key, readonly]) => {
-        return lit_extended_1.html `
-      <label>
-        ${key}
-        <input type="text" name="${key}" readonly?=${readonly}>
-      </label>
-    `;
-    });
+    await settings.saveSettings();
+    update();
 }
 async function update() {
+    console.log("update()");
     const el = document.querySelector('settings-view');
+    let helpText;
     if (!store_1.default.store.settingsLoaded) {
         await settings_1.loadSettings();
     }
-    const settingsFields = renderSettingFields();
+    const rows = Object.entries(settings.settingsSchema).map(([key, readonly]) => {
+        let deployedVersionPromise;
+        let githubVersionPromise;
+        const lookupVersionForKey = readonly; // it just so happens that the read-only keys are all web tasks
+        if (settings.getValue(key) && lookupVersionForKey) {
+            const url = new URL(settings.getValue(key));
+            url.pathname = `${url.pathname}/version`;
+            deployedVersionPromise = fetch(url.toString())
+                .then(res => (res.status < 300) ? res.text() : Promise.reject("Status not 200 for " + res.url))
+                .then(versionString => `Deployed ${versionString}`)
+                .catch(reason => console.warn(`Getting deployed version failed ${url.toString()}. `, reason));
+            githubVersionPromise = fetch(exports.codeBases[key])
+                .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200"))
+                .then(packageJson => (typeof packageJson === "object") ? `Latest ${packageJson.version}` : "package.json not valid")
+                .catch(reason => console.warn("Getting latest version failed. ", reason));
+        }
+        const value = settings.getValue(key);
+        const type = key.includes("email") ? "email" : "text";
+        const required = false;
+        return {
+            type,
+            readonly,
+            key,
+            value,
+            helpText,
+            deployedVersionPromise,
+            githubVersionPromise,
+            required,
+        };
+    });
     const tpl = lit_extended_1.html `
     <h3>Settings</h3>
 
-    <div class="grid-x grid-margin-x">
-      <div class="cell small-6">
+    <div class="grid-x grid-margin-y">
+      <div class="cell medium-12">
         <button class="button" on-click="${saveUserDefinedSettings}">Save</button>
         <button class="button success" on-click="${deployTasks}">Deploy Tasks</button>
         <button class="button success" on-click="${sendReports}">Send Reports</button>
-        ${settingsFields}
       </div>
+      
+      <form class="grid-x grid-margin-x grid-margin-y">
+        ${rows.map((vm) => lit_extended_1.html `            
+          <div class="cell medium-6">
+            <label>
+              ${vm.key}
+              <input type="${vm.type}" name="${vm.key}" value="${vm.value}" readonly?=${vm.readonly} required?=${vm.readonly}>
+            </label>
+            <p class="help-text">${vm.helpText} ${vm.deployedVersionPromise} ${vm.githubVersionPromise}</p>
+          </div>
+        `)}
+      </form>
     </div>
   `;
     lit_extended_1.render(tpl, el);
-    renderSettings();
 }
 exports.update = update;
 
@@ -87086,6 +87110,8 @@ function getCronUrl(taskName) {
 }
 async function createWebTaskTask(taskName, taskCodeUrl, taskPackageUrl, taskSecrets = {}) {
     const p = await fetch(taskPackageUrl).then((res) => { return res.json(); });
+    taskSecrets.version = p.version;
+    console.debug(`Deploying ${taskName} v${p.version}`);
     return (await fetch(getTaskUrl(taskName), {
         method: 'PUT',
         body: JSON.stringify({
@@ -87217,4 +87243,4 @@ exports.getFile = getFile;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=656265f92aa4dcf6f647.bundle.js.map
+//# sourceMappingURL=5fba37d232e3e08950e3.bundle.js.map
