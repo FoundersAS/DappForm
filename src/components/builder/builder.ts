@@ -36,16 +36,17 @@ export function update() {
   </div>
   <div class="cell small-6">
     <label>
-        Intro text
-        <input type="text" name="intro-text">
-    </label>
-  </div>
-  <div class="cell small-6">
-    <label>
         Confirmation text
         <input type="text" name="confirmation-text">
     </label>
   </div>
+  <div class="cell small-6">
+    <label>
+        Intro text
+        <textarea type="text" name="intro-text"></textarea>
+    </label>
+  </div>
+  
  
   <div class="cell small-12">
     ${questionsListTpl}
