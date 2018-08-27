@@ -45,6 +45,12 @@ export function update() {
         Intro text
         <textarea type="text" name="intro-text"></textarea>
     </label>
+  </div> 
+  <div class="cell small-6">
+    <label>
+        Brand/primary colour
+        <input type="color" name="primary-color" value="#00bfff">
+    </label>
   </div>
   
  
@@ -80,6 +86,7 @@ function collectForm ():Form {
     name: (document.querySelector('[name=form-name]') as HTMLInputElement).value,
     introText: (document.querySelector('[name=intro-text]') as HTMLInputElement).value,
     confirmationText: (document.querySelector('[name=confirmation-text]') as HTMLInputElement).value,
+    primaryColor: (document.querySelector('[name=primary-color]') as HTMLInputElement).value,
     submissionsUrl: settings.getValue('submissionTaskUrl'),
   }
 
