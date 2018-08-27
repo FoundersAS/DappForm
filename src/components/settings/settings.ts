@@ -15,6 +15,7 @@ interface SettingViewModel {
   type: "text" | "number" | "email"
   deployedVersionPromise: Promise<string>
   githubVersionPromise: Promise<string>
+  matchPromise: Promise<string>
   required: boolean
 }
 
@@ -83,6 +84,7 @@ export async function update() {
   const rows:SettingViewModel[] = Object.entries(settings.settingsSchema).map(([key, readonly]:tuple) => {
     let deployedVersionPromise:Promise<string|void>
     let githubVersionPromise:Promise<string|void>
+    let matchPromise:Promise<any>
 
     const lookupVersionForKey = readonly // it just so happens that the read-only keys are all web tasks
     if (settings.getValue(key) && lookupVersionForKey) {
@@ -90,13 +92,23 @@ export async function update() {
       url.pathname = `${url.pathname}/version`
       deployedVersionPromise = fetch(url.toString())
         .then(res => (res.status < 300) ? res.text() : Promise.reject("Status not 200 for "+ res.url))
-        .then(versionString => `Deployed ${versionString}`)
         .catch(reason => console.warn(`Getting deployed version failed ${url.toString()}. `, reason))
 
       githubVersionPromise = fetch(codeBases[key])
         .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200"))
-        .then(packageJson => (typeof packageJson === "object") ? `Latest ${packageJson.version}` : "package.json not valid")
+        .then(packageJson => (typeof packageJson === "object") ? `${packageJson.version}` : "package.json not valid")
         .catch(reason => console.warn("Getting latest version failed. ", reason))
+
+      matchPromise = Promise.all([deployedVersionPromise, githubVersionPromise])
+          .then(results => {
+            return parseFloat((results[0] + '')) >=
+              parseFloat((results[1] + ''))
+          })
+          .then(result => {
+            return result ? html`<span class="label secondary">Up to date</span>` : html`<span class="label success">New code available!</span>`
+          })
+
+      // matchPromise.then(m => console.log(m))
     }
 
     const value = settings.getValue(key)
@@ -111,6 +123,7 @@ export async function update() {
       helpText,
       deployedVersionPromise,
       githubVersionPromise,
+      matchPromise,
       required,
     }
   })
@@ -132,7 +145,12 @@ export async function update() {
               ${vm.key}
               <input type="${vm.type}" name="${vm.key}" value="${vm.value}" readonly?=${vm.readonly} required?=${vm.readonly}>
             </label>
-            <p class="help-text">${vm.helpText} ${vm.deployedVersionPromise} ${vm.githubVersionPromise}</p>
+            <p class="help-text">
+                ${vm.helpText}
+                <span class="">${vm.matchPromise}
+                   Deployed ${vm.deployedVersionPromise} - Latest ${vm.githubVersionPromise}
+                </span>
+            </p>
           </div>
         `)}
       </form>
