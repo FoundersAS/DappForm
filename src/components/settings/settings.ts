@@ -5,6 +5,7 @@ import  * as settings from '../../settings'
 import { createWebTaskTask, createCronSchedule } from '../../util/webtask';
 import { loadSettings, Settings } from '../../settings'
 import Store from '../../store'
+import { TemplateResult } from 'lit-html'
 
 interface SettingViewModel {
   key: string
@@ -13,9 +14,7 @@ interface SettingViewModel {
   label: string
   helpText: string
   type: "text" | "number" | "email"
-  deployedVersionPromise: Promise<string>
-  githubVersionPromise: Promise<string>
-  matchPromise: Promise<string>
+  matchPromise: Promise<TemplateResult>
   required: boolean
 }
 
@@ -84,7 +83,7 @@ export async function update() {
   const rows:SettingViewModel[] = Object.entries(settings.settingsSchema).map(([key, readonly]:tuple) => {
     let deployedVersionPromise:Promise<string|void>
     let githubVersionPromise:Promise<string|void>
-    let matchPromise:Promise<any>
+    let matchPromise:Promise<TemplateResult>
 
     const lookupVersionForKey = readonly // it just so happens that the read-only keys are all web tasks
     if (settings.getValue(key) && lookupVersionForKey) {
@@ -95,18 +94,19 @@ export async function update() {
         .catch(reason => console.warn(`Getting deployed version failed ${url.toString()}. `, reason))
 
       githubVersionPromise = fetch(codeBases[key])
-        .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200"))
-        .then(packageJson => (typeof packageJson === "object") ? `${packageJson.version}` : "package.json not valid")
+        .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200 for "+codeBases[key]))
+        .then(packageJson => (typeof packageJson === "object") ? `${packageJson.version}` : "0.0.0")
         .catch(reason => console.warn("Getting latest version failed. ", reason))
 
       matchPromise = Promise.all([deployedVersionPromise, githubVersionPromise])
-          .then(results => {
-            return parseFloat((results[0] + '')) >=
-              parseFloat((results[1] + ''))
-          })
-          .then(result => {
-            return result ? html`<span class="label secondary">Up to date</span>` : html`<span class="label success">New code available!</span>`
-          })
+          .then(([deployed, githubVer]) => {
+            const match = parseFloat((deployed + '')) >= parseFloat((githubVer + '')) ? html`<span class="label secondary">Up to date</span>` : html`<span class="label success">New code available!</span>`
+            return html`
+                ${match}
+                Deployed ${deployed} --
+                Latest ${githubVer}
+              `
+            })
 
       // matchPromise.then(m => console.log(m))
     }
@@ -121,8 +121,6 @@ export async function update() {
       key,
       value,
       helpText,
-      deployedVersionPromise,
-      githubVersionPromise,
       matchPromise,
       required,
     }
@@ -146,10 +144,8 @@ export async function update() {
               <input type="${vm.type}" name="${vm.key}" value="${vm.value}" readonly?=${vm.readonly} required?=${vm.readonly}>
             </label>
             <p class="help-text">
-                ${vm.helpText}
-                <span class="">${vm.matchPromise}
-                   Deployed ${vm.deployedVersionPromise} - Latest ${vm.githubVersionPromise}
-                </span>
+                ${vm.helpText}               
+                <span>${vm.matchPromise}</span>
             </p>
           </div>
         `)}
