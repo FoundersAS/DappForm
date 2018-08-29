@@ -16,6 +16,7 @@ export interface Settings {
   submissionTaskUrl: string
   hostingTaskUrl: string
   statsTaskUrl: string
+  tasksViewCounter: string
 }
 
 // set wether readonly is true or false
@@ -29,6 +30,7 @@ export const settingsSchema: Booleanify<Settings> = {
   submissionTaskUrl: true,
   hostingTaskUrl: true,
   statsTaskUrl: true,
+  tasksViewCounter: true,
   webhookUrl: false,
 }
 
