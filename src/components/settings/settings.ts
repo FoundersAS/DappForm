@@ -28,13 +28,22 @@ export const codeBases = <{readonly[k: string]: string}>{
   hostingTaskUrl:   'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json',
   submissionTaskUrl:'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
   statsTaskUrl:     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
+  tasksViewCounter: 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/package.json',
 }
 
 async function deployTasks() {
   settings.setValue('hostingTaskUrl', (await createWebTaskTask(
     'dappform-tasks-host',
-    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/main.js",
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/index.js",
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
+    {
+    }
+  )).webtask_url)
+
+  settings.setValue('tasksViewCounter', (await createWebTaskTask(
+    'dappform-tasks-view-counter',
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/index.js",
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/package.json",
     {
     }
   )).webtask_url)
