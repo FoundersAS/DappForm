@@ -2,6 +2,7 @@ import { Form } from 'dappform-forms-api'
 import { persist, Route, update as routeUpdate } from './components/router'
 import { update as navUpdate } from './components/nav/nav'
 import { Settings } from './settings'
+import { FormRow } from './components/list-forms/list-forms'
 
 interface Dict {[k: string]: any}
 
@@ -9,6 +10,7 @@ interface DefaultState {
   forms: Partial<Form>[]
   route: Route
   routeParams: Dict
+  listView: FormRow[]
   settings: Settings
   settingsLoaded:boolean
 }
@@ -26,11 +28,11 @@ export default class Store {
   static reducers:Map<Function, Set<Function>> = new Map()
 
   private static _store = <DefaultState> { // default state
-    forms: <Partial<Form>>[],
     route: Route.Login,
     routeParams: <Dict>{},
     settings: <Settings>{},
-    settingsLoaded: false
+    settingsLoaded: false,
+    listView: <FormRow[]>[],
   }
 
   static get store():Readonly<DefaultState> {
@@ -44,12 +46,12 @@ export default class Store {
 
   // Actions
 
-  static setFormsAction(value: Partial<Form>[]) {
-    this._store.forms.length = 0
+  static setListViewAction(value: Partial<FormRow>[]) {
+    this._store.listView.length = 0
     for (let f of value) {
-      this._store.forms.push(f)
+      this._store.listView.push(f)
     }
-    Store.callReducers(Store.setFormsAction)
+    Store.callReducers(Store.setListViewAction)
   }
 
   static setRouteAction(value:Route, routeParams:Object = {}) {
@@ -70,8 +72,6 @@ export default class Store {
 }
 
 // glue together actions and reducers
-Store.reducers.set(Store.setFormsAction, new Set([
-]))
 
 Store.reducers.set(Store.setRouteAction, new Set([
   routeUpdate,
@@ -80,6 +80,10 @@ Store.reducers.set(Store.setRouteAction, new Set([
 ]))
 
 Store.reducers.set(Store.setSettingsAction, new Set([
+]))
+
+Store.reducers.set(Store.setListViewAction, new Set([
+
 ]))
 
 Store.reducers.set(Store.setSettingsLoadedAction, new Set([
