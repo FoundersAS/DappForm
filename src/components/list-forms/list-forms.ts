@@ -1,12 +1,18 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
-import { Form, getForms, getFormSubmissions } from 'dappform-forms-api'
+import { Form, getForms, getFormSubmissions, SubmissionMap } from 'dappform-forms-api'
 import { Route } from '../router'
 import Store from '../../store'
+import { getFile } from '../../util/write'
 
 export interface FormRow extends Partial<Form> {
   views?: number
   submissions?: number
   replyRatio?: number
+}
+
+type FormStats = {
+  numViews: number
+  numSubmissions: number
 }
 
 export async function init () {
@@ -24,20 +30,21 @@ export async function init () {
     }))
 
   !(async function() {
-    const maps = await Promise.all(rows.map(form => Promise.all([getFormSubmissions(form.uuid), form])))
+    const maps = await Promise.all(rows.map(form => Promise.all([getFormSubmissions(form.uuid), getFile(  `views/${form.uuid}.json`), form])))
 
     const updated = maps
-      .filter(([map]) => Object.values(map).length > 0)
-      .map(([map, row]) => {
+      .map(([map, viewsObj, row]:[SubmissionMap, FormStats|false, FormRow]) => [map, viewsObj || <FormStats>{numViews: 0,}, row])
+      .map(([map, viewsObj, row]:[SubmissionMap, FormStats, FormRow]) => {
         row.submissions = Object.values(map).length
-        row.views = -1
-        row.replyRatio = -1
+        row.views = viewsObj.numViews
+        row.replyRatio = (row.views > 0) ? Math.round( (row.submissions/row.views) * 10 ** 2 ) : 0
         return row
       })
 
     Store.setListViewAction(updated)
     update()
   })()
+
 
   Store.setListViewAction(rows)
   update()
