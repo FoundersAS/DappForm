@@ -1,5 +1,5 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
-import { createForm, Form, Question } from 'dappform-forms-api'
+import { createForm, Form, getForm, Question } from 'dappform-forms-api'
 import Store from '../../store'
 import { Route } from '../router'
 
@@ -10,9 +10,34 @@ import * as settings from '../../settings'
 
 const questions = <Question[]>[]
 
+export function init () {
+  questions.length = 0
+  update()
+
+  const templateFrom:string = Store.store.routeParams.formToCopy
+  if (templateFrom) {
+    applyTemplate(templateFrom)
+  }
+}
+
+async function applyTemplate (formUuid:string) {
+  const form = await getForm(formUuid);
+
+  (document.querySelector('[name=form-name]') as HTMLInputElement).value = form.name || '';
+  (document.querySelector('[name=intro-text]') as HTMLInputElement).value = form.introText || '';
+  (document.querySelector('[name=confirmation-text]') as HTMLInputElement).value = form.confirmationText || '';
+  (document.querySelector('[name=primary-color]') as HTMLInputElement).value = form.primaryColor || '';
+  (document.querySelector('[name=intro-background-url]') as HTMLInputElement).value = form.introImageURL || '';
+
+  form.questions.forEach(q => {
+    questions.push(q)
+  })
+
+  update()
+}
+
 export function update() {
   const el:HTMLElement = document.querySelector(`build-form`)
-  const questionsListTpl = questions.map(renderLeaf)
 
   const save = async (evt:MouseEvent) => {
     (evt.target as HTMLButtonElement).disabled = true
@@ -61,7 +86,32 @@ export function update() {
   
  
   <div class="cell small-12">
-    ${questionsListTpl}
+    ${questions.map(q => 
+    html`
+    <div class="grid-x grid-margin-x grid-margin-y question-item">
+      <div class="cell auto">
+        <label>Question label
+          <input type='text' name="${q.name}" value="${q.label}" placeholder="Question label">
+        </label>
+      </div>
+      <div class="cell small-3">
+        <label>Type
+          <select name="${q.name}-q-type">
+              <option selected?="${q.type === 'text'}">text</option>
+              <option selected?="${q.type === 'email'}">email</option>
+              <option selected?="${q.type === 'number'}">number</option>
+              <option selected?="${q.type === 'datetime-local'}">datetime-local</option>
+              <option selected?="${q.type === 'tel'}">tel</option>
+              <option selected?="${q.type === 'url'}">url</option>
+          </select>
+        </label>
+      </div>
+      <div class="cell shrink align-self-bottom">
+        <button data-uuid$="${q.uuid}" on-click="${(evt:Event) => removeField(evt)}" class="hollow button warning expanded" type="button">Remove</button>
+      </div>
+    </div>
+  `)}
+    
   </div>
 
   <div class="cell small-12">
@@ -126,33 +176,6 @@ function addField (questions:Question[]) {
 function removeField (event:Event) {
   (event.target as HTMLButtonElement).parentElement.parentElement.classList.add('hide');
   (event.target as HTMLButtonElement).parentElement.parentElement.classList.remove('question-item')
-}
-
-function renderLeaf(q:Question) {
-  return html`
-<div class="grid-x grid-margin-x grid-margin-y question-item">
-  <div class="cell auto">
-    <label>Question label
-      <input type='text' name="${q.name}" placeholder="Question label">
-    </label>
-  </div>
-  <div class="cell small-3">
-    <label>Type
-      <select name="${q.name}-q-type">
-          <option>text</option>
-          <option>email</option>
-          <option>number</option>
-          <option>datetime-local</option>
-          <option>tel</option>
-          <option>url</option>
-      </select>
-    </label>
-  </div>
-  <div class="cell shrink align-self-bottom">
-    <button data-uuid$="${q.uuid}" on-click="${(evt:Event) => removeField(evt)}" class="hollow button warning expanded" type="button">Remove</button>
-  </div>
-</div>
-  `
 }
 
 function wait (sec:number) {

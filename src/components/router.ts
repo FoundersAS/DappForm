@@ -2,7 +2,7 @@ import Store from '../store'
 import { update as loginInit } from './login/login'
 import { update as viewFormInit } from './view-form/view-form'
 import { init as listFormsInit } from './list-forms/list-forms'
-import { update as buildInit } from './builder/builder'
+import { init as buildInit } from './builder/builder'
 import { update as viewSubmissionInit } from './view-submissions/view-submissions'
 import { update as settingsViewInit } from './settings/settings'
 

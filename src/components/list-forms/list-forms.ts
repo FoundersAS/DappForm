@@ -99,9 +99,10 @@ export function update () {
       <div class="cell small-2">
           ${formatDate(form.created)}
       </div>
-      <div class="cell small-2 text-right">
-          <button class="clear button link" on-click="${() => exportCsv(form.uuid) }" disabled?="${form.submissions === 0}">CSV</button>
-          <button class="clear button link" on-click="${() => Store.setRouteAction(Route.FormView, {formId: form.uuid}) }">View</button>
+      <div class="cell small-2 text-right" style="white-space: nowrap">
+          <button class="clear button link small" on-click="${() => exportCsv(form.uuid) }" disabled?="${form.submissions === 0}">CSV</button>
+          <button class="clear button link small" on-click="${() => Store.setRouteAction(Route.Build, {formToCopy: form.uuid}) }">Copy</button>
+          <button class="clear button link small" on-click="${() => Store.setRouteAction(Route.FormView, {formId: form.uuid}) }">View</button>
       </div>
     </div>
     `)}
