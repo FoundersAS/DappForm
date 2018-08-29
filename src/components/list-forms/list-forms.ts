@@ -29,21 +29,20 @@ export async function init () {
       ...form,
     }))
 
-  !(async function() {
-    const maps = await Promise.all(rows.map(form => Promise.all([getFormSubmissions(form.uuid), getFile(  `views/${form.uuid}.json`), form])))
-
-    const updated = maps
-      .map(([map, viewsObj, row]:[SubmissionMap, FormStats|false, FormRow]) => [map, viewsObj || <FormStats>{numViews: 0,}, row])
-      .map(([map, viewsObj, row]:[SubmissionMap, FormStats, FormRow]) => {
-        row.submissions = Object.values(map).length
-        row.views = viewsObj.numViews
-        row.replyRatio = (row.views > 0) ? Math.round( (row.submissions/row.views) * 10 ** 2 ) : 0
-        return row
+    Promise.all(rows.map(form => Promise.all([getFormSubmissions(form.uuid), getFile(  `views/${form.uuid}.json`), form])))
+      .then(maps => {
+        const updatedRows = maps
+          .map(([map, viewsObj, row]:[SubmissionMap, FormStats|false, FormRow]) => [map, viewsObj || <FormStats>{numViews: 0,}, row])
+          .map(([map, viewsObj, row]:[SubmissionMap, FormStats, FormRow]) => {
+            row.submissions = Object.values(map).length
+            row.views = viewsObj.numViews
+            row.replyRatio = (row.views > 0) ? Math.round( (row.submissions/row.views) * 10 ** 2 ) : 0
+            return row
+        })
+        Store.setListViewAction(updatedRows)
+        update()
       })
-
-    Store.setListViewAction(updated)
-    update()
-  })()
+      .catch(err => console.error(err))
 
 
   Store.setListViewAction(rows)
