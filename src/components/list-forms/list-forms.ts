@@ -1,5 +1,5 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
-import { Form, getForms, getFormSubmissions, SubmissionMap } from 'dappform-forms-api'
+import { Form, getForm, getForms, getFormSubmissions, SubmissionMap } from 'dappform-forms-api'
 import { Route } from '../router'
 import Store from '../../store'
 import { getFile } from '../../util/write'
@@ -100,6 +100,7 @@ export function update () {
           ${formatDate(form.created)}
       </div>
       <div class="cell small-2 text-right">
+          <button class="clear button link" on-click="${() => exportCsv(form.uuid) }" disabled?="${form.submissions === 0}">CSV</button>
           <button class="clear button link" on-click="${() => Store.setRouteAction(Route.FormView, {formId: form.uuid}) }">View</button>
       </div>
     </div>
@@ -107,6 +108,37 @@ export function update () {
   `
   const el:HTMLElement = document.querySelector('forms-list')
   render(tpl, el)
+}
+
+async function exportCsv(uuid:string) {
+  const [form, submissionsMap] = await Promise.all([
+    getForm(uuid),
+    getFormSubmissions(uuid),
+  ])
+  const questions = form.questions
+  const submissions = Object.values(submissionsMap)
+  console.assert(submissions.length > 0, 'should have submissions')
+
+  const comma = "," // lol
+  const newLine = '\n'
+  const enclose = '"'
+
+  const headers:string = questions.map(q => q.label)
+    .map(val => enclose + val.replace(/[^a-z0-9 ]/ig,'').toLowerCase() + enclose)
+    .join(comma)
+
+  const values:string = submissions
+    .map(s => s.answers
+      .map(ans => ans.value) // return only answer text
+      .map(val => val.replace(new RegExp(newLine, 'g'), ' ')) // escape new lines
+      .map(val => enclose + val.replace(new RegExp(enclose, 'g'),'\\'+enclose) + enclose) // enclose values
+      .join(comma))
+    .join(newLine)
+
+  const file = new Blob([headers + newLine + values], {type : 'text/csv'})
+  // const file = new File([headers + values], 'export.csv')
+  const url = URL.createObjectURL(file);
+  (location as any) = url // typescript doesn't like it, but is totally cool.
 }
 
 function formatDate (date: Date | string):string {
