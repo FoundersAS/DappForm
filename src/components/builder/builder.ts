@@ -103,6 +103,7 @@ export function update() {
               <option selected?="${q.type === 'datetime-local'}">datetime-local</option>
               <option selected?="${q.type === 'tel'}">tel</option>
               <option selected?="${q.type === 'url'}">url</option>
+              <option selected?="${q.type === 'file'}" value="file">file attachment</option>
           </select>
         </label>
       </div>
