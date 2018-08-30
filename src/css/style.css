@@ -16,9 +16,7 @@ button.link {
 input:invalid {
     box-shadow: 0 0 3px red;
 }
-input[required]:valid {
-    box-shadow: 0 0 3px lime;
-}
+
 
 .hide {
     display: none;
