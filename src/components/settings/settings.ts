@@ -109,7 +109,7 @@ export async function update() {
 
       matchPromise = Promise.all([deployedVersionPromise, githubVersionPromise])
           .then(([deployed, githubVer]) => {
-            const match = parseFloat((deployed + '')) >= parseFloat((githubVer + '')) ? html`<span class="label secondary">Up to date</span>` : html`<span class="label success">New code available!</span>`
+            const match = (deployed === githubVer) ? html`<span class="label secondary">Up to date</span>` : html`<span class="label success">New code available!</span>`
             return html`
                 ${match}
                 Deployed ${deployed} --
