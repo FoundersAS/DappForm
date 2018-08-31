@@ -130,7 +130,7 @@ async function exportCsv(uuid:string) {
 
   const values:string = submissions
     .map(s => s.answers
-      .map(ans => ans.value) // return only answer text
+      .map(ans => ans.value + "") // toString everything
       .map(ans => (ans.indexOf('http') === 0 && ans.includes('gaia')) ? ans.substr(ans.lastIndexOf(".")) + " file" : ans) // detect file upload link
       .map(val => val.replace(new RegExp(newLine, 'g'), ' ')) // escape new lines
       .map(val => enclose + val.replace(new RegExp(enclose, 'g'),'\\'+enclose) + enclose) // enclose values
