@@ -1,7 +1,34 @@
 import { html, render } from '../../../node_modules/lit-html/lib/lit-extended'
 import Store from '../../store'
 import { Route } from '../router'
-import { getFormSubmissions, getForm } from 'dappform-forms-api'
+import { getForm, getFormSubmissions } from 'dappform-forms-api'
+import { getAnyFile } from '../../util/write'
+
+const extMimeMap = new Map([
+  ['txt',  'text/plain'],
+  ['csv',  'text/csv'],
+  ['jpeg', 'image/jpeg'],
+  ['jpg',  'image/jpeg'],
+  ['png',  'image/png'],
+  ['js',   'application/javascript'],
+  ['xml',  'application/xml'],
+  ['xls',  'application/vnd.ms-excel'],
+])
+
+async function getDataUrl (url:string):Promise<string> {
+  const ext = url.substr( url.lastIndexOf(".")+1 )
+  const path = url.substr(url.indexOf('files/'))
+  let buffer:any = await getAnyFile(path)
+  if (!buffer) return url
+  const enc = new TextDecoder()
+  const decoded = enc.decode(buffer)
+  const blob = new Blob([...decoded], {type: extMimeMap.get(ext)})
+  return URL.createObjectURL(blob)
+}
+
+async function download (fileLink:string) {
+  location.href = await getDataUrl(fileLink);
+}
 
 export async function update() {
   const el = document.querySelector('submissions-view')
@@ -16,7 +43,13 @@ export async function update() {
   const tableRows = Object.keys(submissions)
     .map(uuid => { return { uuid, answers: submissions[uuid].answers } })
     .map(d => {
-    return html`<tr><td>${uuid}</td>${d.answers.map(a => html`<td>${a.value}</td>`)}</tr>`
+    return html`<tr><td>${uuid}</td>${d.answers.map(a => {
+      if (typeof a.value === 'string' && a.value.indexOf('http') === 0 && a.value.includes('gaia')) {
+        return html`<td><button class="button link clear small" on-click="${() => download(a.value)}">Download</button></td>`
+      }
+      return html`<td>${a.value}</td>`
+    })
+    }</tr>`
   })
 
   const table = html`

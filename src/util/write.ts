@@ -34,3 +34,21 @@ export async function getFile(path: string): Promise<Object | Boolean> {
   }
   return parsed
 }
+
+export async function getAnyFile(path: string): Promise<Buffer|undefined> {
+  let contents
+  try {
+    contents = await blockstack.getFile(path)
+  }
+  catch (e) {
+    console.log(`getFile failed`)
+    console.error(e)
+    return
+  }
+  if (!contents) {
+    console.info("Empty file. Form was probably deleted. " + path)
+    return
+  }
+
+  return contents
+}

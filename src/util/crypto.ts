@@ -4,6 +4,14 @@ const {encryptECIES, decryptECIES} = require('../../node_modules/blockstack/lib/
 
 const ecurve = new EllipticCurve('secp256k1')
 
+export type cipherObject = {
+  iv: string
+  ephemeralPK: string
+  cipherText: string
+  mac: string
+  wasString: boolean
+}
+
 interface SignedString {
   r: Object,
   s: Object,
@@ -15,16 +23,21 @@ export function signString(message: string, privateKey: string): SignedString {
   return keyFromPrivate.sign(message)
 }
 
-export function encryptFile (toKey:string, contents:Object): Object {
+export function encryptFile (toKey:string, contents:Object): cipherObject {
   const jsonContents = JSON.stringify(contents)
   return encryptECIES(toKey, jsonContents)
 }
 
-export function decryptFileWithKey (privateKey: string, cipherObj:Object): Object{
+export function decryptFileWithKey (privateKey: string, cipherObj:Object): Object {
   return JSON.parse(decryptECIES(privateKey, cipherObj))
 }
 
 export function decryptFile(cipherObj:Object): Object {
   const appPrivateKey = new blockstackUtils().privateKey
   return decryptFileWithKey(appPrivateKey, cipherObj)
+}
+
+export function decryptCipherObj(cipherObj:Object):Buffer {
+  const appPrivateKey = new blockstackUtils().privateKey
+  return decryptECIES(appPrivateKey, cipherObj)
 }
