@@ -31,6 +31,30 @@ export const codeBases = <{readonly[k: string]: string}>{
   tasksViewCounter: 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/package.json',
 }
 
+async function getVersions(key:string):Promise<[string, string]> {
+  const codeBases = <{readonly[k: string]: string}>{
+    hostingTaskUrl:   'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json',
+    submissionTaskUrl:'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
+    statsTaskUrl:     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
+  }
+  let deployed:string
+  let latest:string
+
+  const url = new URL(settings.getValue(key as keyof Settings))
+  url.pathname = `${url.pathname}/package.json`
+  const deployedVersionPromise = fetch(url.toString())
+    .then(res => (res.status < 300) ? res.json() : Promise.reject("Status not 200 for "+ res.url))
+    .then(packageJson => (typeof packageJson === "object") ? `Version ${packageJson.version}` : "package.json not valid")
+    .catch(reason => console.warn("Getting deployed version failed. ", reason))
+
+  const githubVersionPromise = fetch(codeBases[key])
+    .then(res => (res.status < 300) ? res.json() : Promise.resolve("Status not 200"))
+    .then(packageJson => (typeof packageJson === "object") ? `Latest ${packageJson.version}` : "package.json not valid")
+    .catch(reason => console.warn("Getting latest version failed. ", reason))
+
+  return await Promise.all([deployed, latest])
+}
+
 async function deployTasks() {
   settings.setValue('hostingTaskUrl', (await createWebTaskTask(
     'dappform-tasks-host',
