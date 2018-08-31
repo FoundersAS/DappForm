@@ -140,7 +140,7 @@ async function exportCsv(uuid:string) {
   const file = new Blob([headers + newLine + values], {type : 'text/csv'})
   // const file = new File([headers + values], 'export.csv')
   const url = URL.createObjectURL(file);
-  (location as any) = url // typescript doesn't like it, but is totally cool.
+  location.href = url
 }
 
 function formatDate (date: Date | string):string {
