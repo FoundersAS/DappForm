@@ -101453,7 +101453,7 @@ exports.codeBases = {
 };
 async function deployTasks() {
     settings.setValue('hostingTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-host', "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/index.js", "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json", {})).webtask_url);
-    settings.setValue('tasksViewCounter', (await webtask_1.createWebTaskTask('dappform-tasks-view-counter', "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/index.js", "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/package.json", {})).webtask_url);
+    settings.setValue('tasksViewCounter', (await webtask_1.createWebTaskTask('dappform-tasks-view-counter', "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/index.js", "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/package.json", Object.assign({}, blockstackUtils_1.default.getBlockstackLocalStorage()))).webtask_url);
     settings.setValue('submissionTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-submission', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json', Object.assign({}, blockstackUtils_1.default.getBlockstackLocalStorage(), { BLOCKSTACK_APP_PRIVATE_KEY: new blockstackUtils_1.default().privateKey }))).webtask_url);
     settings.setValue('statsTaskUrl', (await webtask_1.createWebTaskTask('dappform-tasks-stats', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js', 'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json', Object.assign({}, blockstackUtils_1.default.getBlockstackLocalStorage(), { POSTMARK_TOKEN: settings.getValue('postmarkToken'), POSTMARK_FROM: settings.getValue('postmarkFrom'), POSTMARK_TO: settings.getValue('email') }))).webtask_url);
     await webtask_1.createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'));
@@ -102105,4 +102105,4 @@ exports.getAnyFile = getAnyFile;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=28ab2adf22c0da5ef7fb.bundle.js.map
+//# sourceMappingURL=a2f67e5d698e84f91948.bundle.js.map
