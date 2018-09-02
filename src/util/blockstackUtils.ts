@@ -1,5 +1,11 @@
 const blockstack = require('blockstack')
 
+export type localBlockstack = {
+  BLOCKSTACK: string
+  BLOCKSTACK_GAIA_HUB_CONFIG: string
+  BLOCKSTACK_TRANSIT_PRIVATE_KEY: string
+}
+
 export default class {
   username:string
   privateKey:string
@@ -14,7 +20,7 @@ export default class {
     }
   }
 
-  public static getBlockstackLocalStorage():Object {
+  public static getBlockstackLocalStorage():localBlockstack {
     return {
       BLOCKSTACK: localStorage.getItem('blockstack'),
       BLOCKSTACK_GAIA_HUB_CONFIG: localStorage.getItem('blockstack-gaia-hub-config'),
