@@ -9,19 +9,27 @@ function getCronUrl(taskName: string) {
 }
 
 export async function createWebTaskTask(taskName: string, taskCodeUrl: string, taskPackageUrl: string, taskSecrets: any = {}) {
-  const p = await fetch(taskPackageUrl).then((res) => { return res.json() })
-  taskSecrets.version = p.version
-  console.debug(`Deploying ${taskName} v${p.version}`)
-  return (await fetch(getTaskUrl(taskName), {
+  let res:Response
+
+  res = await fetch(taskPackageUrl)
+  const packageJson = await res.json()
+
+  taskSecrets.version = packageJson.version
+  console.debug(`Deploying ${taskName} v${packageJson.version}`)
+
+  res = await fetch(getTaskUrl(taskName), {
     method: 'PUT',
     body: JSON.stringify({
       url: taskCodeUrl,
       secrets: taskSecrets,
       meta: {
-        'wt-node-dependencies': JSON.stringify(p.dependencies).replace(/\^/g, '')
+        'wt-node-dependencies': JSON.stringify(packageJson.dependencies).replace(/\^/g, '') // remove ^ because webtask doesn't support it
       }
     })
-  }).then((res) => res.json()))
+  })
+  const deployed:{webtask_url: string} = await res.json()
+
+  return deployed
 }
 
 export async function createCronSchedule(taskName: string, schedule: string) {

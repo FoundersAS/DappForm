@@ -32,15 +32,25 @@ export const codeBases = <{readonly[k: string]: string}>{
 }
 
 async function deployTasks() {
-  settings.setValue('hostingTaskUrl', (await createWebTaskTask(
+  createWebTaskTask(
+    'dappform-tasks-host',
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/index.js",
+    "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
+    {
+    })
+    .then(result=> settings.setValue('hostingTaskUrl', result.webtask_url)).catch(console.error)
+    .then(() => Save.scheduleSave())
+
+  createWebTaskTask(
     'dappform-tasks-host',
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/index.js",
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-form-hosting/master/package.json",
     {
     }
-  )).webtask_url)
+  ).then(result => settings.setValue('hostingTaskUrl', result.webtask_url)).catch(console.error)
+    .then(() => Save.scheduleSave())
 
-  settings.setValue('tasksViewCounter', (await createWebTaskTask(
+  createWebTaskTask(
     'dappform-tasks-view-counter',
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/index.js",
     "https://raw.githubusercontent.com/FoundersAS/dappform-tasks-view-counter/master/package.json",
@@ -49,17 +59,20 @@ async function deployTasks() {
       // WEBTASK_ID
       // WEBTASK_TOKEN
     },
-  )).webtask_url)
+  ).then(result => settings.setValue('tasksViewCounter', result.webtask_url)).catch(console.error)
+    .then(() => Save.scheduleSave())
 
-  settings.setValue('submissionTaskUrl', (await createWebTaskTask(
+  createWebTaskTask(
     'dappform-tasks-submission',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-submissions/master/package.json',
     {...BlockstackUtils.getBlockstackLocalStorage(),
       BLOCKSTACK_APP_PRIVATE_KEY: new BlockstackUtils().privateKey},
-  )).webtask_url)
+    )
+    .then(result => settings.setValue('submissionTaskUrl', result.webtask_url)).catch(console.error)
+    .then(() => Save.scheduleSave())
 
-  settings.setValue('statsTaskUrl', (await createWebTaskTask(
+  createWebTaskTask(
     'dappform-tasks-stats',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/index.js',
     'https://raw.githubusercontent.com/FoundersAS/dappform-tasks-stats/master/package.json',
@@ -68,11 +81,27 @@ async function deployTasks() {
       POSTMARK_FROM: settings.getValue('postmarkFrom'),
       POSTMARK_TO: settings.getValue('email')
     }
-  )).webtask_url)
+  ).then(result => settings.setValue('statsTaskUrl', result.webtask_url)).catch(console.error)
+    .then(() => Save.scheduleSave())
 
-  await createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'))
-  await settings.saveSettings()
-  update()
+  createCronSchedule('dappform-tasks-stats', settings.getValue('cronSchedule'))
+    .catch(console.error)
+}
+
+class Save {
+  static scheduled:boolean
+  static async scheduleSave (delay:number = 1) {
+    if (!Save.scheduled) {
+      Save.scheduled = true
+      await wait(delay)
+      await Promise.all( [update(),settings.saveSettings()] )
+      Save.scheduled = false
+    }
+  }
+}
+
+function wait (sec:number) {
+  return new Promise(resolve => setTimeout(() => resolve(), sec * 1000))
 }
 
 async function saveUserDefinedSettings() {
