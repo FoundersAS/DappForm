@@ -20,10 +20,9 @@ async function getDataUrl (url:string):Promise<string> {
   const path = url.substr(url.indexOf('files/'))
   let buffer:any = await getAnyFile(path)
   if (!buffer) return url
-  const enc = new TextDecoder()
-  const decoded = enc.decode(buffer)
-  const blob = new Blob([...decoded], {type: extMimeMap.get(ext)})
-  return URL.createObjectURL(blob)
+  const blob = new Blob([buffer], {type: extMimeMap.get(ext)})
+  const file = new File([blob], `attachment.${ext}`, {type: extMimeMap.get(ext)})
+  return URL.createObjectURL(file)
 }
 
 async function download (fileLink:string) {
