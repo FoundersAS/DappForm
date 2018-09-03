@@ -3,6 +3,7 @@ import Store from '../../store'
 import { Route } from '../router'
 import { getForm, getFormSubmissions } from 'dappform-forms-api'
 import { getAnyFile } from '../../util/write'
+import * as FileSaver from 'file-saver'
 
 const extMimeMap = new Map([
   ['txt',  'text/plain'],
@@ -15,19 +16,17 @@ const extMimeMap = new Map([
   ['xls',  'application/vnd.ms-excel'],
 ])
 
-async function getDataUrl (url:string):Promise<string> {
+async function getBlob (url:string) {
   const ext = url.substr( url.lastIndexOf(".")+1 )
   const path = url.substr(url.indexOf('files/'))
   let buffer:any = await getAnyFile(path)
-  if (!buffer) return url
   const blob = new Blob([buffer], {type: extMimeMap.get(ext)})
-  const file = new File([blob], `attachment`, {type: extMimeMap.get(ext)})
-  return URL.createObjectURL(file)
+  return {blob, ext}
 }
 
 async function download (fileLink:string) {
-  const objUrl = await getDataUrl(fileLink)
-  window.open(objUrl, "_blank")
+  const {blob, ext} = await getBlob(fileLink)
+  FileSaver.saveAs(blob, `attachment.${ext}`)
 }
 
 export async function update() {
