@@ -30181,10 +30181,10 @@ module.exports = function(uri, failCb, successCb, unsupportedCb) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/index.js");
-const write_1 = __webpack_require__(/*! ./lib/write */ "./node_modules/dappform-forms-api/dist/lib/write.js");
-exports.getFile = write_1.getFile;
-exports.putFile = write_1.putFile;
-const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/dappform-forms-api/node_modules/blockstack/lib/index.js");
+const blockstack_1 = __webpack_require__(/*! ./lib/blockstack */ "./node_modules/dappform-forms-api/dist/lib/blockstack.js");
+exports.getFile = blockstack_1.getFile;
+exports.putFile = blockstack_1.putFile;
+exports.getPublicFormURL = blockstack_1.getPublicFormURL;
 const formsListFile = 'forms.json';
 function getSubmissionsPath(formUuid) {
     return `submissions/${formUuid}.json`;
@@ -30196,11 +30196,6 @@ function getPublishPath(formUuid) {
     return `published/${formUuid}.json`;
 }
 exports.getPublishPath = getPublishPath;
-async function getPublicFormURL(formUuid, authorName, appOrigin) {
-    const path = await blockstack.getUserAppFileUrl(getPublishPath(formUuid), authorName, appOrigin);
-    return path;
-}
-exports.getPublicFormURL = getPublicFormURL;
 // function sortSubmissions(submissions: Submission[]): FormSubmissionMap {
 //   return submissions.reduce((acc: FormSubmissionMap, cur: Submission) => {
 //     acc[cur.formUuid] = acc[cur.formUuid] || {} as SubmissionMap
@@ -30229,8 +30224,8 @@ async function newFormSubmission(submission) {
     const submissionsPath = getSubmissionsPath(submission.formUuid);
     const newSubmission = {};
     newSubmission[submission.uuid] = submission;
-    const oldSubmissions = await write_1.getFile(submissionsPath) || {};
-    await write_1.putFile(submissionsPath, Object.assign({}, oldSubmissions, newSubmission));
+    const oldSubmissions = await blockstack_1.getFile(submissionsPath) || {};
+    await blockstack_1.putFile(submissionsPath, Object.assign({}, oldSubmissions, newSubmission));
 }
 exports.newFormSubmission = newFormSubmission;
 function createDummySubmission(formUuid) {
@@ -30244,49 +30239,49 @@ function createDummySubmission(formUuid) {
 exports.createDummySubmission = createDummySubmission;
 function createForm(form) {
     return Promise.all([
-        write_1.putFile(getFormPath(form.uuid), form),
+        blockstack_1.putFile(getFormPath(form.uuid), form),
         publishForm(form),
         addFormToList(form),
     ]);
 }
 exports.createForm = createForm;
 async function getFormSubmissions(formUuid) {
-    return await write_1.getFile(getSubmissionsPath(formUuid)) || {};
+    return await blockstack_1.getFile(getSubmissionsPath(formUuid)) || {};
 }
 exports.getFormSubmissions = getFormSubmissions;
 async function getForm(formUuid) {
-    return await write_1.getFile(getFormPath(formUuid)) || undefined;
+    return await blockstack_1.getFile(getFormPath(formUuid)) || undefined;
 }
 exports.getForm = getForm;
 function publishForm(form) {
-    return write_1.putFile(getPublishPath(form.uuid), form, false);
+    return blockstack_1.putFile(getPublishPath(form.uuid), form, false);
 }
 exports.publishForm = publishForm;
 async function addFormToList(form) {
     const forms = await getForms();
-    await write_1.putFile(formsListFile, [...forms, form]);
+    await blockstack_1.putFile(formsListFile, [...forms, form]);
 }
 exports.addFormToList = addFormToList;
 async function saveForm(form) {
-    await write_1.putFile(getFormPath(form.uuid), form);
+    await blockstack_1.putFile(getFormPath(form.uuid), form);
 }
 exports.saveForm = saveForm;
 async function deleteFormSubmissions(formUuid) {
-    return await write_1.putFile(getSubmissionsPath(formUuid), {});
+    return await blockstack_1.putFile(getSubmissionsPath(formUuid), {});
 }
 async function removeFormFromList(formUuid) {
     const forms = await getForms();
-    await write_1.putFile(formsListFile, forms.filter((f) => f.uuid !== formUuid));
+    await blockstack_1.putFile(formsListFile, forms.filter((f) => f.uuid !== formUuid));
 }
 async function unpublishForm(formUuid) {
-    return await write_1.putFile(getPublishPath(formUuid), {});
+    return await blockstack_1.putFile(getPublishPath(formUuid), {});
 }
 exports.unpublishForm = unpublishForm;
 async function deleteForm(formUuid) {
     await unpublishForm(formUuid);
     await deleteFormSubmissions(formUuid);
     await removeFormFromList(formUuid);
-    await write_1.putFile(getFormPath(formUuid), {});
+    await blockstack_1.putFile(getFormPath(formUuid), {});
 }
 exports.deleteForm = deleteForm;
 async function getForms() {
@@ -30298,25 +30293,26 @@ async function getForms() {
 }
 exports.getForms = getForms;
 async function getFormsFile() {
-    return await write_1.getFile(formsListFile);
+    return await blockstack_1.getFile(formsListFile);
 }
 async function initForms() {
-    return await write_1.putFile(formsListFile, []);
+    return await blockstack_1.putFile(formsListFile, []);
 }
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ "./node_modules/dappform-forms-api/dist/lib/write.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/dappform-forms-api/dist/lib/write.js ***!
-  \***********************************************************/
+/***/ "./node_modules/dappform-forms-api/dist/lib/blockstack.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/dappform-forms-api/dist/lib/blockstack.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const index_1 = __webpack_require__(/*! ../index */ "./node_modules/dappform-forms-api/dist/index.js");
 const blockstack = __webpack_require__(/*! blockstack */ "./node_modules/dappform-forms-api/node_modules/blockstack/lib/index.js");
 async function putFile(path, contents, encrypt = true) {
     try {
@@ -30353,7 +30349,12 @@ async function getFile(path) {
     return parsed;
 }
 exports.getFile = getFile;
-//# sourceMappingURL=write.js.map
+async function getPublicFormURL(formUuid, authorName, appOrigin) {
+    const path = await blockstack.getUserAppFileUrl(index_1.getPublishPath(formUuid), authorName, appOrigin);
+    return path;
+}
+exports.getPublicFormURL = getPublicFormURL;
+//# sourceMappingURL=blockstack.js.map
 
 /***/ }),
 
@@ -102358,4 +102359,4 @@ exports.getAnyFile = getAnyFile;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=1ac594c1e0c83b3bc379.bundle.js.map
+//# sourceMappingURL=fc2ca55dda3fffcc5caf.bundle.js.map
