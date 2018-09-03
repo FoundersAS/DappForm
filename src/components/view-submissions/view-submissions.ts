@@ -21,12 +21,13 @@ async function getDataUrl (url:string):Promise<string> {
   let buffer:any = await getAnyFile(path)
   if (!buffer) return url
   const blob = new Blob([buffer], {type: extMimeMap.get(ext)})
-  const file = new File([blob], `attachment.${ext}`, {type: extMimeMap.get(ext)})
+  const file = new File([blob], `attachment`, {type: extMimeMap.get(ext)})
   return URL.createObjectURL(file)
 }
 
 async function download (fileLink:string) {
-  location.href = await getDataUrl(fileLink);
+  const objUrl = await getDataUrl(fileLink)
+  window.open(objUrl, "_blank")
 }
 
 export async function update() {
