@@ -29,6 +29,10 @@ export async function createWebTaskTask(taskName: string, taskCodeUrl: string, t
   })
   const deployed:{webtask_url: string} = await res.json()
 
+  if (res.status > 299) {
+    throw deployed // error
+  }
+
   return deployed
 }
 
